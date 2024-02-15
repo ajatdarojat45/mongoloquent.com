@@ -1,0 +1,70 @@
+# Soft Delete
+
+In addition to actually removing records from your database, `Mongoloquent` can also `soft delete` models. When models are soft deleted, they are not actually removed from your database. Instead, a `isDeleted` and `deletedAt` attribute is set on the model indicating the date and time at which the model was "deleted". To enable soft deletes for a model, add the static property `softDelete` to the model.
+
+```js
+import { Mongoloquent } from "mongoloquent";
+
+class User extends Mongoloquent {
+	static collection = "users";
+	static softDelete = true;
+}
+```
+
+> The static property softDelete will automatically add the isDeleted and deletedAt attributes to your model.
+
+## restore()
+
+Sometimes you may wish to "un-delete" a soft deleted model. To restore a soft deleted model, you may call the `restore` method on a model. The `restore` method will set the model's `deletedAt` column to `null` and `isDeleted` column to `false`.
+
+```js
+import User from "./yourPath/User";
+
+await User.withTrashed().restore();
+```
+
+You may also combine the `restore` method with query methods to restore multiple models/data.
+
+```js
+import User from "./yourPath/User";
+
+await User.withTrashed().where("age", ">=", 50).restore();
+```
+
+## forceDelete()
+
+Sometimes you may need to truly remove a model from your database. You may use the `forceDelete` method to permanently remove a soft deleted model from the database collection.
+
+```js
+import User from "./yourPath/User";
+
+await User.forceDelete();
+```
+
+You may also combine the `forceDelete` method with query methods to permanently delete some specific soft deleted models/data.
+
+```js
+import User from "./yourPath/User";
+
+await User.where("age", 50).forceDelete();
+```
+
+## withTrashed()
+
+As noted above, soft deleted models will automatically be excluded from query results. However, you may force soft deleted models to be included in a query's results by calling the withTrashed method on the query.
+
+```js
+import User from "./yourPath/User";
+
+const users = await User.withTrashed().where("age", ">=" 50).get()
+```
+
+## onlyTrashed()
+
+The `onlyTrashed` method will retrieve only soft deleted models.
+
+```js
+import User from "./yourPath/User";
+
+const users = await User.onlyTrashed().where("age", "gte" 50).get()
+```
