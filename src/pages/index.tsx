@@ -10,12 +10,15 @@ import styles from "./index.module.css";
 function HomepageHeader() {
 	const { siteConfig } = useDocusaurusContext();
 	return (
-		<header className={clsx("hero hero--primary", styles.heroBanner)}>
+		<header
+			className={clsx("hero hero--primary", styles.heroBanner)}
+			style={{
+				backgroundColor: "#118e3c",
+			}}
+		>
 			<div className="container">
-				<Heading as="h1" className="hero__title">
-					{siteConfig.title}
-				</Heading>
-				<p className="hero__subtitle">{siteConfig.tagline}</p>
+				<h1 style={{ fontSize: "3rem", color: "#ffffff" }}>{siteConfig.title}</h1>
+				<p style={{ fontSize: "1.5rem", color: "#ffffff" }}>{siteConfig.tagline}</p>
 				<div className={styles.buttons}>
 					<Link
 						className="button button--secondary button--lg"
@@ -39,6 +42,21 @@ export default function Home(): JSX.Element {
 			<HomepageHeader />
 			<main>
 				<HomepageFeatures />
+				<div
+					className="container text--center"
+					style={{ maxWidth: "50%", marginBottom: "50px", marginTop: "50px" }}
+				>
+					<Heading as="h1">Support us</Heading>
+					<p>
+						Mongoloquent is an MIT-licensed open-source project. Hence, it grows
+						thanks to the sponsors and support by the amazing backers. Please,
+						consider supporting us!
+					</p>
+					<div style={{ marginTop: "50px" }}>
+						<Heading as="h3">SPONSORS</Heading>
+						<p>-</p>
+					</div>
+				</div>
 			</main>
 		</Layout>
 	);

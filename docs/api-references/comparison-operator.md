@@ -1,4 +1,9 @@
-# Comparison operators
+---
+sidebar_position: 2
+title: Comparison operators
+---
+
+import Sponsor from "../\_sponsor.mdx";
 
 ## Comparation operators table
 
@@ -13,3 +18,5 @@
 | `in`     | in             | In                                  |
 | `notIn`  | nin            | Not in                              |
 | `like`   | regex          | Like (case-insensitive) using regex |
+
+<Sponsor/>

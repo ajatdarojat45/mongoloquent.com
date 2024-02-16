@@ -1,7 +1,7 @@
 {
 	"name": "mongoloquent.com",
 	"version": "1.0.0",
-	"private": true,
+	"private": false,
 	"scripts": {
 		"docusaurus": "docusaurus",
 		"start": "docusaurus start",
@@ -14,6 +14,33 @@
 		"write-heading-ids": "docusaurus write-heading-ids",
 		"typecheck": "tsc"
 	},
+	"keywords": [
+		"javascript",
+		"typescript",
+		"database",
+		"mongodb",
+		"orm",
+		"mongoloquent"
+	],
+	"author": {
+		"name": "Ajat Darojat",
+		"email": "ajatdarojat45@gmail.com",
+		"url": "https://ajatdarojat45.id"
+	},
+	"license": "MIT",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/ajatdarojat45/mongoloquent.com.git"
+	},
+	"funding": {
+		"type": "github",
+		"url": "https://github.com/sponsors/ajatdarojat45"
+	},
+	"bugs": {
+		"url": "https://github.com/ajatdarojat45/mongoloquent.com/issues",
+		"email": "ajatdarojat45@gmail.com"
+	},
+	"homepage": "https://github.com/ajatdarojat45/mongoloquent.com#readme",
 	"dependencies": {
 		"@docusaurus/core": "3.1.1",
 		"@docusaurus/preset-classic": "3.1.1",

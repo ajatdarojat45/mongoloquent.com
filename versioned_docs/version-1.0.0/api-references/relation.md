@@ -1,0 +1,19 @@
+---
+sidebar_position: 4
+title: Relationship methods
+---
+
+import Sponsor from "../\_sponsor.mdx";
+
+## Relationships methods table
+
+| Relation Method                                                                                                        | Description                                                                                                         | Parameters                                                                                       |
+| ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------ |
+| [`hasMany(Model, foreignKey, localKey)`](/docs/tutorials/relationships/has-many)                                       | Define a "has many" relationship between the current model and the related model.                                   | `related: Model or str`, `foreignKey: str`, `localKey: str`                                      |
+| [`belongsTo(Model, foreignKey, ownerKey)`](/docs/tutorials/relationships/belongs-to)                                   | Define a "belongs to" relationship between the current model and the related model.                                 | `Model: Model or str`, `foreignKey: str`, `ownerKey: str`                                        |
+| [`belongsToMany(Model, pivotModel, foreignKey, foreignKeyTarget)`](/docs/tutorials/relationships/belongs-to-many)      | Define a "belongs to many" relationship between the current model and the related model through a pivot collection. | `Model: Model or str`, `pivotModel: Model or str`, `foreignKey: str`, `foreignKeyTarget: str`    |
+| [`hasManyThrough(Model, throughModel, foreignKey, throughForeignKey)`](/docs/tutorials/relationships/has-many-through) | Define a "has many through" relationship between the current model and the related model through a pivot Model.     | `Model: Model or str`, `throughModel: Model or str`, `foreignKey: str`, `throughForeignKey: str` |
+| [`with(relation, options?)`](/docs/tutorials/relationships/with)                                                       | To perform eager loading of specified relationship.                                                                 | `relation: str`, `options: obj`                                                                  |
+| [`has(relation, options?)`](#/docs/tutorials/relationships/has)                                                        | Alias for the `with` method.                                                                                        | `relation: str`, `options: obj`                                                                  |
+
+<Sponsor/>
