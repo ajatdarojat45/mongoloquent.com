@@ -2,7 +2,7 @@
 title: Soft Delete
 ---
 
-import Sponsor from "../../\_sponsor.mdx";
+import Sponsor from "../../sponsor.mdx";
 
 In addition to actually removing records from your database, `Mongoloquent` can also `soft delete` models. When models are soft deleted, they are not actually removed from your database. Instead, a `isDeleted` and `deletedAt` attribute is set on the model indicating the date and time at which the model was "deleted". To enable soft deletes for a model, add the static property `softDelete` to the model.
 
@@ -73,4 +73,4 @@ import User from "./yourPath/User";
 const users = await User.onlyTrashed().where("age", "gte" 50).get()
 ```
 
-<Sponsor/>
+<Sponsor />
