@@ -17,8 +17,8 @@ function HomepageHeader() {
 			}}
 		>
 			<div className="container">
-				<h1 style={{ fontSize: "3rem", color: "#ffffff" }}>{siteConfig.title}</h1>
-				<p style={{ fontSize: "1.5rem", color: "#ffffff" }}>{siteConfig.tagline}</p>
+				<h1 style={{ fontSize: "3rem", color: "#EAEDF0" }}>{siteConfig.title}</h1>
+				<p style={{ fontSize: "1.5rem", color: "#EAEDF0" }}>{siteConfig.tagline}</p>
 				<div className={styles.buttons}>
 					<Link
 						className="button button--secondary button--lg"
@@ -44,7 +44,7 @@ export default function Home(): JSX.Element {
 				<HomepageFeatures />
 				<div
 					className="container text--center"
-					style={{ maxWidth: "50%", marginBottom: "50px", marginTop: "50px" }}
+					style={{ maxWidth: "700px", marginBottom: "50px", marginTop: "30px" }}
 				>
 					<Heading as="h1">Support us</Heading>
 					<p>
@@ -53,7 +53,7 @@ export default function Home(): JSX.Element {
 						consider supporting us!
 					</p>
 					<div style={{ marginTop: "50px" }}>
-						<Heading as="h3">SPONSORS</Heading>
+						<Heading as="h3">Sponsors</Heading>
 						<p>-</p>
 					</div>
 				</div>
