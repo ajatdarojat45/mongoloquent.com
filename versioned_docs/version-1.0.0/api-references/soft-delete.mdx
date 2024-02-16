@@ -1,0 +1,17 @@
+---
+sidebar_position: 5
+title: Soft delete methods
+---
+
+import Sponsor from "../\_sponsor.mdx";
+
+## Soft delete methods table
+
+| Method                                                      | Description                                                                                                   | Parameters |
+| ----------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------- | ---------- |
+| [`restore()`](/docs/tutorials/soft-delete/#restore)         | The `onlyTrashed` method will retrieve only soft deleted models.                                              | -          |
+| [`forceDelete()`](/docs/tutorials/soft-delete/#forcedelete) | The `forceDelete` method to permanently remove a soft deleted model from the database collection.             | -          |
+| [`withTrashed()`](/docs/tutorials/soft-delete/#withtrashed) | The `withTrashed` method will force soft deleted models to be included soft delete data in a query's results. | -          |
+| [`onlyTrashed()`](/docs/tutorials/soft-delete/#onlytrashed) | The `onlyTrashed` method will retrieve only soft deleted models.                                              | -          |
+
+<Sponsor/>
