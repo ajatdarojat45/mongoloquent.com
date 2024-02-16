@@ -17,6 +17,11 @@ function HomepageHeader() {
 			}}
 		>
 			<div className="container">
+				{/* <img
+					src="https://cdn.discordapp.com/attachments/973422761944952883/1208054844154454088/Mongolo.jpg?ex=65e1e3bf&is=65cf6ebf&hm=3158b932d6f76d023323ce920b88ec4a96e0011152a55f6a99570d004682c06c&"
+					alt="Mongoloquent logo"
+					width={300}
+				/> */}
 				<h1 style={{ fontSize: "3rem", color: "#EAEDF0" }}>{siteConfig.title}</h1>
 				<p style={{ fontSize: "1.5rem", color: "#EAEDF0" }}>{siteConfig.tagline}</p>
 				<div className={styles.buttons}>

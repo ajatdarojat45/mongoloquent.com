@@ -4,8 +4,9 @@ import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
 	title: "Mongoloquent",
-	tagline: "A lightweight MongoDB ORM library for Javascript",
-	favicon: "img/favicon.ico",
+	tagline: "A lightweight MongoDB ORM library for Javascript/Typescript",
+	favicon:
+		"https://cdn.discordapp.com/attachments/973422761944952883/1208059879613407243/Mongolo.jpg?ex=65e1e86f&is=65cf736f&hm=d02304d9d4ccf8965b2efe0edffe56f455a6bc4afe04babb4039dc700af41e76&",
 
 	// Set the production url of your site here
 	url: "https://mongoloquent.com",
@@ -58,10 +59,10 @@ const config: Config = {
 		image: "img/docusaurus-social-card.jpg",
 		navbar: {
 			title: "Mongoloquent",
-			// logo: {
-			// 	alt: "My Site Logo",
-			// 	src: "img/logo.svg",
-			// },
+			logo: {
+				alt: "Mongoloquent Logo",
+				src: "https://cdn.discordapp.com/attachments/973422761944952883/1208059879613407243/Mongolo.jpg?ex=65e1e86f&is=65cf736f&hm=d02304d9d4ccf8965b2efe0edffe56f455a6bc4afe04babb4039dc700af41e76&",
+			},
 			items: [
 				{
 					to: "/docs/introductions/getting-started",
@@ -147,7 +148,7 @@ const config: Config = {
 					],
 				},
 			],
-			copyright: `Copyright © ${new Date().getFullYear()} Mongoloquent. Built with Docusaurus.`,
+			copyright: `Copyright © ${new Date().getFullYear()} <a href="https://linkedin.com/in/ajatdarojat45" target="_blank">Ajat Darojat</a>. Built with Docusaurus.`,
 		},
 		prism: {
 			theme: prismThemes.github,
