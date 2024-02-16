@@ -9,7 +9,9 @@ If you want to work on this project on your local machine, you may follow the in
 1. Fork this repository
 2. Open your terminal and `cd` to your `~/projects` folder
 3. Clone your fork into the `~/projects/mongoloquent.com` folder, by running the following command with your username placed into the {username} slot:
-   `git clone git@github.com:{username}/mongoloquent.com`
+   ```
+   git clone git@github.com:{username}/mongoloquent.com
+   ```
 4. `cd` into the new directory you just created:
 
    ```
