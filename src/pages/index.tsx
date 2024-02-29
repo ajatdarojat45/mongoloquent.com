@@ -41,8 +41,8 @@ export default function Home(): JSX.Element {
 	const { siteConfig } = useDocusaurusContext();
 	return (
 		<Layout
-			title={`${siteConfig.title} - A lightweight MongoDB ORM library for Javascript.`}
-			description="A lightweight MongoDB ORM library for Javascript"
+			title={`${siteConfig.title} - A lightweight MongoDB ORM library for Javascript/Typescript`}
+			description="A lightweight MongoDB ORM library for Javascript/Typescript"
 		>
 			<HomepageHeader />
 			<main>
