@@ -32,7 +32,7 @@ Exclude specific columns from being displayed in the query results.
 ```js
 import User from "./yourPath/User";
 
-const users = await User.exclude("name").select("age").get();
+const users = await User.exclude("name").exclude("age").get();
 ```
 
 Also, you can pass a list of column names to exclude some columns.

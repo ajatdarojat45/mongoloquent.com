@@ -56,7 +56,8 @@ const config: Config = {
 
 	themeConfig: {
 		// Replace with your project's social card
-		image: "img/docusaurus-social-card.jpg",
+		image:
+			"https://cdn.discordapp.com/attachments/973422761944952883/1208054844154454088/Mongolo.jpg?ex=65eb1e3f&is=65d8a93f&hm=d4db17ac8862963197222678fb88e725ea46d0a40f7de5cc167bc5eaa5f1c630&",
 		navbar: {
 			title: "Mongoloquent",
 			logo: {
