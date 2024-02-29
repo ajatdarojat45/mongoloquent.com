@@ -1,0 +1,107 @@
+---
+sidebar_position: 1
+title: Write Data
+---
+
+import Sponsor from "../../sponsor.mdx";
+
+## Create
+
+### insert(data)
+
+Create a new document with the provided data.
+
+```js
+import User from "./yourPath/User";
+
+const data = {
+	name: "Udin",
+	age: 17,
+	email: "udin@mail.com",
+};
+
+const user = await User.insert(data);
+```
+
+### create(data)
+
+The `create` method is an alias for the [`insert`](#insertdata) method.
+
+### insertMany(data)
+
+The `insertMany` method used to insert multiple documents into the database collection.
+
+```js
+import User from "./yourPath/User";
+
+const data = [
+	{
+		name: "Udin",
+		age: 17,
+		email: "udin@mail.com",
+	},
+	{
+		name: "Kosasih",
+		age: 20,
+		email: "kosasih@mail.com",
+	},
+];
+
+const user = await User.insertMany(data);
+```
+
+## Update
+
+### update(data)
+
+Update a single document that matches a given query.
+
+```js
+import User from "./yourPath/User";
+
+const data = { name: "Udin Edited" };
+
+const user = await User.where("_id", "65ab7e3d05d58a1ad246ee87").update(data);
+```
+
+### updateMany(data)
+
+Update multiple documents that matches a given query.
+
+```js
+import Flight from "./yourPath/Flight";
+
+await Flight.where("isActive", true)
+	.where("destination", "Bogor")
+	.updateMany({ delayed: true });
+```
+
+The `updateMany` method returns the number of affected documents.
+
+## Delete
+
+### delete()
+
+Delete a single document that matches a given query.
+
+```js
+import User from "./yourPath/User";
+
+const user = await User.where("_id", "65ab7e3d05d58a1ad246ee87").delete();
+```
+
+### deleteMany()
+
+Delete multiple documents that matches a given query.
+
+```js
+import Flight from "./yourPath/Flight";
+
+await Flight.where("isActive", false).deleteMany();
+```
+
+The `deleteMany` method returns the number of affected documents.
+
+---
+
+<Sponsor />
