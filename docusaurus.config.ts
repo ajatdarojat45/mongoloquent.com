@@ -5,8 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
 	title: "Mongoloquent",
 	tagline: "A lightweight MongoDB ORM library for Javascript/Typescript",
-	favicon:
-		"https://cdn.discordapp.com/attachments/973422761944952883/1208059879613407243/Mongolo.jpg?ex=65e1e86f&is=65cf736f&hm=d02304d9d4ccf8965b2efe0edffe56f455a6bc4afe04babb4039dc700af41e76&",
+	favicon: "img/favicon.jpg",
 
 	// Set the production url of your site here
 	url: "https://mongoloquent.com",
@@ -57,12 +56,12 @@ const config: Config = {
 	themeConfig: {
 		// Replace with your project's social card
 		image:
-			"https://cdn.discordapp.com/attachments/973422761944952883/1208054844154454088/Mongolo.jpg?ex=65eb1e3f&is=65d8a93f&hm=d4db17ac8862963197222678fb88e725ea46d0a40f7de5cc167bc5eaa5f1c630&",
+			"img/favicon.jpg",
 		navbar: {
 			title: "Mongoloquent",
 			logo: {
 				alt: "Mongoloquent Logo",
-				src: "https://cdn.discordapp.com/attachments/973422761944952883/1208059879613407243/Mongolo.jpg?ex=65e1e86f&is=65cf736f&hm=d02304d9d4ccf8965b2efe0edffe56f455a6bc4afe04babb4039dc700af41e76&",
+				src: "img/favicon.jpg",
 			},
 			items: [
 				{
