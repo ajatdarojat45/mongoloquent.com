@@ -5,7 +5,7 @@ import type * as Preset from "@docusaurus/preset-classic";
 const config: Config = {
 	title: "Mongoloquent",
 	tagline: "A lightweight MongoDB ORM library for Javascript/Typescript",
-	favicon: "img/favicon.jpg",
+	favicon: "img/favicon.png",
 
 	// Set the production url of your site here
 	url: "https://mongoloquent.com",
@@ -55,13 +55,12 @@ const config: Config = {
 
 	themeConfig: {
 		// Replace with your project's social card
-		image:
-			"img/favicon.jpg",
+		image: "img/favicon.png",
 		navbar: {
 			title: "Mongoloquent",
 			logo: {
 				alt: "Mongoloquent Logo",
-				src: "img/favicon.jpg",
+				src: "img/favicon.png",
 			},
 			items: [
 				{

@@ -1,0 +1,56 @@
+---
+sidebar_position: 1
+title: One to One
+---
+
+### Usage
+
+A one-to-one relationship is a very basic type of database relationship. For example, a User model might be associated with one Phone model. To define this relationship, we will place a phone method on the User model. The phone method should call the hasOne method and return its result. The hasOne method is available to your model via the model's Illuminate\Database\Eloquent\Model base class:
+
+```js
+import { Mongoloquent } from "mongoloquent";
+import Phone from "./yourPath/Phone";
+
+class User extends Mongoloquent {
+	static collection = "users";
+
+	static phone() {
+		return this.hasOne(Phone, "userId", "_id");
+	}
+}
+
+// usage
+const user = await User.with("phone").find("65ab7e3d05d58a1ad246ee87");
+
+// you can access your data in the data property
+console.log(user.data);
+```
+
+The first argument passed to the hasOne method is the name of the related model class.
+
+Additionally, Mongoloquent assumes that the foreign key should have a value matching the primary key column of the parent. In other words, Mongoloquent will look for the value of the user's `_id` column in the `userId` column of the Phone record.
+
+### Defining the Inverse of the Relationship
+
+So, we can access the Phone model from our User model. Next, let's define a relationship on the Phone model that will let us access the user that owns the phone. We can define the inverse of a `hasOne` relationship using the `belongsTo` method:
+
+```js
+import { Mongoloquent } from "mongoloquent";
+import User from "./yourPath/User";
+
+class Phone extends Mongoloquent {
+	static collection = "phones";
+
+	static user() {
+		return this.belongsTo(User, "userId", "_id");
+	}
+}
+
+// usage
+const phone = await Phone.with("user").find("10ab7e3d05d58a1ad250dd90");
+
+// you can access your data in the data property
+console.log(phone.data);
+```
+
+When invoking the user method, Eloquent will attempt to find a User model that has an `_id` which matches the `userId` column on the Phone model.

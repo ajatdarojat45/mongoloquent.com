@@ -102,6 +102,24 @@ await Flight.where("isActive", false).deleteMany();
 
 The `deleteMany` method returns the number of affected documents.
 
----
+### destroy(ids)
+
+Delete multiple documents that matches a given ids.
+
+```js
+import Flight from "./yourPath/Flight";
+
+await Flight.destroy("660034987147a7d233501c8a");
+```
+
+Also you can passing multiple ids.
+
+```js
+import Flight from "./yourPath/Flight";
+
+await Flight.destroy(["660034987147a7d233501c8a", "660034d7dbcd54dd425e2723"]);
+```
+
+The `destroy` method returns the number of affected documents.
 
 <Sponsor />

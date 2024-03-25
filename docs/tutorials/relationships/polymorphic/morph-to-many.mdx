@@ -1,0 +1,113 @@
+---
+sidebar_position: 3
+title: Many to Many
+---
+
+## Many to Many (Polymorphic)
+
+### Table Structure
+
+Many-to-many polymorphic relations are slightly more complicated than "morph one" and "morph many" relationships. For example, a `Post` model and `Video` model could share a polymorphic relation to a `Tag` model. Using a many-to-many polymorphic relation in this situation would allow your application to have a single table of unique tags that may be associated with posts or videos. First, let's examine the table structure required to build this relationship:
+
+```
+posts
+  id - integer
+  name - string
+
+videos
+  id - integer
+  name - string
+
+tags
+  id - integer
+  name - string
+
+taggables
+  tag_id - integer
+  taggable_id - integer
+  taggable_type - string
+```
+
+> Before diving into polymorphic many-to-many relationships, you may benefit from reading the documentation on typical many-to-many relationships.
+
+### Model Structure
+
+Next, we're ready to define the relationships on the models. The `Post` and `Video` models will both contain a `tags` method that calls the `morphToMany` method provided by the base Mongoloquent model class.
+
+The `morphToMany` method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate table name and the keys it contains, we will refer to the relationship as "taggable":
+
+```javascript
+import { Mongoloquent } from "mongoloquent";
+import Tag from "./yourPath/Tag";
+
+class Post extends Mongoloquent {
+	static collection = "posts";
+	static softDelete = true;
+	static timestamps = true;
+
+	static tags() {
+		return this.morphToMany(Tag, "taggable");
+	}
+}
+```
+
+### Defining the Inverse of the Relationship
+
+Next, on the `Tag` model, you should define a method for each of its possible parent models. So, in this example, we will define a `posts` method and a `videos` method. Both of these methods should return the result of the `morphedByMany` method.
+
+The `morphedByMany` method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate collection name and the keys it contains, we will refer to the relationship as "taggable":
+
+```javascript
+import { Mongoloquent } from "mongoloquent";
+import Post from "./yourPath/Post";
+import Video from "./yourPath/Video";
+
+class Tag extends Model {
+	static collection = "tags";
+	static softDelete = true;
+	static timestamps = true;
+
+	static posts() {
+		return this.morphedByMany(Post, "taggable");
+	}
+
+	static videos() {
+		return this.morphedByMany(Video, "taggable");
+	}
+}
+```
+
+### Retrieving the Relationship
+
+Once your database table and models are defined, you may access the relationships via your models. For example, to access all of the tags for a post, you may use the `tags` dynamic relationship property:
+
+```javascript
+import Post from "./yourPath/Post";
+
+const post = await Post.with("tags").find("56ab7e3d05d58a1ad250dd56");
+
+// your relationship data can accessed in the data property
+console.log(post.data);
+```
+
+```javascript
+import Video from "./yourPath/Video";
+
+const video = await Video.with("tags").find("46ab7e3d05d58a1ad250dd46");
+
+// your relationship data can accessed in the data property
+console.log(video.data);
+```
+
+You may retrieve the parent of a polymorphic relation from the polymorphic child model by accessing the name of the method that performs the call to `morphedByMany`. In this case, that is the `posts` or `videos` methods on the `Tag` model:
+
+```javascript
+import Tag from "./yourPath/Tag";
+
+const tag = await Tag.with("posts")
+	.with("videos")
+	.find("33ab7e3d05d58a1ad250dd33");
+
+// your relationship data can accessed in the data property
+console.log(tag.data);
+```
