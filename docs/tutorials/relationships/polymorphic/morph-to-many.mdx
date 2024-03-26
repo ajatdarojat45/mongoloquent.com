@@ -11,24 +11,24 @@ Many-to-many polymorphic relations are slightly more complicated than "morph one
 
 ```
 posts
-  id - integer
+  _id - ObjectId
   name - string
 
 videos
-  id - integer
+  _id - ObjectId
   name - string
 
 tags
-  id - integer
+  _id - ObjectId
   name - string
 
 taggables
-  tag_id - integer
-  taggable_id - integer
+  tagId - ObjectId
+  taggableId - ObjectId
   taggable_type - string
 ```
 
-> Before diving into polymorphic many-to-many relationships, you may benefit from reading the documentation on typical many-to-many relationships.
+> Before diving into polymorphic many-to-many relationships, you may benefit from reading the documentation on typical [`many-to-many relationships`](/docs/tutorials/relationships/belongs-to-many).
 
 ### Model Structure
 

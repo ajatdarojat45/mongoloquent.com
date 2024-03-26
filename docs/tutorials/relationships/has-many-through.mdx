@@ -11,18 +11,18 @@ The "has-many-through" relationship provides a convenient way to access distant 
 
 ```
 projects
-    _id - id
-    name - string
+  _id - ObjectId
+  name - string
 
 environments
-    _id - id
-    projectId - id
-    name - string
+  _id - ObjectId
+  projectId - ObjectId
+  name - string
 
 deployments
-    _id - id
-    environmentId - id
-    commitHash - string
+  _id - ObjectId
+  environmentId - ObjectId
+  commitHash - string
 ```
 
 Now that we have examined the collection structure for the relationship, let's define the relationship on the `Project` model:
