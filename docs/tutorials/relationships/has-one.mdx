@@ -3,9 +3,9 @@ sidebar_position: 1
 title: One to One
 ---
 
-### Usage
+## One to One Relationship
 
-A one-to-one relationship is a very basic type of database relationship. For example, a User model might be associated with one Phone model. To define this relationship, we will place a phone method on the User model. The phone method should call the hasOne method and return its result. The hasOne method is available to your model via the model's Illuminate\Database\Eloquent\Model base class:
+A one-to-one relationship is a very basic type of database relationship. For example, a `User` model might be associated with one `Phone` model. To define this relationship, we will place a `phone` method on the `User` model. The `phone` method should call the `hasOne` method and return its result.
 
 ```js
 import { Mongoloquent } from "mongoloquent";
@@ -18,15 +18,18 @@ class User extends Mongoloquent {
 		return this.hasOne(Phone, "userId", "_id");
 	}
 }
+```
 
-// usage
+The first argument passed to the `hasOne` method is the name of the related model class. Once the relationship is defined, we may retrieve the related record using Mongoloquent's dynamic properties. Dynamic properties allow you to access relationship methods as if they were properties defined on the model:
+
+```js
+import User from "./yourPath/User";
+
 const user = await User.with("phone").find("65ab7e3d05d58a1ad246ee87");
 
 // you can access your data in the data property
 console.log(user.data);
 ```
-
-The first argument passed to the hasOne method is the name of the related model class.
 
 Additionally, Mongoloquent assumes that the foreign key should have a value matching the primary key column of the parent. In other words, Mongoloquent will look for the value of the user's `_id` column in the `userId` column of the Phone record.
 
@@ -49,8 +52,8 @@ class Phone extends Mongoloquent {
 // usage
 const phone = await Phone.with("user").find("10ab7e3d05d58a1ad250dd90");
 
-// you can access your data in the data property
+// your relationship data can accessed in the data property
 console.log(phone.data);
 ```
 
-When invoking the user method, Eloquent will attempt to find a User model that has an `_id` which matches the `userId` column on the Phone model.
+When invoking the user method, Mongoloquent will attempt to find a User model that has an `_id` which matches the `userId` column on the Phone model.

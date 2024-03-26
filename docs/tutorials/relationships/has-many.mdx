@@ -5,26 +5,9 @@ title: One to Many
 
 import Sponsor from "../../sponsor.mdx";
 
-## hasMany(Model, foreignKey, localKey)
+## One to Many Relationship
 
 A one-to-many relationship is used to define relationships where a single model is the parent to one or more child models. For example, a blog `post` may have an infinite number of `comments`. Like all other `Mongoloquent` relationships, one-to-many relationships are defined by defining a method on your `Mongoloquent` model.
-
-### Collection structure
-
-```
-posts:
-	_id - id
-	title - string
-	userId - id
-
-comments:
-	_id - id
-	comment - string
-	postId - id
-	userId - id
-```
-
-### Usage
 
 ```js
 import { Mongoloquent } from "mongoloquent";
@@ -37,32 +20,17 @@ class Post extends Mongoloquent {
 		return this.hasMany(Comment, "postId", "_id");
 	}
 }
-
-// usage
-const post = await Post.where("_id", "65ab7e3d05d58a1ad246ee87")
-	.with("comments")
-	.first();
 ```
 
-Also, you can pass collection name as a Model.
-
-> The softDelete is disabled in the target model when you pass the collection name as a model.
+Once the relationship method has been defined, we can access the `collection` of related comments by accessing the comments property in the data property.
 
 ```js
-import { Mongoloquent } from "mongoloquent";
+import Post from "./yourPath/Post";
 
-class Post extends Mongoloquent {
-	static collection = "posts";
+const post = await Post.with("comments").find("65ab7e3d05d58a1ad246ee87");
 
-	static comments() {
-		return this.hasMany("comments", "postId", "_id");
-	}
-}
-
-// usage
-const post = await Post.where("_id", "65ab7e3d05d58a1ad246ee87")
-	.with("comments")
-	.first();
+// your relationship data can accessed in the data property
+console.log(post.data);
 ```
 
 ---
