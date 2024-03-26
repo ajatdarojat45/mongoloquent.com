@@ -7,9 +7,9 @@ import Sponsor from "../../sponsor.mdx";
 
 ## Create
 
-### insert(data)
+### insert
 
-Create a new document with the provided data.
+Of course, when using Mongoloquent, we don't only need to retrieve models from the database. We also need to insert new records. Thankfully, Eloquent makes it simple.
 
 ```js
 import User from "./yourPath/User";
@@ -23,11 +23,11 @@ const data = {
 const user = await User.insert(data);
 ```
 
-### create(data)
+### create
 
 The `create` method is an alias for the [`insert`](#insertdata) method.
 
-### insertMany(data)
+### insertMany
 
 The `insertMany` method used to insert multiple documents into the database collection.
 
@@ -52,7 +52,7 @@ const user = await User.insertMany(data);
 
 ## Update
 
-### update(data)
+### update
 
 Update a single document that matches a given query.
 
@@ -64,7 +64,7 @@ const data = { name: "Udin Edited" };
 const user = await User.where("_id", "65ab7e3d05d58a1ad246ee87").update(data);
 ```
 
-### updateMany(data)
+### updateMany
 
 Update multiple documents that matches a given query.
 
@@ -80,7 +80,7 @@ The `updateMany` method returns the number of affected documents.
 
 ## Delete
 
-### delete()
+### delete
 
 Delete a single document that matches a given query.
 
@@ -90,7 +90,7 @@ import User from "./yourPath/User";
 const user = await User.where("_id", "65ab7e3d05d58a1ad246ee87").delete();
 ```
 
-### deleteMany()
+### deleteMany
 
 Delete multiple documents that matches a given query.
 
@@ -102,7 +102,7 @@ await Flight.where("isActive", false).deleteMany();
 
 The `deleteMany` method returns the number of affected documents.
 
-### destroy(ids)
+### destroy
 
 Delete multiple documents that matches a given ids.
 
@@ -112,7 +112,7 @@ import Flight from "./yourPath/Flight";
 await Flight.destroy("660034987147a7d233501c8a");
 ```
 
-Also you can passing multiple ids.
+Also you can passing multiple records.
 
 ```js
 import Flight from "./yourPath/Flight";
