@@ -1,0 +1,34 @@
+---
+sidebar_position: 2
+title: Inserting and Updating Models
+---
+
+import Sponsor from "../sponsor.mdx";
+
+### Inserts
+
+Of course, when using Mongoloquent, we don't only need to retrieve models from the database. We also need to insert new records. Thankfully, Mongoloquent makes it simple. To insert a new record into the database, you can call the `insert` or `create` method on the model:
+
+```js
+import Flight from "./yourPath/Flight";
+
+const flight = await Flight.create({
+	name: "London to Paris",
+});
+```
+
+### Updates
+
+Updates can be performed against models that match a given query. In this example, all flights that are `active` and have a `destination` of `San Diego` will be marked as delayed:
+
+```js
+await Flight.where("active", true).where("destination", "San Diego").update({
+	delayed: true,
+});
+```
+
+The update method expects an array of column and value pairs representing the columns that should be updated.
+
+---
+
+<Sponsor />

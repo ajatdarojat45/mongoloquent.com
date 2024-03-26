@@ -1,0 +1,61 @@
+---
+sidebar_position: 1
+title: Retrieving Data
+---
+
+import Sponsor from "../sponsor.mdx";
+
+## Retrieving Models
+
+Once you have created a model and its associated database collection, you are ready to start retrieving data from your database. You can think of each Mongoloquent model as a powerful query builder allowing you to fluently query the database collection associated with the model. The model's `all` method will retrieve all of the records from the model's associated database collection:
+
+```js
+import Flight from "./yourPath/Flight";
+
+const flights = await Flight.all();
+
+console.log(flights);
+```
+
+### Building Queries
+
+The Mongoloquent `all` method will return all of the results in the model's collection. However, since each Mongoloquent model serves as a query builder, you may add additional constraints to queries and then invoke the `get` method to retrieve the results:
+
+```js
+const flights = await Flight.where("active", true)
+	.orderBy("name")
+	.take(10)
+	.get();
+
+console.log(flights);
+```
+
+> Since Mongoloquent models are query builders, you should review all of the methods provided by Mongoloquent's [query builder](docs/tutorials/query-builder). You may use any of these methods when writing your Mongoloquent queries.
+
+## Retrieving Single Models / Aggregates
+
+In addition to retrieving all of the records matching a given query, you may also retrieve single records using the `find` or `first` methods. Instead of returning a collection of models, these methods return a single model instance:
+
+```js
+import Flight from "./yourPath/Flight"
+
+// Retrieve a model by its primary key...
+const flight = await Flight.find("65ab7e3d05d58a1ad246ee87");
+
+// Retrieve the first model matching the query constraints...
+const flight = await Flight.where('active', true)->first();
+```
+
+## Retrieving Aggregates
+
+When interacting with Mongoloquent models, you may also use the `count`, `sum`, `max`, and other [aggregate methods](docs/api-references/aggregate-methods) provided by the Mongoloquent [query builder](docs/tutorials/query-builder). As you might expect, these methods return a scalar value instead of an Mongoloquent model instance:
+
+```js
+const count = await Flight.where("active", true).count();
+
+const max = await Flight.where("active", true).max("price");
+```
+
+---
+
+<Sponsor />
