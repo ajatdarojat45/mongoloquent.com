@@ -67,8 +67,7 @@ const price = await Order.max("price");
 Of course, you may combine these methods with other clauses to fine-tune how your aggregate value is calculated:
 
 ```js
-const price = await Order.->where('finalized', 1)
-.avg("price");
+const price = await Order.where("finalized", 1).avg("price");
 ```
 
 ## Select Statements
@@ -151,14 +150,6 @@ The `whereBetween` method verifies that a column's value is between two values:
 const users = await User.whereBetween("votes", [1, 100]).get();
 ```
 
-#### whereNotBetween / orWhereNotBetween
-
-The `whereNotBetween` method verifies that a column's value lies outside of two values:
-
-```js
-const users = await User.whereNotBetween("votes", [1, 100]).get();
-```
-
 #### whereIn / whereNotIn / orWhereIn / orWhereNotIn
 
 The `whereIn` method verifies that a given column's value is contained within the given array:
@@ -227,7 +218,7 @@ const users = await User.offset(10).limit(5).get();
 
 ## Insert Statements
 
-The query also provides an `insert` method that may be used to insert records into the database table. The `insert` method accepts an object of column names and values:
+The query also provides an `insert` method that may be used to insert records into the database collection. The `insert` method accepts an object of column names and values:
 
 ```js
 await User.insert({
@@ -282,14 +273,12 @@ await User.where("votes", ">", 100).delete();
 Also, you can delete multiple documents that match queries by invoking the `deleteMany` method.
 
 ```js
-await User.delete();
-
 await User.where("votes", ">", 100).deleteMany();
 ```
 
 ### Deleting an Existing Data by its Primary Key
 
-if you know the primary key of the model, you may delete the model without explicitly retrieving it by calling the destroy method. In addition to accepting the single primary key, the destroy method will accept multiple primary keys, an array of primary keys, or a collection of primary keys:
+if you know the primary key of the model, you may delete the model without explicitly retrieving it by calling the destroy method. In addition to accepting the single primary key, the destroy method will accept multiple primary keys or an array of primary keys:
 
 ```js
 import Flight from "./yourPath/Flight";
@@ -304,7 +293,7 @@ await Flight.destroy(["20ab7e3d05d58a1ad246ee87", "30ab7e3d05d58a1ad246ee87"]);
 Of course, you may build an Mongoloquent query to delete all models matching your query's criteria. In this example, we will delete all flights that are marked as inactive.
 
 ```js
-const deleted = await Flight.where("active", false).delete();
+const deleted = await Flight.where("active", false).deleteMany();
 ```
 
 ---

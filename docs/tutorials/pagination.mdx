@@ -27,7 +27,7 @@ const user = await User.where("votes", ">", 100).paginate(1, 15);
 
 ### Paginate Results
 
-THe `paginate` method will include meta information such as `total`, `currentPage`, `lastPage`, and more. The result records are available via the data key in the JSON array. Here is an example of the data returned by returning a paginate method:
+THe `paginate` method will include meta information such as `total`, `page`, `lastPage`, and `perPage`. The result records are available via the `data` key in the JSON array. Here is an example of the data returned by returning a paginate method:
 
 ```js
  {

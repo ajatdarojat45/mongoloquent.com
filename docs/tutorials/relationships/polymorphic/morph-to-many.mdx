@@ -7,7 +7,7 @@ title: Many to Many
 
 ### Collection Structure
 
-Many-to-many polymorphic relations are slightly more complicated than "morph one" and "morph many" relationships. For example, a `Post` model and `Video` model could share a polymorphic relation to a `Tag` model. Using a many-to-many polymorphic relation in this situation would allow your application to have a single table of unique tags that may be associated with posts or videos. First, let's examine the table structure required to build this relationship:
+Many-to-many polymorphic relations are slightly more complicated than "morph one" and "morph many" relationships. For example, a `Post` model and `Video` model could share a polymorphic relation to a `Tag` model. Using a many-to-many polymorphic relation in this situation would allow your application to have a single collection of unique tags that may be associated with posts or videos. First, let's examine the collection structure required to build this relationship:
 
 ```
 posts
@@ -34,7 +34,7 @@ taggables
 
 Next, we're ready to define the relationships on the models. The `Post` and `Video` models will both contain a `tags` method that calls the `morphToMany` method provided by the base Mongoloquent model class.
 
-The `morphToMany` method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate table name and the keys it contains, we will refer to the relationship as "taggable":
+The `morphToMany` method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate collection name and the keys it contains, we will refer to the relationship as "taggable":
 
 ```javascript
 import { Mongoloquent } from "mongoloquent";
@@ -79,7 +79,7 @@ class Tag extends Model {
 
 ### Retrieving the Relationship
 
-Once your database table and models are defined, you may access the relationships via your models. For example, to access all of the tags for a post, you may use the `tags` dynamic relationship property:
+Once your database collection and models are defined, you may access the relationships via your models. For example, to access all of the tags for a post, you may use the `tags` dynamic relationship property:
 
 ```javascript
 import Post from "./yourPath/Post";
