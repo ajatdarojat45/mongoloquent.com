@@ -1,48 +1,59 @@
 ---
 sidebar_position: 3
-title: Query methods
+title: Queries
 ---
 
 import Sponsor from "../sponsor.mdx";
 
-### Query methods table
+## Queries
 
-| Method                                                                                                                 | Description                                                                  | Parameters                                           |
-| ---------------------------------------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------- |
-| [`insert(data)`](/docs/tutorials/queries/write-data#insertdata)                                                        | Create a new document with the provided data.                                | `data: obj`                                          |
-| [`create(data)`](/docs/tutorials/queries/write-data#createdata)                                                        | Alias for the `insert` method.                                               | `data: obj`                                          |
-| [`insertMany(data)`](/docs/tutorials/queries/write-data#insertmanydata)                                                | `insertMany` method used to insert documents into the database collection.   | `data: obj[]`                                        |
-| [`update(data)`](/docs/tutorials/queries/write-data#updatedata)                                                        | Update a single document that matches a given query.                         | `data: obj`                                          |
-| [`updateMany(data)`](/docs/tutorials/queries/write-data#updatemanydata)                                                | Update multiple documents that match a given query.                          | `data: obj`                                          |
-| [`delete()`](/docs/tutorials/queries/write-data#delete)                                                                | Delete a single document that matches a given query.                         | -                                                    |
-| [`deleteMany()`](/docs/tutorials/queries/write-data#deletemany)                                                        | Delete multiple documents that matches a given query.                        | -                                                    |
-| [`select(columns)`](/docs/tutorials/queries/read-data#selectcolumns)                                                   | Select specific columns to be displayed in the query results.                | `columns: str or str[]`                              |
-| [`exclude(columns)`](/docs/tutorials/queries/read-data#excludecolumns)                                                 | Exclude specific columns from being displayed in the query results.          | `columns: str or str[]`                              |
-| [`all()`](/docs/tutorials/queries/read-data#all)                                                                       | Retrieve all of the records from the model's associated database collection. | -                                                    |
-| [`get(columns)`](/docs/tutorials/queries/read-data#getcolumns)                                                         | Get the documents matching the query criteria.                               | `columns: str or str[]`                              |
-| [`paginate(page, limit)`](/docs/tutorials/queries/read-data#paginatepage-limit)                                        | Paginate the query results.                                                  | `page: int, limit: int`                              |
-| [`first(columns)`](/docs/tutorials/queries/read-data#firstcolumns)                                                     | Get the first document matching the query criteria.                          | `columns: str or str[]`                              |
-| [`find(id)`](/docs/tutorials/queries/read-data#firstid)                                                                | Find a document by its ID.                                                   | `id: str or ObjectId`                                |
-| [`pluck(column)`](/docs/tutorials/queries/read-data#pluckcolumn)                                                       | Retrieve the values of a specific column from the query results.             | `column: str`                                        |
-| [`limit(value)`](/docs/tutorials/queries/read-data#limitvalue)                                                         | Limit the number of documents to be returned by the query.                   | `value: int`                                         |
-| [`take(value)`](/docs/tutorials/queries/read-data#takevalue)                                                           | Alias for the `limit` method.                                                | `value: int`                                         |
-| [`offset(value)`](/docs/tutorials/queries/read-data#offsetvalue)                                                       | Set an offset for the query results.                                         | `value: int`                                         |
-| [`skip(value)`](/docs/tutorials/queries/read-data#skipvalue)                                                           | Skip a specified number of documents in the query results.                   | `value: int`                                         |
-| [`where(column, operator, value)`](/docs/tutorials/queries/read-data#wherecolumn-operator-value)                       | Add a WHERE clause to the query.                                             | `column: str`, `operator: str`, `value: any`         |
-| [`orWhere(column, operator, value)`](/docs/tutorials/queries/read-data#orwherecolumn-operator-value)                   | Add an OR WHERE clause to the query.                                         | `column: str`, `operator: str`, `value: any`         |
-| [`whereIn(column, values)`](#/docs/tutorials/queries/read-data#wherecolumn-values)                                     | Add a WHERE IN clause to the query.                                          | `column: str`, `values: any[]`                       |
-| [`orWhereIn(column, values)`](#/docs/tutorials/queries/read-data#orwhereincolumn-values)                               | Add an OR WHERE IN clause to the query.                                      | `column: str,` `values: any[]`                       |
-| [`whereNotIn(column, values)`](#/docs/tutorials/queries/read-data#wherenotincolumn-values)                             | Add a WHERE NOT IN clause to the query.                                      | `column: str`, `values: any[]`                       |
-| [`orWhereNotIn(column, values)`](#/docs/tutorials/queries/read-data#orwherenotincolumn-values)                         | Add an OR WHERE NOT IN clause to the query.                                  | `column: str`, `values: any[]`                       |
-| [`whereBetween(column, values)`](#/docs/tutorials/queries/read-data#wherebetweencolumn-values)                         | Add a WHERE BETWEEN clause to the query.                                     | `column: str`, `values: int[]`                       |
-| [`orWhereBetween(column, array values)`](#/docs/tutorials/queries/read-data#orwherebetweencolumn-array-values)         | Add an OR WHERE BETWEEN clause to the query.                                 | `column: str`, `values: int[]`                       |
-| [`orderBy(column, direction?, isSensitive?)`](#/docs/tutorials/queries/read-data#orderbycolumn-direction-issensitive?) | Sort the query results by a specific column.                                 | `column: str`, `direction: str`, `isSensitive: bool` |
-| [`groupBy(column)`](/docs/tutorials/queries/read-data#groupbycolumn)                                                   | Group the query results by specific columns.                                 | `column: str`                                        |
-| [`min(column)`](/docs/tutorials/queries/read-data#mincolumn)                                                           | Retrieve the minimum value of a specific column.                             | `column: str`                                        |
-| [`max(column)`](/docs/tutorials/queries/read-data#maxcolumn)                                                           | Retrieve the maximum value of a specific column.                             | `column: str`                                        |
-| [`sum(column)`](/docs/tutorials/queries/read-data#sumcolumn)                                                           | Calculate the sum of values in a specific column.                            | `column: str`                                        |
-| [`avg(column)`](/docs/tutorials/queries/read-data#avgcolumn)                                                           | Calculate the average value of a specific column.                            | `column: str`                                        |
-| [`count()`](/docs/tutorials/queries/read-data#count)                                                                   | Count the number of documents matching the query criteria.                   | -                                                    |
+| Method                                                                                   | Description                                                                  | Parameters                                           |
+| ---------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ---------------------------------------------------- |
+| [`insert(data)`](/docs/tutorials/query#insert-statements)                                | Create a new document with the provided data.                                | `data: obj`                                          |
+| [`create(data)`](/docs/tutorials/query#insert-statements)                                | Alias for the `insert` method.                                               | `data: obj`                                          |
+| [`insertMany(data)`](/docs/tutorials/query#insert-statements)                            | `insertMany` method used to insert documents into the database collection.   | `data: obj[]`                                        |
+| [`update(data)`](/docs/tutorials/query#update-statements)                                | Update a single document that matches a given query.                         | `data: obj`                                          |
+| [`updateMany(data)`](/docs/tutorials/query#update-statements)                            | Update multiple documents that match a given query.                          | `data: obj`                                          |
+| [`delete()`](/docs/tutorials/query#delete-statements)                                    | Delete a single document that matches a given query.                         | -                                                    |
+| [`deleteMany()`](/docs/tutorials/query#delete-statements)                                | Delete multiple documents that matches a given query.                        | -                                                    |
+| [`destroy(ids)`](/docs/tutorials/query#deleting-an-existing-data-by-its-primary-key)     | Delete one or multiple documents by ids                                      | `ids: id or id[]`                                    |
+| [`select(columns)`](/docs/tutorials/query#specifying-a-select-clause)                    | Select specific columns to be displayed in the query results.                | `columns: str or str[]`                              |
+| [`exclude(columns)`](/docs/next/tutorials/query#specifying-a-exclude-clause)             | Exclude specific columns from being displayed in the query results.          | `columns: str or str[]`                              |
+| [`all()`](/docs/tutorials/query#retrieving-all-rows-from-a-collection)                   | Retrieve all of the records from the model's associated database collection. | -                                                    |
+| [`get(columns)`](/docs/tutorials/query#retrieving-all-rows-from-a-collection)            | Get the documents matching the query criteria.                               | `columns: str or str[]`                              |
+| [`first(columns)`](/docs/tutorials/query#retrieving-a-single-document-from-a-collection) | Get the first document matching the query criteria.                          | `columns: str or str[]`                              |
+| [`find(id)`](/docs/tutorials/query#retrieving-a-single-document-from-a-collection)       | Find a document by its ID.                                                   | `id: str or ObjectId`                                |
+| [`pluck(column)`](/docs/tutorials/query#retrieving-a-list-of-column-values)              | Retrieve the values of a specific column from the query results.             | `column: str`                                        |
+| [`where(column, operator, value)`](/docs/tutorials/query#where-clauses)                  | Add a WHERE clause to the query.                                             | `column: str`, `operator: str`, `value: any`         |
+| [`orWhere(column, operator, value)`](/docs/tutorials/query#or-where-clauses)             | Add an OR WHERE clause to the query.                                         | `column: str`, `operator: str`, `value: any`         |
+| [`whereIn(column, values)`](/docs/tutorials/query#additional-where-clauses)              | Add a WHERE IN clause to the query.                                          | `column: str`, `values: any[]`                       |
+| [`orWhereIn(column, values)`](/docs/tutorials/query#additional-where-clauses)            | Add an OR WHERE IN clause to the query.                                      | `column: str,` `values: any[]`                       |
+| [`whereNotIn(column, values)`](/docs/tutorials/query#additional-where-clauses)           | Add a WHERE NOT IN clause to the query.                                      | `column: str`, `values: any[]`                       |
+| [`orWhereNotIn(column, values)`](/docs/tutorials/query#additional-where-clauses)         | Add an OR WHERE NOT IN clause to the query.                                  | `column: str`, `values: any[]`                       |
+| [`whereBetween(column, values)`](/docs/tutorials/query#additional-where-clauses)         | Add a WHERE BETWEEN clause to the query.                                     | `column: str`, `values: int[]`                       |
+| [`orWhereBetween(column, array values)`](/docs/tutorials/query#additional-where-clauses) | Add an OR WHERE BETWEEN clause to the query.                                 | `column: str`, `values: int[]`                       |
+| [`orderBy(column, direction?, isSensitive?)`](/docs/tutorials/query#ordering)            | Sort the query results by a specific column.                                 | `column: str`, `direction: str`, `isSensitive: bool` |
+| [`groupBy(column)`](/docs/tutorials/query#grouping)                                      | Group the query results by specific columns.                                 | `column: str`                                        |
+
+## Paginations
+
+| Method                                                    | Description                                                | Parameters              |
+| --------------------------------------------------------- | ---------------------------------------------------------- | ----------------------- |
+| [`limit(value)`](/docs/tutorials/query#limit-and-offset)  | Limit the number of documents to be returned by the query. | `value: int`            |
+| [`take(value)`](/docs/tutorials/query#limit-and-offset)   | Alias for the `limit` method.                              | `value: int`            |
+| [`offset(value)`](/docs/tutorials/query#limit-and-offset) | Set an offset for the query results.                       | `value: int`            |
+| [`skip(value)`](/docs/tutorials/query#limit-and-offset)   | Skip a specified number of documents in the query results. | `value: int`            |
+| [`paginate(page, limit)`](/docs/tutorials/pagination)     | Paginate the query results.                                | `page: int, limit: int` |
+
+## Aggregates
+
+| Method                                            | Description                                                | Parameters    |
+| ------------------------------------------------- | ---------------------------------------------------------- | ------------- |
+| [`min(column)`](/docs/tutorials/query#aggregates) | Retrieve the minimum value of a specific column.           | `column: str` |
+| [`max(column)`](/docs/tutorials/query#aggregates) | Retrieve the maximum value of a specific column.           | `column: str` |
+| [`sum(column)`](/docs/tutorials/query#aggregates) | Calculate the sum of values in a specific column.          | `column: str` |
+| [`avg(column)`](/docs/tutorials/query#aggregates) | Calculate the average value of a specific column.          | `column: str` |
+| [`count()`](/docs/tutorials/query#aggregates)     | Count the number of documents matching the query criteria. | -             |
 
 ---
 

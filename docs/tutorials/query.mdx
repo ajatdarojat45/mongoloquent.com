@@ -17,7 +17,13 @@ import User from "./yourPath/User";
 const users = await User.get();
 ```
 
-### Retrieving a Single Row / Column From a Collection
+Also, you can using the `all` method
+
+```js
+const users = await User.all();
+```
+
+### Retrieving a Single Document From a Collection
 
 If you just need to retrieve a single row from a database collection, you may use the Mongoloquent's `first` method. This method will return a single object:
 
@@ -69,7 +75,7 @@ const price = await Order.->where('finalized', 1)
 
 ### Specifying a Select Clause
 
-You may not always want to select all columns from a database table. Using the `select` method, you can specify a custom "select" clause for the query:
+You may not always want to select all columns from a database collection. Using the `select` method, you can specify a custom "select" clause for the query:
 
 ```js
 import User from "./yourPath/User";
@@ -80,16 +86,28 @@ const users = await User.select("name").select("email").get();
 Also, you can passing a array of columns into `select` method
 
 ```js
-import User from "./yourPath/User";
-
 const users = await User.select(["name", "emai"]).get();
+```
+
+### Specifying a Exclude Clause
+
+You may want to exclude specific columns from a database collection. Using the `exclude` method, you can specify a custom "exclude" clause for the query:
+
+```js
+const users = await User.exclude("name").select("email").get();
+```
+
+Also, you can passing a array of columns into `select` method
+
+```js
+const users = await User.exclude(["name", "emai"]).get();
 ```
 
 ## Basic Where Clauses
 
 ### Where Clauses
 
-You may use the query `where` method to add "where" clauses to the query. The most basic call to the `where` method requires three arguments. The first argument is the name of the column. The second argument is an operator, which can be any of the database's [supported operators](test). The third argument is the value to compare against the column's value.
+You may use the query `where` method to add "where" clauses to the query. The most basic call to the `where` method requires three arguments. The first argument is the name of the column. The second argument is an operator, which can be any of the database's [supported operators](/docs/api-references/operator). The third argument is the value to compare against the column's value.
 
 For example, the following query retrieves users where the value of the `votes` column is equal to `100` and the value of the `age` column is greater than `35`:
 
@@ -121,18 +139,6 @@ When chaining together calls to the query `where` method, the "where" clauses wi
 
 ```js
 users = await User.where("votes", ">", 100).orWhere("name", "Jhon").get();
-```
-
-### Where Not Clauses
-
-The `whereNot` and `orWhereNot` methods may be used to negate a given group of query constraints. For example, the following query excludes products that are on clearance or which have a price that is less than ten:
-
-```js
-import Product from "./yourPath/Product";
-
-products = await Product.whereNot("clearance", true)
-	.orWhere("price", "<", 10)
-	.get();
 ```
 
 ### Additional Where Clauses
@@ -230,17 +236,10 @@ await User.insert({
 });
 ```
 
-You may insert several records at once by passing an array of object. Each array represents a record that should be inserted into the table:
+You may insert several records at once by passing an array of object. Each array represents a record that should be inserted into the collection:
 
 ```js
-const user = await User.insert({
-	email: "udin@mail.com",
-	votes: 0,
-});
-```
-
-```js
-await User.insert([
+await User.insertMany([
 	{
 		email: "udin@mail.com",
 		votes: 0,
@@ -262,7 +261,7 @@ await User.where("_id", "03ab7e3d05d58a1ad246ee87").update({
 });
 ```
 
-You may update several records at once by passing an array of object.
+You may update several records by invoked `updateMany`
 
 ```js
 await User.where("votes", 0).updateMany({
@@ -278,6 +277,14 @@ The query `delete` method may be used to delete records from the collection. You
 await User.delete();
 
 await User.where("votes", ">", 100).delete();
+```
+
+Also, you can delete multiple documents that match queries by invoking the `deleteMany` method.
+
+```js
+await User.delete();
+
+await User.where("votes", ">", 100).deleteMany();
 ```
 
 ### Deleting an Existing Data by its Primary Key
