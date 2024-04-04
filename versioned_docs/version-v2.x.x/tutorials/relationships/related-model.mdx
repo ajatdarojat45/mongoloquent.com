@@ -3,8 +3,6 @@ sidebar_position: 7
 title: Inserting and Updating Related Models
 ---
 
-import Sponsor from "../../sponsor.mdx";
-
 ## The `insert` Method
 
 Mongoloquent provides convenient methods for adding new models to relationships. For example, perhaps you need to add a new comment to a post. Instead of manually setting the `postId` attribute on the `Comment` model you may insert the comment using the relationship's `insert` method:
@@ -91,7 +89,3 @@ await user
 	.roles()
 	.sync(["60ab7e3d05d58a1ad246ee60", "70ab7e3d05d58a1ad246ee70"]);
 ```
-
----
-
-<Sponsor />

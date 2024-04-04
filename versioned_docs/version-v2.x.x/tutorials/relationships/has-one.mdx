@@ -3,8 +3,6 @@ sidebar_position: 1
 title: One to One
 ---
 
-import Sponsor from "../../sponsor.mdx";
-
 ## One to One Relationship
 
 A one-to-one relationship is a very basic type of database relationship. For example, a `User` model might be associated with one `Phone` model. To define this relationship, we will place a `phone` method on the `User` model. The `phone` method should call the `hasOne` method and return its result.
@@ -59,7 +57,3 @@ console.log(phone.data);
 ```
 
 When invoking the user method, Mongoloquent will attempt to find a User model that has an `_id` which matches the `userId` column on the Phone model.
-
----
-
-<Sponsor />

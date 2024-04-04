@@ -3,8 +3,6 @@ sidebar_position: 1
 title: One to One
 ---
 
-import Sponsor from "../../../sponsor.mdx";
-
 ## One to One (Polymorphic)
 
 ### Collection Structure
@@ -97,7 +95,3 @@ const video = await User.with("image").find("77bb7e3d05d58a1ad250dd80");
 // your relationship data can accessed in the data property
 console.log(video.data);
 ```
-
----
-
-<Sponsor />
