@@ -54,6 +54,7 @@ function Feature({ title, Svg, description }: FeatureItem) {
 					className={styles.featureSvg}
 					role="img"
 					fill="var(--svg-fill-color)"
+					style={{ maxWidth: "50%" }}
 				/>
 			</div>
 			<div className="text--center padding-horiz--md">

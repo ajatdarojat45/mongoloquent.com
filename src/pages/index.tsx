@@ -6,6 +6,10 @@ import HomepageFeatures from "@site/src/components/HomepageFeatures";
 import Heading from "@theme/Heading";
 
 import styles from "./index.module.css";
+import digicode from "@site/static/img/digicode.png";
+import ideacamp from "@site/static/img/ideacamp.png";
+import digicodeDark from "@site/static/img/digicode_dark.png";
+//className="text--center"
 
 function HomepageHeader() {
 	const { siteConfig } = useDocusaurusContext();
@@ -57,7 +61,27 @@ export default function Home(): JSX.Element {
 						thanks to the sponsors and support by the amazing backers. Please,
 						consider supporting us!
 					</p>
-					<div style={{ marginTop: "50px" }}>
+					<div
+						style={{
+							marginTop: "30px",
+						}}
+					>
+						<Heading as="h3">Partners</Heading>
+						<div
+							style={{
+								backgroundColor: "white",
+								height: "50px",
+							}}
+						>
+							<a href="https://youtube.com/@digicodeacademy" target="_blank">
+								<img style={{ height: "50px", marginRight: "5px" }} src={digicode} />
+							</a>
+							<a href="https://ideacamp.id" target="_blank">
+								<img style={{ height: "50px" }} src={ideacamp} />
+							</a>
+						</div>
+					</div>
+					<div style={{ marginTop: "30px" }}>
 						<Heading as="h3">Sponsors</Heading>
 						<p>-</p>
 					</div>

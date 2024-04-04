@@ -147,7 +147,7 @@ const config: Config = {
 					],
 				},
 			],
-			copyright: `Copyright © ${new Date().getFullYear()} <a href="https://linkedin.com/in/ajatdarojat45" target="_blank">Ajat Darojat</a>. Built with Docusaurus.`,
+			copyright: `Copyright © ${new Date().getFullYear()} <a href="https://linkedin.com/in/ajatdarojat45" target="_blank">Ajat Darojat</a>`,
 		},
 		prism: {
 			theme: prismThemes.github,
