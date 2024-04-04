@@ -3,6 +3,37 @@ sidebar_position: 7
 title: Inserting and Updating Related Models
 ---
 
+## The `insert` Method
+
+Mongoloquent provides convenient methods for adding new models to relationships. For example, perhaps you need to add a new comment to a post. Instead of manually setting the `postId` attribute on the `Comment` model you may insert the comment using the relationship's `insert` method:
+
+```js
+import Post from "./yourPath/Post";
+
+const post = await Post.find("77ab7e3d05d58a1ad246ee87");
+
+await post.comments().save({ message: "A new comment." });
+// or
+await post.comments().insert({ message: "A new comment." });
+```
+
+Note that we did not access the `comments` relationship as a dynamic property. Instead, we called the `comments` method to obtain an instance of the relationship. The save method will automatically add the appropriate `postId` value to the new `Comment` model.
+
+If you need to save multiple related models, you may use the `insertMany` method:
+
+```js
+const post = await Post.find("77ab7e3d05d58a1ad246ee87");
+
+await post
+	.comments()
+	.insertMany([
+		{ message: "A new comment." },
+		{ message: "Another new comment." },
+	]);
+```
+
+You may also use the `save` and `create` methods to create models on relationships.
+
 ## Many to Many Relationships
 
 ### Attaching / Detaching
