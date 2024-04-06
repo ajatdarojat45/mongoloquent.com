@@ -55,7 +55,7 @@ const config: Config = {
 
 	themeConfig: {
 		// Replace with your project's social card
-		image: "img/favicon.png",
+		image: "img/mongoloquent.png",
 		navbar: {
 			title: "Mongoloquent",
 			logo: {
