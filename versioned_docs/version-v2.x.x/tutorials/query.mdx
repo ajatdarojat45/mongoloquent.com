@@ -12,7 +12,13 @@ import Sponsor from "../sponsor.mdx";
 You may use the `class` extended `Mongoloquent` to begin a query. The `class` method returns a fluent query builder instance for the given collection, allowing you to chain more constraints onto the query and then finally retrieve the results of the query using the `get` method:
 
 ```js
-import User from "./yourPath/User";
+import { Mongoloquent } from "mongoloquent";
+
+class User extends Mongoloquent {
+	static collection = "users";
+	static softDelete = true;
+	static timestamp = true;
+}
 
 const users = await User.get();
 ```
@@ -34,7 +40,7 @@ const user = await User.where("name", "Udin").first();
 console.log(user.data);
 ```
 
-To retrieve a single row by its `_id` column value, use the `find` method:
+To retrieve a single row by its `_id` key value, use the `find` method:
 
 ```js
 const user = await User.find("65ab7e3d05d58a1ad246ee87");
@@ -45,7 +51,7 @@ console.log(user.data);
 
 ### Retrieving a List of Column Values
 
-If you would like to retrieve an array containing the values of a single column, you may use the `pluck` method. In this example, we'll retrieve a `array` of user titles:
+If you would like to retrieve an array containing the values of a single key, you may use the `pluck` method. In this example, we'll retrieve a `array` of user titles:
 
 ```js
 const titles = await User.pluck("title");
@@ -53,7 +59,7 @@ const titles = await User.pluck("title");
 
 ## Aggregates
 
-The Mongoloquent query also provides a variety of methods for retrieving aggregate values like `count`, `max`, `min`, `avg`, and `sum`. You may call any of these methods after constructing your query:
+The `Mongoloquent` also provides a variety of methods for retrieving aggregate values like `count`, `max`, `min`, `avg`, and `sum`. You may call any of these methods after constructing your query:
 
 ```js
 import User from "./yourPath/User";
@@ -82,7 +88,7 @@ import User from "./yourPath/User";
 const users = await User.select("name").select("email").get();
 ```
 
-Also, you can passing a array of columns into `select` method
+Also, you can passing a array of keys into `select` method
 
 ```js
 const users = await User.select(["name", "emai"]).get();
@@ -90,13 +96,13 @@ const users = await User.select(["name", "emai"]).get();
 
 ### Specifying a Exclude Clause
 
-You may want to exclude specific columns from a database collection. Using the `exclude` method, you can specify a custom "exclude" clause for the query:
+You may want to exclude specific keys from a database collection. Using the `exclude` method, you can specify a custom "exclude" clause for the query:
 
 ```js
-const users = await User.exclude("name").select("email").get();
+const users = await User.exclude("name").exclude("email").get();
 ```
 
-Also, you can passing a array of columns into `select` method
+Also, you can passing a array of keys into `exclude` method
 
 ```js
 const users = await User.exclude(["name", "emai"]).get();
@@ -106,9 +112,9 @@ const users = await User.exclude(["name", "emai"]).get();
 
 ### Where Clauses
 
-You may use the query `where` method to add "where" clauses to the query. The most basic call to the `where` method requires three arguments. The first argument is the name of the column. The second argument is an operator, which can be any of the database's [supported operators](/docs/api-references/operator). The third argument is the value to compare against the column's value.
+You may use the query `where` method to add "where" clauses to the query. The most basic call to the `where` method requires three arguments. The first argument is the name of the `key`. The second argument is an `operator,` which can be any of the database's [supported operators](/docs/api-references/operator). The third argument is the `value` to compare against the column's value.
 
-For example, the following query retrieves users where the value of the `votes` column is equal to `100` and the value of the `age` column is greater than `35`:
+For example, the following query retrieves users where the value of the `votes` key is equal to `100` and the value of the `age` key is greater than `35`:
 
 ```js
 import User from "./yourPath/User";
@@ -116,7 +122,7 @@ import User from "./yourPath/User";
 const users = await User.where("votes", "=", 100).where("age", ">=", 35).get();
 ```
 
-For convenience, if you want to verify that a column is `=` to a given value, you may pass the value as the second argument to the `where` method. Mongoloquent will assume you would like to use the `=` operator:
+For convenience, if you want to verify that a column is `=` to a given value, you may pass the value as the second argument to the `where` method. `Mongoloquent` will assume you would like to use the `=` operator:
 
 ```js
 const users = await User.where("votes", 100).get();
@@ -144,7 +150,7 @@ users = await User.where("votes", ">", 100).orWhere("name", "Jhon").get();
 
 #### whereBetween / orWhereBetween
 
-The `whereBetween` method verifies that a column's value is between two values:
+The `whereBetween` method verifies that a key's value is between two values:
 
 ```js
 const users = await User.whereBetween("votes", [1, 100]).get();
@@ -152,7 +158,7 @@ const users = await User.whereBetween("votes", [1, 100]).get();
 
 #### whereIn / whereNotIn / orWhereIn / orWhereNotIn
 
-The `whereIn` method verifies that a given column's value is contained within the given array:
+The `whereIn` method verifies that a given key's value is contained within the given array:
 
 ```js
 const users = await User.whereIn("_id", [
@@ -162,7 +168,7 @@ const users = await User.whereIn("_id", [
 ]).get();
 ```
 
-The `whereNotIn` method verifies that the given column's value is not contained in the given array:
+The `whereNotIn` method verifies that the given key's value is not contained in the given array:
 
 ```js
 const users = await User.whereNotIn("_id", [
@@ -178,13 +184,13 @@ const users = await User.whereNotIn("_id", [
 
 #### The orderBy Method
 
-The `orderBy` method allows you to sort the results of the query by a given column. The first argument accepted by the `orderBy` method should be the column you wish to sort by, while the second argument determines the direction of the sort and may be either `asc` or `desc`:
+The `orderBy` method allows you to sort the results of the query by a given key. The first argument accepted by the `orderBy` method should be the key you wish to sort by, while the second argument determines the direction of the sort and may be either `asc` or `desc`:
 
 ```js
 const users = await User.orderBy("name", "desc").get();
 ```
 
-To sort by multiple columns, you may simply invoke `orderBy` as many times as necessary:
+To sort by multiple keys, you may simply invoke `orderBy` as many times as necessary:
 
 ```js
 const users = await User.orderBy("name", "desc").orderBy("email", "asc").get();
@@ -210,7 +216,7 @@ You may use the `skip` and `take` methods to limit the number of results returne
 const users = await User.skip(10).take(5).get();
 ```
 
-Alternatively, you may use the limit and offset methods. These methods are functionally equivalent to the take and skip methods, respectively:
+Alternatively, you may use the `limit` and `offset` methods. These methods are functionally equivalent to the `take` and `skip` methods, respectively:
 
 ```js
 const users = await User.offset(10).limit(5).get();
@@ -218,7 +224,7 @@ const users = await User.offset(10).limit(5).get();
 
 ## Insert Statements
 
-The query also provides an `insert` method that may be used to insert records into the database collection. The `insert` method accepts an object of column names and values:
+The query also provides an `insert` method that may be used to insert records into the database collection. The `insert` method accepts an object of key names and values:
 
 ```js
 await User.insert({
@@ -244,7 +250,7 @@ await User.insertMany([
 
 ## Update Statements
 
-In addition to inserting records into the database, the query can also update existing records using the `update` method. The `update` method, like the `insert` method, accepts an object of column and value pairs indicating the columns to be updated. You may constrain the update query using where clauses:
+In addition to inserting records into the database, the query can also update existing records using the `update` method. The `update` method, like the `insert` method, accepts an object of key and value pairs indicating the keys to be updated. You may constrain the update query using where clauses:
 
 ```js
 await User.where("_id", "03ab7e3d05d58a1ad246ee87").update({
@@ -278,7 +284,7 @@ await User.where("votes", ">", 100).deleteMany();
 
 ### Deleting an Existing Data by its Primary Key
 
-if you know the primary key of the model, you may delete the model without explicitly retrieving it by calling the destroy method. In addition to accepting the single primary key, the destroy method will accept multiple primary keys or an array of primary keys:
+if you know the primary key of the model, you may delete the model without explicitly retrieving it by calling the `destroy` method. In addition to accepting the single primary key, the `destroy` method will accept multiple primary keys or an array of primary keys:
 
 ```js
 import Flight from "./yourPath/Flight";
@@ -290,7 +296,7 @@ await Flight.destroy(["20ab7e3d05d58a1ad246ee87", "30ab7e3d05d58a1ad246ee87"]);
 
 ### Deleting Data Using Queries
 
-Of course, you may build an Mongoloquent query to delete all models matching your query's criteria. In this example, we will delete all flights that are marked as inactive.
+Of course, you may build an Mongoloquent query to delete all models matching your query's criteria. In this example, we will delete all `flights` that are marked as `inactive`.
 
 ```js
 const deleted = await Flight.where("active", false).deleteMany();

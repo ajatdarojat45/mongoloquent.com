@@ -7,11 +7,11 @@ import Sponsor from "../../sponsor.mdx";
 
 ## Many to Many Relationship
 
-Many-to-many relations are slightly more complicated than hasOne and hasMany relationships. An example of a many-to-many relationship is a user that has many roles and those roles are also shared by other users in the application. For example, a user may be assigned the role of "Author" and "Editor"; however, those roles may also be assigned to other users as well. So, a user has many roles and a role has many users.
+Many-to-many relations are slightly more complicated than `hasOne` and `hasMany` relationships. An example of a many-to-many relationship is a user that has many roles and those roles are also shared by other users in the application. For example, a user may be assigned the role of "Author" and "Editor"; however, those roles may also be assigned to other users as well. So, a user has many roles and a role has many users.
 
 ### Collection structure
 
-To define this relationship, three database collections are needed: `users`, `roles`, and `roleUser`. The `roleUser` collection is derived from the alphabetical order of the related model names and contains `userId` and `roleId` columns. This collection is used as an intermediate collection linking the `users` and `roles`.
+To define this relationship, three database collections are needed: `users`, `roles`, and `roleUser`. The `roleUser` collection is derived from the alphabetical order of the related model names and contains `userId` and `roleId` keys. This collection is used as an intermediate collection linking the `users` and `roles`.
 
 Remember, since a role can belong to many users, we cannot simply place a `userId` column on the `roles` collection. This would mean that a role could only belong to a single user. In order to provide support for roles being assigned to multiple users, the `roleUser` collection is needed. We can summarize the relationship's collection structure like so:
 
@@ -32,7 +32,7 @@ roleUser
 
 ### Model Structure
 
-Many-to-many relationships are defined by writing a method that returns the result of the belongsToMany method. For example, let's define a `roles` method on our `User` model. The first argument passed to this method is the name of the related model class:
+Many-to-many relationships are defined by writing a method that returns the result of the `belongsToMany` method. For example, let's define a `roles` method on our `User` model. The first argument passed to this method is the name of the related model class:
 
 ```js
 import { Mongoloquent } from "mongoloquent";
@@ -75,6 +75,24 @@ class Role extends Mongoloquent {
 		return this.belongsToMany(User, RoleUser, "roleId", "userId");
 	}
 }
+```
+
+### Select and Exclude Related Model Keys
+
+Monggoloquent can also `select` or `exclude` certain related model `keys`
+
+```js
+import User from "./yourPath/User";
+
+// with select keys
+await User.with("roles", {
+	select: ["name"],
+}).find("65ab7e3d05d58a1ad246ee87");
+
+// with exclude keys
+await User.with("roles", {
+	exclude: ["name"],
+}).find("65ab7e3d05d58a1ad246ee87");
 ```
 
 ---

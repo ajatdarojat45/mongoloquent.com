@@ -11,7 +11,7 @@ import Sponsor from "../sponsor.mdx";
 
 There are several ways to paginate items. The simplest is by using the `paginate` method. The `paginate` method automatically takes care of setting the query's "limit" and "offset" based on the current page being viewed by the user.
 
-In this example, the only argument passed to the `paginate` method is the number of items you would like displayed "per page". In this case, let's specify that we would like to display `15` items per page:
+The `paginate` method requires two arguments. The first argument is page number and the second argument is the number of items you would like displayed "per page". In this case, let's specify that we would like to display `15` items per page:
 
 ```js
 import User from "./yourPath/User";
@@ -27,7 +27,7 @@ const user = await User.where("votes", ">", 100).paginate(1, 15);
 
 ### Paginate Results
 
-THe `paginate` method will include meta information such as `total`, `page`, `lastPage`, and `perPage`. The result records are available via the `data` key in the JSON array. Here is an example of the data returned by returning a paginate method:
+THe `paginate` method will include meta information such as `total`, `page`, `lastPage`, and `perPage`. The result records are available via the `data` key in the JSON array. Here is an example of the data returned by returning a `paginate` method:
 
 ```js
  {

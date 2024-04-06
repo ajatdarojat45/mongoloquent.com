@@ -3,6 +3,8 @@ sidebar_position: 3
 title: Many to Many
 ---
 
+import Sponsor from "../../../sponsor.mdx";
+
 ## Many to Many (Polymorphic)
 
 ### Collection Structure
@@ -110,4 +112,25 @@ const tag = await Tag.with("posts")
 
 // your relationship data can accessed in the data property
 console.log(tag.data);
+```
+
+### Select and Exclude Related Model Keys
+
+Monggoloquent can also `select` or `exclude` certain related model `keys`
+
+```js
+import Post from "./yourPath/Post";
+
+// with select keys
+await Post.with("tags", {
+	select: ["name"]
+}).find("56ab7e3d05d58a1ad250dd56");
+
+// with exclude keys
+await Post.with("tags", {
+	exclude: ["name"]
+}).find("56ab7e3d05d58a1ad250dd56");
+---
+
+<Sponsor />
 ```

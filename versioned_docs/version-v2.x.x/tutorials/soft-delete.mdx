@@ -60,7 +60,7 @@ await User.where("age", 50).forceDelete();
 
 ### Including Soft Deleted Models
 
-As noted above, soft deleted models will automatically be excluded from query results. However, you may force soft deleted models to be included in a query's results by calling the withTrashed method on the query.
+As noted above, soft deleted models will automatically be excluded from query results. However, you may force soft deleted models to be included in a query's results by calling the `withTrashed` method on the query.
 
 ```js
 import User from "./yourPath/User";

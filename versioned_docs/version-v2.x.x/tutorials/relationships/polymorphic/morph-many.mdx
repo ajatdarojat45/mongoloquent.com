@@ -3,6 +3,8 @@ sidebar_position: 2
 title: One to Many
 ---
 
+import Sponsor from "../../../sponsor.mdx";
+
 ## One to Many (Polymorphic)
 
 ### Collection Structure
@@ -101,4 +103,27 @@ const video = await Video.with("comments").find("11bb7e3d05d58a1ad250dd99");
 
 // your relationship data can accessed in the data property
 console.log(video.data);
+```
+
+### Select and Exclude Related Model Keys
+
+Monggoloquent can also `select` or `exclude` certain related model `keys`
+
+```js
+import Post from "./yourPath/Post";
+
+// with select keys
+await Post.with("comments", {
+	select: ["body"]
+}).find("56ab7e3d05d58a1ad250dd56");
+
+// with exclude keys
+await Post.with("comments", {
+	exclude: ["body"]
+}).find("56ab7e3d05d58a1ad250dd56");
+---
+
+---
+
+<Sponsor />
 ```

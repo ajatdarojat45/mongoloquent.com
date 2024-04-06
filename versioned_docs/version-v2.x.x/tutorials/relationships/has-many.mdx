@@ -7,6 +7,8 @@ import Sponsor from "../../sponsor.mdx";
 
 ## One to Many Relationship
 
+### One to Many
+
 A one-to-many relationship is used to define relationships where a single model is the parent to one or more child models. For example, a blog `post` may have an infinite number of `comments`. Like all other `Mongoloquent` relationships, one-to-many relationships are defined by defining a method on your `Mongoloquent` model.
 
 ```js
@@ -22,7 +24,7 @@ class Post extends Mongoloquent {
 }
 ```
 
-Once the relationship method has been defined, we can access the `collection` of related comments by accessing the comments property in the data property.
+Once the relationship method has been defined, we can access the `collection` of related comments by accessing the `comments` property in the data property.
 
 ```js
 import Post from "./yourPath/Post";
@@ -33,6 +35,22 @@ const post = await Post.with("comments").find("65ab7e3d05d58a1ad246ee87");
 console.log(post.data);
 ```
 
----
+### Select and Exclude Related Model Keys
+
+Monggoloquent can also `select` or `exclude` certain related model `keys`
+
+```js
+import Post from "./yourPath/Post";
+
+// with select keys
+await Post.with("comments", {
+	select: ["text"],
+}).find("65ab7e3d05d58a1ad246ee87");
+
+// with exclude keys
+await Post.with("comments", {
+	exclude: ["text"],
+}).find("65ab7e3d05d58a1ad246ee87");
+```
 
 <Sponsor />
