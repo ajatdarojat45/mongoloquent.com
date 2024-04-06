@@ -7,6 +7,8 @@ import Sponsor from "../../sponsor.mdx";
 
 ## One to Many (Inverse) / Belongs To
 
+### Belongs To
+
 Now that we can access all of a post's comments, let's define a relationship to allow a comment to access its parent post. To define the inverse of a `hasMany` relationship, define a relationship method on the child model which calls the `belongsTo` method:
 
 ```js
@@ -31,6 +33,24 @@ const comment = await Comment.with("post").find("50ab7e3d05d58a1ad246aa87");
 
 // your relationship data can accessed in the data property
 console.log(comment.data);
+```
+
+### Select and Exclude Related Model Keys
+
+Monggoloquent can also `select` or `exclude` certain related model `keys`
+
+```js
+import Comment from "./yourPath/Comment";
+
+// with select keys
+await Comment.with("post", {
+	select: ["title"],
+}).find("50ab7e3d05d58a1ad246aa87");
+
+// with exclude keys
+await Comment.with("comments", {
+	exclude: ["title"],
+}).find("50ab7e3d05d58a1ad246aa87");
 ```
 
 ---

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 title: Inserting and Updating Related Models
 ---
 
@@ -40,14 +40,18 @@ You may also use the `save` and `create` methods to create models on relationshi
 
 ### Attaching / Detaching
 
-Mongoloquent also provides methods to make working with many-to-many relationships more convenient. For example, let's imagine a user can have many roles and a role can have many users. You may use the `attach` method to attach a role to a user by inserting a record in the relationship's intermediate collection:
+Mongoloquent also provides methods to make working with `many-to-many` relationships more convenient. For example, let's imagine a `user` can have many `roles` and a role can have many users. You may use the `attach` method to attach a `role` to a `user` by inserting a record in the relationship's intermediate collection:
 
 ```js
 import User from "./yourPath/User"
 
 const user = await User.find("65ab7e3d05d58a1ad246ee87");
 
+// Attach a single role from the user...
 await user->roles()->attach("60ab7e3d05d58a1ad246ee60");
+
+// Attach multiple roles from the user...
+await user->roles()->attach(["60ab7e3d05d58a1ad246ee60", "60ab7e3d05d58a1ad246ee61"]);
 ```
 
 Sometimes it may be necessary to remove a role from a user. To remove a many-to-many relationship record, use the `detach` method. The `detach` method will delete the appropriate record out of the intermediate collection; however, both models will remain in the database:
@@ -78,7 +82,7 @@ await user
 
 ### Syncing Associations
 
-You may also use the `sync` method to construct many-to-many associations. The `sync` method accepts an array of IDs to place on the intermediate collection. Any IDs that are not in the given array will be removed from the intermediate collection. So, after this operation is complete, only the IDs in the given array will exist in the intermediate collection:
+You may also use the `sync` method to construct `many-to-many` associations. The `sync` method accepts an array of IDs to place on the intermediate collection. Any IDs that are not in the given array will be removed from the intermediate collection. So, after this operation is complete, only the IDs in the given array will exist in the intermediate collection:
 
 ```js
 await user.roles().sync("60ab7e3d05d58a1ad246ee60");

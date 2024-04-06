@@ -27,7 +27,7 @@ images
   imageableType - string
 ```
 
-Note the `imageableId` and `imageableType` columns on the images collection. The `imageableId` column will contain the ID value of the post or user, while the `imageableType` column will contain the class name of the parent model. The `imageableType` column is used by Mongoloquent to determine which "type" of parent model to return when accessing the imageable relation. In this case, the column would contain either `Post` or `User`.
+Note the `imageableId` and `imageableType` keys on the images collection. The `imageableId` column will contain the ID value of the post or user, while the `imageableType` column will contain the class name of the parent model. The `imageableType` column is used by Mongoloquent to determine which "type" of parent model to return when accessing the imageable relation. In this case, the column would contain either `Post` or `User`.
 
 ### Model Structure
 
@@ -96,6 +96,24 @@ const video = await User.with("image").find("77bb7e3d05d58a1ad250dd80");
 
 // your relationship data can accessed in the data property
 console.log(video.data);
+```
+
+### Select and Exclude Related Model Keys
+
+Monggoloquent can also `select` or `exclude` certain related model `keys`
+
+```js
+import Post from "./yourPath/Post";
+
+// with select keys
+await Post.with("image", {
+	select: ["url"],
+}).find("09ab7e3d05d58a1ad250dd80");
+
+// with exclude keys
+await Post.with("image", {
+	exclude: ["url"],
+}).find("09ab7e3d05d58a1ad250dd80");
 ```
 
 ---

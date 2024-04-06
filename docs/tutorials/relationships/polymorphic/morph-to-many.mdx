@@ -114,6 +114,23 @@ const tag = await Tag.with("posts")
 console.log(tag.data);
 ```
 
+### Select and Exclude Related Model Keys
+
+Monggoloquent can also `select` or `exclude` certain related model `keys`
+
+```js
+import Post from "./yourPath/Post";
+
+// with select keys
+await Post.with("tags", {
+	select: ["name"]
+}).find("56ab7e3d05d58a1ad250dd56");
+
+// with exclude keys
+await Post.with("tags", {
+	exclude: ["name"]
+}).find("56ab7e3d05d58a1ad250dd56");
 ---
 
 <Sponsor />
+```
