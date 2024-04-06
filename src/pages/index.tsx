@@ -61,9 +61,14 @@ export default function Home(): JSX.Element {
 						thanks to the sponsors and support by the amazing backers. Please,
 						consider supporting us!
 					</p>
+					<div style={{ marginTop: "30px" }}>
+						<Heading as="h3">Sponsors</Heading>
+						<p>-</p>
+					</div>
 					<div
 						style={{
 							marginTop: "30px",
+							marginBottom: "70px",
 						}}
 					>
 						<Heading as="h3">Partners</Heading>
@@ -80,10 +85,6 @@ export default function Home(): JSX.Element {
 								<img style={{ height: "50px" }} src={ideacamp} />
 							</a>
 						</div>
-					</div>
-					<div style={{ marginTop: "30px" }}>
-						<Heading as="h3">Sponsors</Heading>
-						<p>-</p>
 					</div>
 				</div>
 			</main>
