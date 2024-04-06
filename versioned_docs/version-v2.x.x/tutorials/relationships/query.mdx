@@ -36,7 +36,7 @@ const user = await User.find("10ab7e3d05d58a1ad250dd90");
 const posts = await user.posts().where("active", true).get();
 ```
 
-You are able to use any of the Mongoloquent [query builder's](docs/tutorials/query) methods on the relationship, so be sure to explore the query builder documentation to learn about all of the methods that are available to you.
+You are able to use any of the Mongoloquent [query builder's](/docs/tutorials/query) methods on the relationship, so be sure to explore the query builder documentation to learn about all of the methods that are available to you.
 
 ### Chaining `orWhere` Clauses After Relationships
 
@@ -50,7 +50,7 @@ const posts = await user
 	.get();
 ```
 
-The Mongoloquent [query builder's](docs/tutorials/query) can also use in polymorphic relationships.
+The Mongoloquent [query builder's](/docs/tutorials/query) can also use in polymorphic relationships.
 
 ---
 
