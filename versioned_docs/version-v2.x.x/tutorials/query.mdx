@@ -17,7 +17,7 @@ import { Mongoloquent } from "mongoloquent";
 class User extends Mongoloquent {
 	static collection = "users";
 	static softDelete = true;
-	static timestamp = true;
+	static timestamps = true;
 }
 
 const users = await User.get();
