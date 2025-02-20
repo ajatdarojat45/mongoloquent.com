@@ -1,3 +1,5 @@
+import 'dotenv/config';
+
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
 import type * as Preset from "@docusaurus/preset-classic";
@@ -153,6 +155,25 @@ const config: Config = {
 			theme: prismThemes.github,
 			darkTheme: prismThemes.dracula,
 		},
+
+		// Algolia DocSearch configuration
+		algolia: {
+
+			// The application ID provided by Algolia
+			appId: process.env.ALGOLIA_APP_ID,
+
+			// Public API key: it is safe to commit it
+			apiKey: process.env.ALGOLIA_API_KEY,
+
+			indexName: process.env.ALGOLIA_INDEX_NAME,
+
+			// Optional: see doc section below
+			contextualSearch: true,
+
+			// Optional: path for search page that enabled by default (`false` to disable it)
+			searchPagePath: 'search',
+		}
+
 	} satisfies Preset.ThemeConfig,
 };
 
