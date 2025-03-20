@@ -1,0 +1,594 @@
+---
+sidebar_position: 2
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "./sponsor.mdx";
+
+# Relationships
+
+## Introduction
+
+Database tables are often related to one another. For example, a blog post may have many comments or an order could be related to the user who placed it. Mongoloquent makes managing and working with these relationships easy, and supports a variety of common relationships:
+
+- [One To One](#one-to-one--has-one)
+- [One To Many](#one-to-many--has-many)
+- [Many To Many](#many-to-many-relationships)
+- [Has One Through](#has-one-through)
+- [Has Many Through](#has-many-through)
+- [One To One (Polymorphic)](#one-to-one)
+- [One To Many (Polymorphic)](#one-to-many)
+- [Many To Many (Polymorphic)](#many-to-many)
+
+## Defining Relationships
+
+Mongoloquent relationships are defined as methods on your Mongoloquent model classes. Since relationships also serve as powerful [query builders](#query-builder), defining relationships as methods provides powerful method chaining and querying capabilities. For example, we may chain additional query constraints on this `posts` relationship:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    const posts = await user.posts().where('active', true).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    const posts = await user.posts().where('active', true).get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+But, before diving too deep into using relationships, let's learn how to define each type of relationship supported by Mongoloquent.
+
+### One to One / Has One
+
+A one-to-one relationship is a very basic type of database relationship. For example, a `User` model might be associated with one `Phone` model. To define this relationship, we will place a `phone` method on the `User` model. The `phone` method should call the `hasOne` method and return its result. The `hasOne` method is available to your model via the model's `Mongoloquent Model` base class:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import Phone from './Models/Phone';
+
+    class User extends Mongoloquent {
+      /**
+       * Get the phone associated with the user.
+       */
+      public function phone(){
+        return this.hasOne(Phone, "foreign_key");
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Phone from './Models/Phone';
+
+    class User extends Mongoloquent {
+      /**
+       * Get the phone associated with the user.
+       */
+      public function phone(){
+        return this.hasOne(Phone, "foreign_key");
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+The first argument passed to the `hasOne` method is the name of the related model class. Once the relationship is defined, we may retrieve the related record using Mongoloquent's dynamic methods. Dynamic methods allow you to access relationship methods as if they were methods defined on the model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const phone = await User.find("10ab7e3d05d58a1ad246ee87").phone().first();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const phone = await User.find("10ab7e3d05d58a1ad246ee87").phone().first();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Additionally, Mongoloquent assumes that the foreign key should have a value matching the primary key column of the parent. In other words, Mongoloquent will look for the value of the user's id column in the `user_id` column of the `Phone` record. If you would like the relationship to use a primary key value other than `_id`, you may pass a third argument to the `hasOne` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    return this.hasOne(Phone, 'foreign_key', 'local_key');
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    return this.hasOne(Phone, 'foreign_key', 'local_key');
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Defining the Inverse of the Relationship
+
+So, we can access the `Phone` model from our `User` model. Next, let's define a relationship on the `Phone` model that will let us access the user that owns the phone. We can define the inverse of a `hasOne` relationship using the `belongsTo` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import User from './Models/User';
+
+    class Phone extends Mongoloquent {
+      /**
+       * Get the user that owns the phone.
+       */
+      public function user(){
+        return this.belongsTo(User, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import User from './Models/User';
+
+    class Phone extends Mongoloquent {
+      /**
+       * Get the user that owns the phone.
+       */
+      public function user(){
+        return this.belongsTo(User, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+When invoking the `user` method, Mongoloquent will attempt to find a `User` model that has an `_id` which matches the `user_id` column on the Phone model.
+
+If the parent model does not use `_id` as its primary key, or you wish to find the associated model using a different column, you may pass a third argument to the `belongsTo` method specifying the parent table's custom key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import User from './Models/User';
+
+    class Phone extends Mongoloquent {
+      /**
+       * Get the user that owns the phone.
+       */
+      public function user(){
+        return this.belongsTo(User, 'foreign_key', 'owner_key');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import User from './Models/User';
+
+    class Phone extends Mongoloquent {
+      /**
+       * Get the user that owns the phone.
+       */
+      public function user(){
+        return this.belongsTo(User, 'foreign_key', 'owner_key');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+### One to Many / Has Many
+
+A one-to-many relationship is used to define relationships where a single model is the parent to one or more child models. For example, a blog post may have an infinite number of comments. Like all other Mongoloquent relationships, one-to-many relationships are defined by defining a method on your Mongoloquent model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import Comment from './Models/Comment';
+
+    class Post extends Mongoloquent {
+      /**
+       * Get the comments for the post.
+       */
+      public function comments(){
+        return this.hasMany(Comment, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Comment from './Models/Comment';
+
+    class Post extends Mongoloquent {
+      /**
+       * Get the comments for the post.
+       */
+      public function comments(){
+        return this.hasMany(Comment, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+Once the relationship method has been defined, we can access the [collection](#collection) of related comments by accessing the comments property. Remember, since Mongoloquent provides "dynamic relationship methods", we can access relationship methods as if they were defined as methods on the model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const comments = await Post.find("10ab7e3d05d58a1ad246ee87").comments().get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const comments = await Post.find("10ab7e3d05d58a1ad246ee87").comments().get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Since all relationships also serve as query builders, you may add further constraints to the relationship query by calling the `comments` method and continuing to chain conditions onto the query:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const comment = await Post.find("10ab7e3d05d58a1ad246ee87").comments()
+      .where('title', 'foo')
+      .first();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const comment = await Post.find("10ab7e3d05d58a1ad246ee87").comments()
+      .where('title', 'foo')
+      .first();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Like the `hasOne` method, you may also override the foreign and local keys by passing additional arguments to the `hasMany` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    return this.hasMany(Comment, 'foreign_key');
+
+    return this.hasMany(Comment, 'foreign_key', 'local_key');
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    return this.hasMany(Comment, 'foreign_key');
+
+    return this.hasMany(Comment, 'foreign_key', 'local_key');
+    ```
+
+  </TabItem>
+</Tabs>
+
+### One to Many (Inverse) / Belongs To
+
+Now that we can access all of a post's comments, let's define a relationship to allow a comment to access its parent post. To define the inverse of a `hasMany` relationship, define a relationship method on the child model which calls the `belongsTo` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import Post from './Models/Post';
+
+    class Comment extends Mongoloquent {
+      /**
+       * Get the post that owns the comment.
+       */
+      public function post(){
+        return this.belongsTo(Post, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Post from './Models/Post';
+
+    class Comment extends Mongoloquent {
+      /**
+       * Get the post that owns the comment.
+       */
+      public function post(){
+        return this.belongsTo(Post, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+Once the relationship has been defined, we can retrieve a comment's parent `post` by accessing the post "dynamic relationship method":
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript 
+    import Comment from './Models/Comment';
+
+    const comment = Comment.find("10ab7e3d05d58a1ad246ee87");
+
+    const post = await comment.post().first();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Comment from './Models/Comment';
+
+    const comment = Comment.find("10ab7e3d05d58a1ad246ee87");
+
+    const post = await comment.post().first();
+    ```
+
+  </TabItem>
+</Tabs>
+
+In the example above, Mongoloquent will attempt to find a `Post` model that has an `_id` which matches the `foreign_key` column on the `Comment` model.
+
+If your parent model does not use `_id` as its primary key, or you wish to find the associated model using a different column, you may pass a third argument to the `belongsTo` method specifying your parent table's custom key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript 
+    /**
+     * Get the post that owns the comment.
+     */
+    public function post(){
+      return this.belongsTo(Post, 'foreign_key', 'owner_key');
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    /**
+     * Get the post that owns the comment.
+     */
+    public function post(){
+      return this.belongsTo(Post, 'foreign_key', 'owner_key');
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Has Many Through
+
+The "has-many-through" relationship provides a convenient way to access distant relations via an intermediate relation. For example, let's assume we are building a deployment platform. An `Application` model might access many `Deployment` models through an intermediate `Environment` model. Using this example, you could easily gather all deployments for a given application. Let's look at the tables required to define this relationship:
+
+```
+applications
+  _id - ObjectID
+  name - string
+
+environments
+  _id - ObjectID
+  application_id - ObjectID
+  name - string
+
+deployments
+  _id - ObjectID
+  environment_id - ObjectID
+  commit_hash - string
+```
+
+Now that we have examined the table structure for the relationship, let's define the relationship on the `Application` model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript 
+    import { Mongoloquent } from 'mongoloquent';
+    import Deployment from './Models/Deployment';
+    import Environment from './Models/Environment';
+
+    class Application extends Mongoloquent {
+      /**
+       * Get all of the deployments for the application.
+       */
+      public function deployments(){
+        return this.hasManyThrough(Deployment, Environment, 'foreign_key', 'owner_key');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Deployment from './Models/Deployment';
+    import Environment from './Models/Environment';
+
+    class Application extends Mongoloquent {
+      /**
+       * Get all of the deployments for the application.
+       */
+      public function deployments(){
+        return this.hasManyThrough(Deployment, Environment, 'application_id', 'environment_id');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+The first argument passed to the `hasManyThrough` method is the name of the final model we wish to access, while the second argument is the name of the intermediate model.
+
+#### Key Conventions
+
+Typical Mongoloquent foreign key conventions will be used when performing the relationship's queries. If you would like to customize the keys of the relationship, you may pass them as the third and fourth arguments to the `hasManyThrough` method. The third argument is the name of the foreign key on the intermediate model. The fourth argument is the name of the foreign key on the final model. The fifth argument is the local key, while the sixth argument is the local key of the intermediate model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript 
+    class Application extends Model{
+
+      public function deployments(){
+        return this.hasManyThrough(
+          Deployment,
+          Environment,
+          'application_id', // Foreign key on the environments table...
+          'environment_id', // Foreign key on the deployments table...
+          '_id', // Local key on the applications table...
+          '_id' // Local key on the environments table...
+        );
+      }
+
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    class Application extends Model{
+
+      public function deployments(){
+        return this.hasManyThrough(
+          Deployment,
+          Environment,
+          'application_id', // Foreign key on the environments table...
+          'environment_id', // Foreign key on the deployments table...
+          '_id', // Local key on the applications table...
+          '_id' // Local key on the environments table...
+        );
+      }
+
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Scoped Relationships
+
+It's common to add additional methods to models that constrain relationships. For example, you might add a `featuredPosts` method to a `User` model which constrains the broader `posts` relationship with an additional `where` constraint:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript 
+    import { Mongoloquent } from 'mongoloquent';
+    import Post from './Models/Post';
+
+    class User extends Mongoloquent {
+      /**
+       * Get all of the user's posts.
+       */
+      public function posts(){
+        return this.hasMany(Post, 'foreign_key');
+      }
+
+      /**
+       * Get all of the user's featured posts.
+       */
+      public function featuredPosts(){
+        return this.posts().where('featured', true);
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Post from './Models/Post';
+
+    class User extends Mongoloquent {
+      /**
+       * Get all of the user's posts.
+       */
+      public function posts(){
+        return this.hasMany(Post, 'foreign_key');
+      }
+
+      /**
+       * Get all of the user's featured posts.
+       */
+      public function featuredPosts(){
+        return this.posts().where('featured', true);
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Many to Many Relationships
+
+### Retrieving Intermediate Table Columns
+
+### Filtering Queries via Intermediate Table Columns
+
+### Ordering Queries via Intermediate Table Columns
+
+### Defining Custom Intermediate Table Models
+
+## Polymorphic Relationships
+
+### One to One
+
+### One to Many
+
+### One of Many
+
+### Many to Many
+
+### Custom Polymorphic Types
+
+## Querying Relationships
+
+### Relationship Methods vs. Dynamic Properties
+
+### Querying Relationship Existence
+
+### Querying Relationship Absence
+
+### Querying Morph To Relationships
+
+## Inserting and Updating Related Models
+
+### The save Method
+
+### The create Method
+
+### Belongs To Relationships
+
+### Many to Many Relationships
