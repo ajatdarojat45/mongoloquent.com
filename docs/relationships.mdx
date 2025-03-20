@@ -15,11 +15,10 @@ Database tables are often related to one another. For example, a blog post may h
 - [One To One](#one-to-one--has-one)
 - [One To Many](#one-to-many--has-many)
 - [Many To Many](#many-to-many-relationships)
-- [Has One Through](#has-one-through)
 - [Has Many Through](#has-many-through)
-- [One To One (Polymorphic)](#one-to-one)
-- [One To Many (Polymorphic)](#one-to-many)
-- [Many To Many (Polymorphic)](#many-to-many)
+- [One To One (Polymorphic)](#one-to-one-polymorphic)
+- [One To Many (Polymorphic)](#one-to-many-polymorphic)
+- [Many To Many (Polymorphic)](#many-to-many-polymorphic)
 
 ## Defining Relationships
 
@@ -553,42 +552,1091 @@ It's common to add additional methods to models that constrain relationships. Fo
 
 ## Many to Many Relationships
 
-### Retrieving Intermediate Table Columns
+Many-to-many relations are slightly more complicated than `hasOne` and `hasMany` relationships. An example of a many-to-many relationship is a user that has many roles and those roles are also shared by other users in the application. For example, a user may be assigned the role of "Author" and "Editor"; however, those roles may also be assigned to other users as well. So, a user has many roles and a role has many users.
 
-### Filtering Queries via Intermediate Table Columns
+#### Table Structure
 
-### Ordering Queries via Intermediate Table Columns
+To define this relationship, three database tables are needed: `users`, `roles`, and `role_user`. The `role_user` table is derived from the alphabetical order of the related model names and contains `user_id` and `role_id` columns. This table is used as an intermediate table linking the users and roles.
 
-### Defining Custom Intermediate Table Models
+Remember, since a role can belong to many users, we cannot simply place a `user_id` column on the `roles` table. This would mean that a role could only belong to a single user. In order to provide support for roles being assigned to multiple users, the `role_user` table is needed. We can summarize the relationship's table structure like so:
+
+```
+users
+  _id - ObjectID
+  name - string
+
+roles
+  _id - ObjectID
+  name - string
+
+role_user
+  user_id - ObjectID
+  role_id - ObjectID
+```
+
+#### Model Structure
+
+Many-to-many relationships are defined by writing a method that returns the result of the `belongsToMany` method. The `belongsToMany` method is provided by the `Mongoloquent Model` base class that is used by all of your application's Mongoloquent models. For example, let's define a `roles` method on our `User` model. The first argument passed to this method is the name of the related model class:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript 
+    import { Mongoloquent } from 'mongoloquent';
+    import Role from './Models/Role';
+    import RoleUser from './Models/RoleUser';
+
+    class User extends Mongoloquent {
+      /**
+       * The roles that belong to the user.
+       */
+      public function roles(){
+        return this.belongsToMany(Role, RoleUser, "user_id", "role_id");
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Role from './Models/Role';
+    import RoleUser from './Models/RoleUser';
+
+    class User extends Mongoloquent {
+      /**
+       * The roles that belong to the user.
+       */
+      public function roles(){
+        return this.belongsToMany(Role, RoleUser, "user_id", "role_id");
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+Once the relationship is defined, you may access the user's `roles` using the roles dynamic relationship property:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import User from './Models/User';
+
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    const roles = await user.roles().get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import User from './Models/User';
+
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    const roles = await user.roles().get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Since all relationships also serve as query builders, you may add further constraints to the relationship query by calling the `roles` method and continuing to chain conditions onto the query:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const roles = await user.roles().orderBy('name').get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const roles = await user.roles().orderBy('name').get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also customize the column names of the keys on the table by passing additional arguments to the `belongsToMany` method. The third argument is the foreign key name of the model on which you are defining the relationship, while the fourth argument is the foreign key name of the model that you are joining to:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    return this.belongsToMany(Role, RoleUser, 'user_id', 'role_id');
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    return this.belongsToMany(Role, RoleUser, 'user_id', 'role_id');
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Defining the Inverse of the Relationship
+
+To define the "inverse" of a many-to-many relationship, you should define a method on the related model which also returns the result of the `belongsToMany` method. To complete our user / role example, let's define the `users` method on the `Role` model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import User from './Models/User';
+    import RoleUser from './Models/RoleUser';
+
+    class Role extends Mongoloquent {
+      /**
+       * The users that belong to the role.
+       */
+      public function users(){
+        return this.belongsToMany(User, RoleUser, "role_id", "user_id");
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import User from './Models/User';
+    import RoleUser from './Models/RoleUser';
+
+    class Role extends Mongoloquent {
+      /**
+       * The users that belong to the role.
+       */
+      public function users(){
+        return this.belongsToMany(User, RoleUser, "role_id", "user_id");
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+As you can see, the relationship is defined exactly the same as its `User` model counterpart with the exception of referencing the `Models/User` model. Since we're reusing the `belongsToMany` method, all of the usual table and key customization options are available when defining the "inverse" of many-to-many relationships.
 
 ## Polymorphic Relationships
 
-### One to One
+A polymorphic relationship allows the child model to belong to more than one type of model using a single association. For example, imagine you are building an application that allows users to share blog posts and videos. In such an application, a `Comment` model might belong to both the `Post` and `Video` models.
 
-### One to Many
+### One to One (Polymorphic)
 
-### One of Many
+#### Table Structure
 
-### Many to Many
+A one-to-one polymorphic relation is similar to a typical one-to-one relation; however, the child model can belong to more than one type of model using a single association. For example, a blog `Post` and a `User` may share a polymorphic relation to an `Image` model. Using a one-to-one polymorphic relation allows you to have a single table of unique images that may be associated with posts and users. First, let's examine the table structure:
 
-### Custom Polymorphic Types
+```
+posts
+  _id - ObjectID
+  name - string
+
+users
+  _id - ObjectID
+  name - string
+
+images
+  _id - ObjectID
+  url - string
+  imageable_id - ObjectID
+  imageable_type - string
+```
+
+Note the `imageable_id` and `imageable_type` columns on the `images` collection. The `imageable_id` column will contain the ID value of the post or user, while the `imageable_type` column will contain the class name of the parent model. The `imageable_type` column is used by Mongoloquent to determine which "type" of parent model to return when accessing the `imageable` relation. In this case, the column would contain either `Post` or `User`.
+
+#### Model Structure
+
+Next, let's examine the model definitions needed to build this relationship:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // Image.ts
+    import { Mongoloquent } from 'mongoloquent';
+
+    class Image extends Mongoloquent {
+      protected static $collection: string = 'imagables';
+    }
+
+
+    // Post.ts
+    import { Mongoloquent } from 'mongoloquent';
+    import Image from './Models/Image';
+
+    class Post extends Mongoloquent {
+      protected static $collection: string = 'posts';
+
+      /**
+       * Get the post's image.
+       */
+      public function image(){
+        return this.morphTo(Image, 'imageable');
+      }
+    }
+
+
+    // User.ts
+    import { Mongoloquent } from 'mongoloquent';
+    import Image from './Models/Image';
+
+    class User extends Mongoloquent {
+      protected static $collection: string = 'users';
+
+      /**
+       * Get the user's image.
+       */
+      public function image(){
+        return this.morphTo(Image, 'imageable');
+      }
+    }
+
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    // Image.js
+    import { Mongoloquent } from 'mongoloquent';
+
+    class Image extends Mongoloquent {
+      static $collection = 'imagables';
+    }
+
+
+    // Post.js
+    import { Mongoloquent } from 'mongoloquent';
+    import Image from './Models/Image';
+
+    class Post extends Mongoloquent {
+      static $collection = 'posts';
+
+      /**
+       * Get the post's image.
+       */
+      public function image(){
+        return this.morphTo(Image, 'imageable');
+      }
+    }
+
+
+    // User.js
+    import { Mongoloquent } from 'mongoloquent';
+    import Image from './Models/Image';
+
+    class User extends Mongoloquent {
+      static $collection = 'users';
+
+      /**
+       * Get the user's image.
+       */
+      public function image(){
+        return this.morphTo(Image, 'imageable');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Retrieving the Relationship
+
+Once your database table and models are defined, you may access the relationships via your models. For example, to retrieve the image for a post, we can access the `image` dynamic relationship property:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const image = await post.image().first();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const image = await post.image().first();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### One to Many (Polymorphic)
+
+A one-to-many polymorphic relation is similar to a typical one-to-many relation; however, the child model can belong to more than one type of model using a single association. For example, imagine users of your application can "comment" on posts and videos. Using polymorphic relationships, you may use a single `comments` table to contain comments for both posts and videos. First, let's examine the table structure required to build this relationship:
+
+```
+posts
+  _id - ObjectID
+  title - string
+  body - text
+
+videos
+  _id - ObjectID
+  title - string
+  url - string
+
+comments
+  _id - ObjectID
+  body - text
+  commentable_id - ObjectID
+  commentable_type - string
+```
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // Comment.ts
+    import { Mongoloquent } from 'mongoloquent';
+
+    class Comment extends Mongoloquent {
+      protected static $collection: string = 'comments';
+    }
+
+
+    // Post.ts
+    import { Mongoloquent } from 'mongoloquent';
+    import Comment from './Models/Comment';
+
+    class Post extends Mongoloquent {
+      protected static $collection: string = 'posts';
+
+      /**
+       * Get all of the post's comments.
+       */
+      public function comments(){
+        return this.morphMany(Comment, 'commentable');
+      }
+    }
+
+
+    // Video.ts
+    import { Mongoloquent } from 'mongoloquent';
+    import Comment from './Models/Comment';
+
+    class Video extends Mongoloquent {
+      protected static $collection: string = 'videos';
+
+      /**
+       * Get all of the video's comments.
+       */
+      public function comments(){
+        return this.morphMany(Comment, 'commentable');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    // Comment.js
+    import { Mongoloquent } from 'mongoloquent';
+
+    class Comment extends Mongoloquent {
+      static $collection = 'comments';
+    }
+
+
+    // Post.js
+    import { Mongoloquent } from 'mongoloquent';
+    import Comment from './Models/Comment';
+
+    class Post extends Mongoloquent {
+      static $collection = 'posts';
+
+      /**
+       * Get all of the post's comments.
+       */
+      public function comments(){
+        return this.morphMany(Comment, 'commentable');
+      }
+    }
+
+
+    // Video.js
+    import { Mongoloquent } from 'mongoloquent';
+    import Comment from './Models/Comment';
+
+    class Video extends Mongoloquent {
+      static $collection = 'videos';
+
+      /**
+       * Get all of the video's comments.
+       */
+      public function comments(){
+        return this.morphMany(Comment, 'commentable');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Retrieving the Relationship
+
+Once your database table and models are defined, you may access the relationships via your model's dynamic relationship properties. For example, to access all of the comments for a post, we can use the `comments` dynamic property:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comments = await post.comments().get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comments = await post.comments().get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Many to Many (Polymorphic)
+
+#### Table Structure
+
+Many-to-many polymorphic relations are slightly more complicated than "morph one" and "morph many" relationships. For example, a `Post` model and `Video` model could share a polymorphic relation to a `Tag` model. Using a many-to-many polymorphic relation in this situation would allow your application to have a single table of unique tags that may be associated with posts or videos. First, let's examine the table structure required to build this relationship:
+
+```
+posts
+  _id - ObjectID
+  name - string
+
+videos
+  _id - ObjectID
+  name - string
+
+tags
+  _id - ObjectID
+  name - string
+
+taggables
+  _id - ObjectID
+  tag_id - ObjectID
+  taggable_id - ObjectID
+  taggable_type - string
+
+```
+
+> Before diving into polymorphic many-to-many relationships, you may benefit from reading the documentation on typical [many-to-many relationships](#many-to-many-relationships).
+
+#### Model Structure
+
+Next, we're ready to define the relationships on the models. The `Post` and `Video` models will both contain a `tags` method that calls the `morphToMany` method provided by the base Eloquent model class.
+
+The morphToMany method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate table name and the keys it contains, we will refer to the relationship as "taggable":
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import Tag from './Models/Tag';
+
+    class Post extends Mongoloquent {
+      protected static $collection: string = 'posts';
+
+      /**
+       * Get all of the tags for the post.
+       */
+      public function tags(){
+        return this.morphToMany(Tag, 'taggable');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Tag from './Models/Tag';
+
+    class Post extends Mongoloquent {
+      static $collection = 'posts';
+
+      /**
+       * Get all of the tags for the post.
+       */
+      public function tags(){
+        return this.morphToMany(Tag, 'taggable');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Defining the Inverse of the Relationship
+
+Next, on the `Tag` model, you should define a method for each of its possible parent models. So, in this example, we will define a `posts` method and a `videos` method. Both of these methods should return the result of the `morphedByMany` method.
+
+The `morphedByMany` method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate table name and the keys it contains, we will refer to the relationship as "taggable":
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import Post from './Models/Post';
+    import Video from './Models/Video';
+
+    class Tag extends Mongoloquent {
+      protected static $collection: string = 'tags';
+
+      /**
+       * Get all of the posts that are tagged with the tag.
+       */
+      public function posts(){
+        return this.morphedByMany(Post, 'taggable');
+      }
+
+      /**
+       * Get all of the videos that are tagged with the tag.
+       */
+      public function videos(){
+        return this.morphedByMany(Video, 'taggable');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Post from './Models/Post';
+    import Video from './Models/Video';
+
+    class Tag extends Mongoloquent {
+      static $collection = 'tags';
+
+      /**
+       * Get all of the posts that are tagged with the tag.
+       */
+      public function posts(){
+        return this.morphedByMany(Post, 'taggable');
+      }
+
+      /**
+       * Get all of the videos that are tagged with the tag.
+       */
+      public function videos(){
+        return this.morphedByMany(Video, 'taggable');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Retrieving the Relationship
+
+Once your database table and models are defined, you may access the relationships via your models. For example, to access all of the tags for a post, you may use the `tags` dynamic relationship method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const tags = await post.tags().get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const tags = await post.tags().get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may retrieve the parent of a polymorphic relation from the polymorphic child model by accessing the name of the method that performs the call to `morphedByMany`. In this case, that is the `posts` or `videos` methods on the `Tag` model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Tag from './Models/Tag';
+
+    const tag = Tag.find("10ab7e3d05d58a1ad246ee87");
+
+    const posts = await tag.posts().get();
+
+    const videos = await tag.videos().get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Tag from './Models/Tag';
+
+    const tag = Tag.find("10ab7e3d05d58a1ad246ee87");
+
+    const posts = await tag.posts().get();
+
+    const videos = await tag.videos().get();
+    ```
+
+  </TabItem>
+</Tabs>
 
 ## Querying Relationships
 
-### Relationship Methods vs. Dynamic Properties
+Since all Eloquent relationships are defined via methods, you may call those methods to obtain an instance of the relationship without actually executing a query to load the related models. In addition, all types of Eloquent relationships also serve as [query builders](#query-builders), allowing you to continue to chain constraints onto the relationship query before finally executing the SQL query against your database.
+
+For example, imagine a blog application in which a User model has many associated `Post` models:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+
+    class User extends Mongoloquent {
+      protected static $collection: string = 'users';
+
+      /**
+       * Get all of the posts for the user.
+       */
+      public function posts(){
+        return this.hasMany(Post, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+
+    class User extends Mongoloquent {
+      static $collection = 'users';
+
+      /**
+       * Get all of the posts for the user.
+       */
+      public function posts(){
+        return this.hasMany(Post, 'foreign_key');
+      }
+    }
+
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may query the `posts` relationship and add additional constraints to the relationship like so:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import User from './Models/User';
+
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    const posts = await user.posts().where('active', true).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import User from './Models/User';
+
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    const posts = await user.posts().where('active', true).get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+You are able to use any of the Laravel [query builders](#query-builders) methods on the relationship, so be sure to explore the query builder documentation to learn about all of the methods that are available to you.
+
+#### Chaining `orWhere` Clauses After Relationships
+
+As demonstrated in the example above, you are free to add additional constraints to relationships when querying them. However, use caution when chaining `orWhere` clauses onto a relationship, as the `orWhere` clauses will be logically grouped at the same level as the relationship constraint:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const posts = await user.posts()
+      .where('active', true)
+      .orWhere('votes', '>=', 100)
+      .get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const posts = await user.posts()
+      .where('active', true)
+      .orWhere('votes', '>=', 100)
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
 
 ### Querying Relationship Existence
 
-### Querying Relationship Absence
+When retrieving model records, you may wish to limit your results based on the existence of a relationship. For example, imagine you want to retrieve all blog posts that have at least one comment. To do so, you may pass the name of the relationship to the `with` method:
 
-### Querying Morph To Relationships
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const posts = await Post.with('comments').get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const posts = await Post.with('comments').get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+> Mongoloquent does not currently support querying for relationship existence across databases. The relationships must exist within the same database.
+
+## Eager Loading
+
+We can use eager loading to reduce this operation to just two queries. When building a query, you may specify which relationships should be eager loaded using the `with` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Mongoloquent } from 'mongoloquent';
+    import Author from './Models/Author';
+
+    class Book extends Mongoloquent {
+      protected static $collection: string = 'books';
+
+      /**
+       * Get the author that wrote the book.
+       */
+      public function author(){
+        return this.belongsTo(Author, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from 'mongoloquent';
+    import Author from './Models/Author';
+
+    class Book extends Mongoloquent {
+      static $collection = 'books';
+
+      /**
+       * Get the author that wrote the book.
+       */
+      public function author(){
+        return this.belongsTo(Author, 'foreign_key');
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+Now, let's retrieve all books and their authors:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Book from './Models/Book';
+
+    const books = await Book.with('author').get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Book from './Models/Book';
+
+    const books = await Book.with('author').get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Eager Loading Multiple Relationships
+
+Sometimes you may need to eager load several different relationships.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Book from './Models/Book';
+
+    const books = await Book.with('author').with('publisher').get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Book from './Models/Book';
+
+    const books = await Book.with('author').with('publisher').get();
+    ```
+
+  </TabItem>
+</Tabs>
 
 ## Inserting and Updating Related Models
 
-### The save Method
+### The `save` Method
 
-### The create Method
+Mongoloquent provides convenient methods for adding new models to relationships. For example, perhaps you need to add a new comment to a post. Instead of manually setting the `post_id` attribute on the `Comment` model you may insert the comment using the relationship's `save` method:
 
-### Belongs To Relationships
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments().save({ message: 'A new comment.' });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments().save({ message: 'A new comment.' });
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you need to save multiple related models, you may use the `saveMany` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments().saveMany([
+      { message: 'A new comment.' },
+      { message: 'Another new comment.' }
+    ]);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments().saveMany([
+      { message: 'A new comment.' },
+      { message: 'Another new comment.' }
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+### The `create` Method
+
+In addition to the `save` and `saveMany` methods, you may also use the create method, which accepts an array of attributes, creates a model, and inserts it into the database.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments().create({ message: 'A new comment.' });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments().create({ message: 'A new comment.' });
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may use the `createMany` method to create multiple related models:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments().createMany([
+      { message: 'A new comment.' },
+      { message: 'Another new comment.' }
+    ]);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Post from './Models/Post';
+
+    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments().createMany([
+      { message: 'A new comment.' },
+      { message: 'Another new comment.' }
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
 
 ### Many to Many Relationships
+
+#### Attaching / Detaching
+
+Mongoloquent also provides methods to make working with many-to-many relationships more convenient. For example, let's imagine a user can have many roles and a role can have many users. You may use the attach method to `attach` a role to a user by inserting a record in the relationship's intermediate collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import User from './Models/User';
+
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    await user.roles().attach("10ab7e3d05d58a1ad246ee87");
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import User from './Models/User';
+
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    await user.roles().attach("10ab7e3d05d58a1ad246ee87");
+    ```
+
+  </TabItem>
+</Tabs>
+
+Sometimes it may be necessary to remove a role from a user. To remove a many-to-many relationship record, use the `detach` method. The `detach` method will delete the appropriate record out of the intermediate table; however, both models will remain in the database:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // Detach a single role from the user...
+    await user.roles().detach("10ab7e3d05d58a1ad246ee87");
+    
+    // Detach all roles from the user...
+    await user.roles().detach();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    // Detach a single role from the user...
+    await user.roles().detach("10ab7e3d05d58a1ad246ee87");
+
+    // Detach all roles from the user...
+    await user.roles().detach();
+    ```
+
+  </TabItem>
+</Tabs>
+
+For convenience, `attach` and `detach` also accept arrays of IDs as input:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    await user.roles().detach([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+
+    await user.roles().attach([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = User.find("10ab7e3d05d58a1ad246ee87");
+
+    await user.roles().detach([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+
+    await user.roles().attach([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Syncing Associations
+
+You may also use the `sync` method to construct many-to-many associations. The `sync` method accepts an array of IDs to place on the intermediate collection. Any IDs that are not in the given array will be removed from the intermediate collection. So, after this operation is complete, only the IDs in the given array will exist in the intermediate collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await user.roles().sync([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await user.roles().sync([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+---
+
+<Sponsor />
