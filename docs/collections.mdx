@@ -375,6 +375,370 @@ The `chunk` method breaks the collection into multiple, smaller collections of a
   </TabItem>
 </Tabs>
 
+### collect()
+
+The `collect` method returns a new `Collection` instance with the items currently in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collectionA = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+    ]);
+
+    const collectionB = collectionA.collect();
+
+    collectionB.all();
+
+    // [{foo: 1}, {foo: 2}, {foo: 3}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collectionA = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+    ]);
+
+    const collectionB = collectionA.collect();
+
+    collectionB.all();
+
+    // [{foo: 1}, {foo: 2}, {foo: 3}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+### concat()
+
+The concat method appends the given array or collection's values onto the end of another collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([{foo: 1}]);
+
+    const concatenated = collection.concat([
+      {foo: 2},
+      {foo: 3},
+    ]);
+
+    concatenated.all();
+
+    // [{foo: 1}, {foo: 2}, {foo: 3}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([{foo: 1}]);
+
+    const concatenated = collection.concat([
+      {foo: 2},
+      {foo: 3},
+    ]);
+
+    concatenated.all();
+
+    // [{foo: 1}, {foo: 2}, {foo: 3}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+### contains()
+
+The `contains` method determines whether the collection contains a given item. You may pass a closure to the `contains` method to determine if an element exists in the collection matching a given truth test:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    collection.contains((item) => {
+      return item.foo > 5;
+    })
+
+    // false
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    collection.contains((item) => {
+      return item.foo > 5;
+    })
+
+    // false
+    ```
+
+  </TabItem>
+</Tabs>
+
+Alternatively, You may pass a key / value pair to the `contains` method, which will determine if the given pair exists in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {name: "Desk", price: 100}
+    ]);
+
+    collection.contains("Desk");
+
+    // true
+
+    collection.contains("New York");
+
+    // false
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {name: "Desk", price: 100}
+    ]);
+
+    collection.contains("Desk");
+
+    // true
+
+    collection.contains("New York");
+
+    // false
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `contains` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the `containsStrict` method to filter using "strict" comparisons.
+
+> For the inverse of `contains`, see the [doesntContain](#doesntcontain) method.
+
+### containsStrict()
+
+This method has the same signature as the `contains` method; however, all values are compared using "strict" comparisons.
+
+### count()
+
+The `count` method returns the total number of items in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    collection.count();
+
+    // 4
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    collection.count();
+
+    // 4
+    ```
+
+  </TabItem>
+</Tabs>
+
+### countBy()
+
+The `countBy` method counts the occurrences of values in the collection. By default, the method counts the occurrences of every element, allowing you to count certain "types" of elements in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 2},
+      {foo: 2},
+      {foo: 3},
+    ]);
+
+    collection.countBy("foo");
+
+    // {1: 1, 2: 3, 3: 1}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 2},
+      {foo: 2},
+      {foo: 3},
+    ]);
+
+    collection.countBy("foo");
+
+    // {1: 1, 2: 3, 3: 1}
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may pass a closure to the `countBy` method to count all items by a custom value:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {email: "ajat@gmail.com"},
+      {email: "udin@yahoo.com"},
+      {email: "kosasih@gamil.com"}
+    ]);
+
+    const counted = collection.countBy((item) => {
+      return item.email.split("@")[1];
+    });
+
+    counted.all();
+
+    // {gmail.com: 2, yahoo.com: 1}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {email: "ajat@gmail.com"},
+      {email: "udin@yahoo.com"},
+      {email: "kosasih@gamil.com"}
+    ]);
+
+    const counted = collection.countBy((item) => {
+      return item.email.split("@")[1];
+    });
+
+    counted.all();
+
+    // {gmail.com: 2, yahoo.com: 1}
+    ```
+
+  </TabItem>
+</Tabs>
+
+### doesntContain()
+
+The `doesntContain` method determines whether the collection does not contain a given item. You may pass a closure to the `doesntContain` method to determine if an element does not exist in the collection matching a given truth test:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    collection.doesntContain((item) => {
+      return item.foo < 5;
+    })
+
+    // false
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    collection.doesntContain((item) => {
+      return item.foo < 5;
+    })
+
+    // false
+    ```
+
+  </TabItem>
+</Tabs>
+
+Alternatively, You may also pass a key / value pair to the doesntContain method, which will determine if the given pair does not exist in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200}
+      {product: "Chair", price: 100}
+    ]);
+
+    collection.doesntContain("name", "Bookcase");
+
+    // true
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200}
+      {product: "Chair", price: 100}
+    ]);
+
+    collection.doesntContain("name", "Bookcase");
+
+    // true
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Higher Order Messages
 
 ## Lazy Collections
