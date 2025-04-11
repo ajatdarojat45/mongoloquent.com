@@ -739,6 +739,786 @@ Alternatively, You may also pass a key / value pair to the doesntContain method,
   </TabItem>
 </Tabs>
 
+### dump()
+
+The dump method dumps the collection's items:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: "Ajat"},
+      {foo: "Udin"},
+    ]);
+
+    collection.dump();
+
+    /*
+      [
+        {foo: "Ajat"},
+        {foo: "Udin"},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: "Ajat"},
+      {foo: "Udin"},
+    ]);
+
+    collection.dump();
+
+    /*
+      [
+        {foo: "Ajat"},
+        {foo: "Udin"},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### duplicates()
+
+The `duplicates` method retrieves and returns duplicate values from the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: "a"},
+      {foo: "b"},
+      {foo: "a"},
+      {foo: "c"},
+      {foo: "b"},
+    ]);
+
+    collection.duplicates("foo");
+
+    // {a: 2, b: 2}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: "a"},
+      {foo: "b"},
+      {foo: "a"},
+      {foo: "c"},
+      {foo: "b"},
+    ]);
+
+    collection.duplicates("foo");
+
+    // {a: 2, b: 2}
+    ```
+
+  </TabItem>
+</Tabs>
+
+### each()
+
+The `each` method iterates over the items in the collection and passes each item to a closure:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    collection.each((item) => {
+      // ...
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    collection.each((item) => {
+      // ...
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you would like to stop iterating through the items, you may return `false` from your closure:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collection.each((item) => {
+      if (/* condition */) {
+        return false;
+      }
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collection.each((item) => {
+      if (/* condition */) {
+        return false;
+      }
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+### isEvery()
+
+The `isEvery` method may be used to verify that all elements of a collection pass a given truth test:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+    ]).isEvery((item) => {
+      return item.foo > 2;
+    });
+
+    // false
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+    ]).isEvery((item) => {
+      return item.foo > 2;
+    });
+
+    // false
+    ```
+
+  </TabItem>
+</Tabs>
+
+If the collection is empty, the `every` method will return true:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([])
+    
+    collection.isEvery((item) => {
+      return item.foo > 2;
+    });
+
+    // true
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([])
+    
+    collection.isEvery((item) => {
+      return item.foo > 2;
+    });
+
+    // true
+    ```
+
+  </TabItem>
+</Tabs>
+
+### except()
+
+The `except` method returns all items in the collection except for those with the specified keys:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {productId: 1, price: 100, discount: false},
+    ]);
+
+    const filtered = collection.except(["price", "discount"]);
+
+    filtered.all();
+
+    // {productId: 1}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {productId: 1, price: 100, discount: false},
+    ]);
+
+    const filtered = collection.except(["price", "discount"]);
+
+    filtered.all();
+
+    // {productId: 1}
+    ```
+
+  </TabItem>
+</Tabs>
+
+For the inverse of `except`, see the [only](#only) method.
+
+### first()
+
+The `first` method returns the first element in the collection that passes a given truth test:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]).first((item) => {
+      return item.foo > 2;
+    });
+
+    // {foo: 3}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]).first((item) => {
+      return item.foo > 2;
+    });
+
+    // {foo: 3}
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also call the `first` method with no arguments to get the first element in the collection. If the collection is empty, `null` is returned:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]).first();
+
+    // {foo: 1}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]).first();
+
+    // {foo: 1}
+    ```
+
+  </TabItem>
+</Tabs>
+
+### firstOrFail()
+
+The `firstOrFail` method is identical to the first method; however, if no result is found, `MongoloquentItemNotFoundException` exception will be thrown:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]).first(item => {
+      return item.foo > 5;
+    });
+
+    // MongoloquentItemNotFoundException
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]).first(item => {
+      return item.foo > 5;
+    });
+
+    // MongoloquentItemNotFoundException
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also call the `firstOrFail` method with no arguments to get the first element in the collection. If the collection is empty, an `MongoloquentItemNotFoundException` exception will be thrown:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collect<IData>([]).first(item => {
+      return item.foo > 5;
+    });
+
+    // MongoloquentItemNotFoundException
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collect([]).first(item => {
+      return item.foo > 5;
+    });
+
+    // MongoloquentItemNotFoundException
+    ```
+
+  </TabItem>
+</Tabs>
+
+### firstWhere()
+
+The `firstWhere` method returns the first element in the collection with the given key / value pair:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {name: "Regena", age: null},
+      {name: "Linda", age: 14},
+      {name: "Diego", age: 23},
+      {name: "Linda", age: 84},
+    ]);
+
+    collection.firstWhere("name", "Linda");
+
+    // {name: "Linda", age: 14}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {name: "Regena", age: null},
+      {name: "Linda", age: 14},
+      {name: "Diego", age: 23},
+      {name: "Linda", age: 84},
+    ]);
+
+    collection.firstWhere("name", "Linda");
+
+    // {name: "Linda", age: 14}
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also call the `firstWhere` method with a comparison operator:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collection.firstWhere("age", ">=", 18);
+
+    // {name: "Diego", age: 23}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collection.firstWhere("age", ">=", 18);
+
+    // {name: "Diego", age: 23}
+    ```
+
+  </TabItem>
+</Tabs>
+
+### forget()
+
+The `forget` method removes an item from the collection by its key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([{name: "Ajat", framework: "Mongoloquent"}]);
+
+    // Forget a single key
+    collection.forget("name");
+
+    // {framework: "Mongoloquent"}
+
+    // Forget multiple keys
+    collection.forget(["name", "framework"]);
+
+    // {}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect<IData>([{name: "Ajat", framework: "Mongoloquent"}]);
+
+    // Forget a single key
+    collection.forget("name");
+
+    // {framework: "Mongoloquent"}
+
+    // Forget multiple keys
+    collection.forget(["name", "framework"]);
+
+    // {}
+    ```
+
+  </TabItem>
+</Tabs>
+
+### forPage()
+
+The `forPage` method returns a new collection containing the items that would be present on a given page number. The method accepts the page number as its first argument and the number of items to show per page as its second argument:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+      {foo: 6},
+      {foo: 7},
+      {foo: 8},
+      {foo: 9},
+    ]);
+
+    const chunk = collection.forPage(2, 3);
+
+    chunk.all();
+
+    // [{foo: 4}, {foo: 5}, {foo: 6}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+      {foo: 6},
+      {foo: 7},
+      {foo: 8},
+      {foo: 9},
+    ]);
+
+    const chunk = collection.forPage(2, 3);
+
+    chunk.all();
+
+    // [{foo: 4}, {foo: 5}, {foo: 6}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+### groupBy()
+
+The `groupBy` method groups the collection's items by a given key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      { accountId: "account-x10", product: "Chair" },
+      { accountId: "account-x10", product: "Bookcase" },
+      { accountId: "account-x11", product: "Desk" },
+    ]);
+
+    const grouped = collection.groupBy("accountId");
+
+    grouped.all();
+
+    /*
+    [
+      {
+        "account-x10": [
+          {
+            "accountId": "account-x10",
+            "product": "Chair"
+          },
+          {
+            "accountId": "account-x10",
+            "product": "Bookcase"
+          }
+        ]
+      },
+      {
+        "account-x11": [
+          {
+            "accountId": "account-x11",
+            "product": "Desk"
+          }
+        ]
+      }
+    ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      { accountId: "account-x10", product: "Chair" },
+      { accountId: "account-x10", product: "Bookcase" },
+      { accountId: "account-x11", product: "Desk" },
+    ]);
+
+    const grouped = collection.groupBy("accountId");
+
+    grouped.all();
+
+    /*
+    [
+      {
+        "account-x10": [
+          {
+            "accountId": "account-x10",
+            "product": "Chair"
+          },
+          {
+            "accountId": "account-x10",
+            "product": "Bookcase"
+          }
+        ]
+      },
+      {
+        "account-x11": [
+          {
+            "accountId": "account-x11",
+            "product": "Desk"
+          }
+        ]
+      }
+    ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+Instead of passing a string `key`, you may pass a callback. The callback should return the value you wish to key the group by:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const grouped = collection.groupBy((item => {
+      return item.accountId.substring(8);
+    }));
+
+    grouped.all();
+
+    /*
+    [
+      {
+        "x10": [
+          {
+            "accountId": "account-x10",
+            "product": "Chair"
+          },
+          {
+            "accountId": "account-x10",
+            "product": "Bookcase"
+          }
+        ]
+      },
+      {
+        "x11": [
+          {
+            "accountId": "account-x11",
+            "product": "Desk"
+          }
+        ]
+      }
+    ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const grouped = collection.groupBy((item => {
+      return item.accountId.substring(8);
+    }));
+
+    grouped.all();
+
+    /*
+    [
+      {
+        "x10": [
+          {
+            "accountId": "account-x10",
+            "product": "Chair"
+          },
+          {
+            "accountId": "account-x10",
+            "product": "Bookcase"
+          }
+        ]
+      },
+      {
+        "x11": [
+          {
+            "accountId": "account-x11",
+            "product": "Desk"
+          }
+        ]
+      }
+    ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### has()
+
+The `has` method determines if a given key exists in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([{accountId: 1, product: "Desk", amount: 5}]);
+
+    collection.has("product");
+
+    // true
+
+    collection.has(["product", "amount"]);
+
+    // true
+
+    collection.has("amount", "price");
+
+    // false
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([{accountId: 1, product: "Desk", amount: 5}]);
+
+    collection.has("product");
+
+    // true
+
+    collection.has(["product", "amount"]);
+
+    // true
+
+    collection.has("amount", "price");
+
+    // false
+    ```
+
+  </TabItem>
+</Tabs>
+
+### hasAny()
+
+The `hasAny` method determines whether any of the given keys exist in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([{accountId: 1, product: "Desk", amount: 5}]);
+
+    collection.hasAny(["product", "price"]);
+
+    // true
+
+    collection.hasAny(["name", "price"]);
+
+    // false
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([{accountId: 1, product: "Desk", amount: 5}]);
+
+    collection.hasAny(["product", "price"]);
+
+    // true
+
+    collection.hasAny(["name", "price"]);
+
+    // false
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Higher Order Messages
 
 ## Lazy Collections
