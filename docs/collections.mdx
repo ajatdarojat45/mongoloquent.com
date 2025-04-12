@@ -3303,6 +3303,529 @@ The `splitIn` method breaks a collection into the given number of groups, fillin
   </TabItem>
 </Tabs>
 
+### sum()
+
+The `sum` method returns the sum of all items in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]).sum("foo");
+
+    // 15
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]).sum("foo");
+
+    // 15
+    ```
+
+  </TabItem>
+</Tabs>
+
+If the collection contains nested arrays or objects, you should pass a key that will be used to determine which values to sum:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {'name': 'JavaScript: The Good Parts', 'pages': 176},
+      {'name': 'JavaScript: The Definitive Guide', 'pages': 1096},
+    ]);
+
+    collection.sum('pages');
+
+    // 1272
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {'name': 'JavaScript: The Good Parts', 'pages': 176},
+      {'name': 'JavaScript: The Definitive Guide', 'pages': 1096},
+    ]);
+
+    collection.sum('pages');
+
+    // 1272
+    ```
+
+  </TabItem>
+</Tabs>
+
+In addition, you may pass your own closure to determine which values of the collection to sum:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {name: "Chair", colors: ["Black"]},
+      {name: "Desk", colors: ["Black", "Mahogany"]},
+      {name: "Bookcase", colors: ["Red", "Beige", "Brown"]},
+    ]);
+
+    collection.sum((item) => {
+      return item.colors.length;
+    });
+
+    // 6
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+
+    const collection = collect([
+      {name: "Chair", colors: ["Black"]},
+      {name: "Desk", colors: ["Black", "Mahogany"]},
+      {name: "Bookcase", colors: ["Red", "Beige", "Brown"]},
+    ]);
+
+    collection.sum((item) => {
+      return item.colors.length;
+    });
+
+    // 6
+    ```
+
+  </TabItem>
+</Tabs>
+
+### take()
+
+The `take` method returns a new collection with the specified number of items:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 0}
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const taken = collection.take(3);
+
+    taken.all();
+
+    // [{foo: 0}, {foo: 1}, {foo: 2}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 0}
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const taken = collection.take(3);
+
+    taken.all();
+
+    // [{foo: 0}, {foo: 1}, {foo: 2}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also pass a negative integer to take the specified number of items from the end of the collection:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 0}
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const taken = collection.take(-2);
+
+    taken.all();
+
+    // [{foo: 4}, {foo: 5}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 0}
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const taken = collection.take(-2);
+
+    taken.all();
+
+    // [{foo: 4}, {foo: 5}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+### takeUntil()
+
+The `takeUntil` method returns items in the collection until the given callback returns `true`:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.takeUntil((item) => {
+      return item.foo >= 3;
+    });
+
+    subset.all();
+
+    // [{foo: 1}, {foo: 2}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.takeUntil((item) => {
+      return item.foo >= 3;
+    });
+
+    subset.all();
+
+    // [{foo: 1}, {foo: 2}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also pass a simple value to the `takeUntil` method to get the items until the given value is found:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.takeUntil(3);
+
+    subset.all();
+
+    // [{foo: 1}, {foo: 2}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.takeUntil(3);
+
+    subset.all();
+
+    // [{foo: 1}, {foo: 2}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+> If the given value is not found or the callback never returns `true`, the `takeUntil` method will return all items in the collection.
+
+### takeWhile()
+
+The `takeWhile` method returns items in the collection until the given callback returns `false`:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.takeWhile((item) => {
+      return item.foo < 3;
+    });
+
+    subset.all();
+
+    // [{foo: 1}, {foo: 2}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.takeWhile((item) => {
+      return item.foo < 3;
+    });
+
+    subset.all();
+
+    // [{foo: 1}, {foo: 2}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+> If the callback never returns `false`, the `takeWhile` method will return all items in the collection.
+
+### transform()
+
+The `transform` method iterates over the collection and calls the given callback with each item in the collection. The items in the collection will be replaced by the values returned by the callback:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const transformed = collection.transform((item) => {
+      return item.foo * 2;
+    });
+
+    transformed.all();
+
+    // [2, 4, 6, 8, 10]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const transformed = collection.transform((item) => {
+      return item.foo * 2;
+    });
+
+    transformed.all();
+
+    // [2, 4, 6, 8, 10]
+    ```
+
+  </TabItem>  
+</Tabs>
+
+The `unique` method returns all of the unique items in the collection. The returned collection keeps the original array keys, so in the following example we will use the [values](#values) method to reset the keys to consecutively numbered indexes:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 1},
+      {foo: 2},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 2},
+    ]);
+
+    const unique = collection.unique("foo");
+
+    unique.all();
+
+    // [{foo: 1}, {foo: 2}, {foo: 3}, {foo: 4}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 1},
+      {foo: 2},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 2},
+    ]);
+
+    const unique = collection.unique("foo");
+
+    unique.all();
+
+    // [{foo: 1}, {foo: 2}, {foo: 3}, {foo: 4}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+When dealing with nested arrays or objects, you may specify the key used to determine uniqueness:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {name: 'iPhone 6', brand: 'Apple', type: 'phone'},
+      {name: 'iPhone 5', brand: 'Apple', type: 'phone'},
+      {name: 'Apple Watch', brand: 'Apple', type: 'watch'},
+      {name: 'Galaxy S6', brand: 'Samsung', type: 'phone'},
+      {name: 'Galaxy Gear', brand: 'Samsung', type: 'watch'}
+    ]);
+
+    const unique = collection.unique('brand');
+
+    unique.all();
+
+    /*
+      [
+        {name: 'iPhone 6', brand: 'Apple', type: 'phone'},
+        {name: 'Galaxy S6', brand: 'Samsung', type: 'phone'}
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {name: 'iPhone 6', brand: 'Apple', type: 'phone'},
+      {name: 'iPhone 5', brand: 'Apple', type: 'phone'},
+      {name: 'Apple Watch', brand: 'Apple', type: 'watch'},
+      {name: 'Galaxy S6', brand: 'Samsung', type: 'phone'},
+      {name: 'Galaxy Gear', brand: 'Samsung', type: 'watch'}
+    ]);
+
+    const unique = collection.unique('brand');
+
+    unique.all();
+
+    /*
+      [
+        {name: 'iPhone 6', brand: 'Apple', type: 'phone'},
+        {name: 'Galaxy S6', brand: 'Samsung', type: 'phone'}
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+Finally, you may also pass your own closure to the `unique` method to specify which value should determine an item's uniqueness:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const unique = collection.unique(function (item) {
+      return item.brand + item.type;
+    });
+
+    unique.all();
+
+    /*
+      [
+        {name: 'iPhone 6', brand: 'Apple', type: 'phone'},
+        {name: 'Apple Watch', brand: 'Apple', type: 'watch'},
+        {name: 'Galaxy S6', brand: 'Samsung', type: 'phone'},
+        {name: 'Galaxy Gear', brand: 'Samsung', type: 'watch'}
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const unique = collection.unique(function (item) {
+      return item.brand + item.type;
+    });
+
+    unique.all();
+
+    /*
+      [
+        {name: 'iPhone 6', brand: 'Apple', type: 'phone'},
+        {name: 'Apple Watch', brand: 'Apple', type: 'watch'},
+        {name: 'Galaxy S6', brand: 'Samsung', type: 'phone'},
+        {name: 'Galaxy Gear', brand: 'Samsung', type: 'watch'}
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Higher Order Messages
 
 ## Lazy Collections
