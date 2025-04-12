@@ -1995,6 +1995,806 @@ The `mapWithKeys` method iterates through the collection and passes each value t
   </TabItem>
 </Tabs>
 
+### max()
+
+The `max` method returns the maximum value of a given key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const max = collect<IData>([
+      {foo: 10},
+      {foo: 20},
+    ]).max("foo");
+
+    // 20
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const max = collect([
+      {foo: 10},
+      {foo: 20},
+    ]).max("foo");
+
+    // 20
+    ```
+
+  </TabItem>
+</Tabs>
+
+### median()
+
+The `median` method returns the [median value](https://en.wikipedia.org/wiki/Median) of a given key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const median = collect<IData>([
+      {foo: 10},
+      {foo: 10},
+      {foo: 20},
+      {foo: 40},
+    ]).median("foo");
+
+    // 15
+
+    const median = collect<IData>([
+      {foo: 1},
+      {foo: 1},
+      {foo: 2},
+      {foo: 4},
+    ]).median("foo");
+
+    // 1.5
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const median = collect<IData>([
+      {foo: 10},
+      {foo: 10},
+      {foo: 20},
+      {foo: 40},
+    ]).median("foo");
+
+    // 15
+
+    const median = collect<IData>([
+      {foo: 1},
+      {foo: 1},
+      {foo: 2},
+      {foo: 4},
+    ]).median("foo");
+
+    // 1.5
+    ```
+
+  </TabItem>
+</Tabs>
+
+### min()
+
+The `min` method returns the minimum value of a given key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const min = collect<IData>([
+      {foo: 10},
+      {foo: 20},
+    ]).min("foo");
+
+    // 10
+
+    const min = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]).min("foo");
+
+    // 1
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const min = collect([
+      {foo: 10},
+      {foo: 20},
+    ]).min("foo");
+
+    // 10
+
+    const min = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]).min("foo");
+
+    // 1
+    ```
+
+  </TabItem>
+</Tabs>
+
+### multiply()
+
+The `multiply` method creates the specified number of copies of all items in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = collect<IData>([
+      {name: "User #1", email: "user1@example.com"},
+      {name: "User #2", email: "user2@example.com"}
+    ]).multiply(3);
+
+    /*
+      [
+        {name: "User #1", email: "user1@example.com"},
+        {name: "User #2", email: "user2@example.com"},
+        {name: "User #1", email: "user1@example.com"},
+        {name: "User #2", email: "user2@example.com"},
+        {name: "User #1", email: "user1@example.com"},
+        {name: "User #2", email: "user2@example.com"}
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const users = collect<IData>([
+      {name: "User #1", email: "user1@example.com"},
+      {name: "User #2", email: "user2@example.com"}
+    ]).multiply(3);
+
+    /*
+      [
+        {name: "User #1", email: "user1@example.com"},
+        {name: "User #2", email: "user2@example.com"},
+        {name: "User #1", email: "user1@example.com"},
+        {name: "User #2", email: "user2@example.com"},
+        {name: "User #1", email: "user1@example.com"},
+        {name: "User #2", email: "user2@example.com"}
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### nth()
+
+The `nth` method creates a new collection consisting of every n-th element:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: "a"},
+      {foo: "b"},
+      {foo: "c"},
+      {foo: "d"},
+      {foo: "e"},
+      {foo: "f"},
+    ]);
+
+    collection.nth(4);
+
+    /*
+      [
+        {
+          "foo": "a"
+        },
+        {
+          "foo": "e"
+        }
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: "a"},
+      {foo: "b"},
+      {foo: "c"},
+      {foo: "d"},
+      {foo: "e"},
+      {foo: "f"},
+    ]);
+
+    collection.nth(4);
+
+    /*
+      [
+        {
+          "foo": "a"
+        },
+        {
+          "foo": "e"
+        }
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may optionally pass a starting offset as the second argument:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collection.nth(4, 1);
+
+    /*
+      [
+        {
+          "foo": "b"
+        },
+        {
+          "foo": "f"
+        }
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collection.nth(4, 1);
+
+    /*
+      [
+        {
+          "foo": "b"
+        },
+        {
+          "foo": "f"
+        }
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### only()
+
+The `only` method returns the items in the collection with the specified keys:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {
+        productId: 1,
+        name: "Desk",
+        price: 100,
+        discount: false,
+      },
+    ]);
+
+    const filtered = collection.only(["productId", "name"]);
+
+    filtered.all();
+
+    // {productId: 1, name: "Desk"}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {
+        productId: 1,
+        name: "Desk",
+        price: 100,
+        discount: false,
+      },
+    ]);
+
+    const filtered = collection.only(["productId", "name"]);
+
+    filtered.all();
+
+    // {productId: 1, name: "Desk"}
+    ```
+
+  </TabItem>
+</Tabs>
+
+For the inverse of `only`, see the [except](#except) method.
+
+### pluck()
+
+The pluck method retrieves all of the values for a given key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {productId: 1, name: "Desk"},
+      {productId: 2, name: "Chair"},
+    ]);
+
+    const plucked = collection.pluck("name");
+
+    plucked.all();
+
+    // ["Desk", "Chair"]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {productId: 1, name: "Desk"},
+      {productId: 2, name: "Chair"},
+    ]);
+
+    const plucked = collection.pluck("name");
+
+    plucked.all();
+
+    // ["Desk", "Chair"]
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also pass multiple keys to the `pluck` method.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {productId: 1, name: "Desk"},
+      {productId: 2, name: "Chair"},
+    ]);
+
+    const plucked = collection.pluck("name", "productId");
+
+    plucked.all();
+
+    /*
+      {
+        "mame": "Desk",
+        "productId": 1
+      },
+      {
+        "mame": "Chair",
+        "productId": 2
+      }
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {productId: 1, name: "Desk"},
+      {productId: 2, name: "Chair"},
+    ]);
+
+    const plucked = collection.pluck("name", "productId");
+
+    plucked.all();
+
+    /*
+      {
+        "mame": "Desk",
+        "productId": 1
+      },
+      {
+        "mame": "Chair",
+        "productId": 2
+      }
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### pull()
+
+The pull `method` removes and returns an item from the collection by its key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([{productId: "prod-100", name: "Desk"}]);
+
+    collection.pull("name");
+
+    // Desk
+
+    collection.all();
+
+    // {productId: "prod-100"}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([{productId: "prod-100", name: "Desk"}]);
+
+    collection.pull("name");
+
+    // Desk
+
+    collection.all();
+
+    // {productId: "prod-100"}
+    ```
+
+  </TabItem>
+</Tabs>
+
+### random()
+
+The random `method` returns a random item from the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    collection.random();
+
+    // {foo: 4} - (retrived randomly)
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    collection.random();
+
+    // {foo: 4} - (retrived randomly)
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may pass an integer to `random` to specify how many items you would like to randomly retrieve. A collection of items is always returned when explicitly passing the number of items you wish to receive:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const random = collection.random(3)
+
+    // [{foo: 2}, {foo: 4}, {foo: 5}] - (retrived randomly)
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const random = collection.random(3)
+
+    // [{foo: 2}, {foo: 4}, {foo: 5}] - (retrived randomly)
+    ```
+
+  </TabItem>
+</Tabs>
+
+If the collection instance has fewer items than requested, the random method will throw an `MongoloquentInvalidArgumentException`.
+
+### range()
+
+The `range` method returns a collection containing integers between the specified range:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+      {foo: 6},
+    ]).range("foo", [3, 6]);
+
+    collection.all();
+
+    // [{foo: 3}, {foo: 4}, {foo: 5}, {foo: 6}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+      {foo: 6},
+    ]).range("foo", [3, 6]);
+
+    collection.all();
+
+    // [{foo: 3}, {foo: 4}, {foo: 5}, {foo: 6}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+### select()
+
+The select method selects the given keys from the collection, similar to an SQL `SELECT` statement:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = collect<IData>([
+      {name: "Ajat Darojat", role: "Developer", status: "active"},
+      {name: "Udin", role: "Developer", status: "active"},
+    ]);
+
+    users.select(["name", "role"]).all();
+
+    /*
+      [
+        {name: "Ajat Darojat", role: "Developer"},
+        {name: "Udin", role: "Developer"},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const users = collect<IData>([
+      {name: "Ajat Darojat", role: "Developer", status: "active"},
+      {name: "Udin", role: "Developer", status: "active"},
+    ]);
+
+    users.select(["name", "role"]).all();
+
+    /*
+      [
+        {name: "Ajat Darojat", role: "Developer"},
+        {name: "Udin", role: "Developer"},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### shuffle()
+
+The `shuffle` method randomly shuffles the items in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const shuffled = collection.shuffle();
+
+    shuffled.all();
+
+    // [{foo: 4}, {foo: 1}, {foo: 3}, {foo: 5}, {foo: 2}] - (retrived randomly)
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const shuffled = collection.shuffle();
+
+    shuffled.all();
+
+    // [{foo: 4}, {foo: 1}, {foo: 3}, {foo: 5}, {foo: 2}] - (retrived randomly)
+    ```
+
+  </TabItem>
+</Tabs>
+
+### skip()
+
+The `skip` method returns a new collection, with the given number of elements removed from the beginning of the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+      {foo: 6},
+      {foo: 7},
+      {foo: 8},
+      {foo: 9},
+      {foo: 10},
+    ]);
+
+    const skipped = collection.skip(4);
+
+    skipped.all();
+
+    // [{foo: 5}, {foo: 6}, {foo: 7}, {foo: 8}, {foo: 9}, {foo: 10}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+     const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+      {foo: 6},
+      {foo: 7},
+      {foo: 8},
+      {foo: 9},
+      {foo: 10},
+    ]);
+
+    const skipped = collection.skip(4);
+
+    skipped.all();
+
+    // [{foo: 5}, {foo: 6}, {foo: 7}, {foo: 8}, {foo: 9}, {foo: 10}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+### skipUntil()
+
+The `skipUntil` method skips over items from the collection while the given callback returns `false`. Once the callback returns `true` all of the remaining items in the collection will be returned as a new collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.skipUntil((item) => {
+      return item.foo >= 3;
+    });
+
+    subset.all();
+
+    // [{foo: 3}, {foo: 4}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.skipUntil((item) => {
+      return item.foo >= 3;
+    });
+
+    subset.all();
+
+    // [{foo: 3}, {foo: 4}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+> If the given value is not found or the callback never returns `true`, the `skipUntil` method will return an empty collection.
+
+### skipWhile()
+
+The `skipWhile` method skips over items from the collection while the given callback returns `true`. Once the callback returns `false` all of the remaining items in the collection will be returned as a new collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.skipWhile((item) => {
+      return item.foo <= 3;
+    });
+
+    subset.all();
+
+    // [{foo: 4}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]);
+
+    const subset = collection.skipWhile((item) => {
+      return item.foo <= 3;
+    });
+
+    subset.all();
+
+    // [{foo: 4}]
+    ```
+
+  </TabItem>
+</Tabs>
+
+> If the callback never returns `false`, the `skipWhile` method will return an empty collection.
+
 ## Higher Order Messages
 
 ## Lazy Collections
@@ -2006,3 +2806,7 @@ The `mapWithKeys` method iterates through the collection and passes each value t
 ### The Enumerable Contract
 
 ### Lazy Collection Methods
+
+```
+
+```
