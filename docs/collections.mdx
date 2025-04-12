@@ -2795,6 +2795,514 @@ The `skipWhile` method skips over items from the collection while the given call
 
 > If the callback never returns `false`, the `skipWhile` method will return an empty collection.
 
+### sliding()
+
+The sliding method returns a new collection of chunks representing a "sliding window" view of the items in the collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const chunks = collection.sliding(2);
+
+    chunks.all();
+
+    /*
+      [
+        [{foo: 1}, {foo: 2}],
+        [{foo: 2}, {foo: 3}],
+        [{foo: 3}, {foo: 4}],
+        [{foo: 4}, {foo: 5}],
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const chunks = collection.sliding(2);
+
+    chunks.all();
+
+    /*
+      [
+        [{foo: 1}, {foo: 2}],
+        [{foo: 2}, {foo: 3}],
+        [{foo: 3}, {foo: 4}],
+        [{foo: 4}, {foo: 5}],
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may optionally pass a second "step" value, which determines the distance between the first item of every chunk:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const chunks = collection.sliding(3, 2);
+
+    chunks.all();
+
+    /*
+      [
+        [{foo: 1}, {foo: 2}, {foo: 3}],
+        [{foo: 3}, {foo: 4}, {foo: 5}],
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const chunks = collection.sliding(3, 2);
+
+    chunks.all();
+
+    /*
+      [
+        [{foo: 1}, {foo: 2}, {foo: 3}],
+        [{foo: 3}, {foo: 4}, {foo: 5}],
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### sole()
+
+The `sole` method returns the first element in the collection that passes a given truth test, but only if the truth test matches exactly one element:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]).sole((item) => {
+      return item.foo === 2;
+    });
+
+    // {foo: 2}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+    ]).sole((item) => {
+      return item.foo === 2;
+    });
+
+    // {foo: 2}
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also pass a key / value pair to the `sole` method, which will return the first element in the collection that matches the given pair, but only if it exactly one element matches:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 100},
+    ])
+
+    collection.sole({product: "Chair"});
+
+    // {product: "Chair", price: 100}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 100},
+    ])
+
+    collection.sole({product: "Chair"});
+
+    // {product: "Chair", price: 100}
+    ```
+
+  </TabItem>
+</Tabs>
+
+If there are no elements in the collection that should be returned by the `sole` method, an `MongoloquentItemNotFoundException` exception will be thrown.
+
+### sortBy()
+
+The `sortBy` method sorts the collection by the given key. The sorted collection keeps the original array keys, so in the following example we will use the `values` method to reset the keys to consecutively numbered indexes:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {name: "Desk", price: 200},
+      {name: "Chair", price: 100},
+    ]);
+
+    const sorted = collection.sortBy("price")
+
+    sorted.all();
+
+    /*
+      [
+        {name: "Chair", price: 100},
+        {name: "Desk", price: 200},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {name: "Desk", price: 200},
+      {name: "Chair", price: 100},
+    ]);
+
+    const sorted = collection.sortBy("price")
+
+    sorted.all();
+
+    /*
+      [
+        {name: "Chair", price: 100},
+        {name: "Desk", price: 200},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+The sortBy method accepts `sort flags` as its second argument:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const colletion = collect<IData>([
+      {title: "Item 1"},
+      {title: "Item 12"},
+      {title: "Item 3"},
+    ]);
+
+    const sorted = collection.sortBy("title", "asc");
+
+    sorted.all();
+
+    /*
+      [
+        {title: "Item 1"},
+        {title: "Item 12"},
+        {title: "Item 3"},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const colletion = collect<IData>([
+      {title: "Item 1"},
+      {title: "Item 12"},
+      {title: "Item 3"},
+    ]);
+
+    const sorted = collection.sortBy("title", "asc");
+
+    sorted.all();
+
+    /*
+      [
+        {title: "Item 1"},
+        {title: "Item 12"},
+        {title: "Item 3"},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### sortByDesc()
+
+This method has the same signature as the [sortBy](#sortby) method, but will sort the collection in the opposite order.
+
+### sortDesc()
+
+This method will sort the collection in the opposite order as the `sort` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 5},
+      {foo: 3},
+      {foo: 1},
+      {foo: 2},
+      {foo: 4},
+    ]);
+
+    const sorted = collection.sortDesc();
+
+    sorted.all();
+
+    /*
+      [
+        {foo: 5},
+        {foo: 4},
+        {foo: 3},
+        {foo: 2},
+        {foo: 1},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect<IData>([
+      {foo: 5},
+      {foo: 3},
+      {foo: 1},
+      {foo: 2},
+      {foo: 4},
+    ]);
+
+    const sorted = collection.sortDesc();
+
+    sorted.all();
+
+    /*
+      [
+        {foo: 5},
+        {foo: 4},
+        {foo: 3},
+        {foo: 2},
+        {foo: 1},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### split()
+
+The `split` method breaks a collection into the given number of groups:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const split = collection.split(3);
+
+    split.all();
+
+    /*
+      [
+        [
+          {foo: 1},
+          {foo: 2}
+        ],
+        [
+          {foo: 3},
+          {foo: 4}
+        ],
+        [
+          {foo: 5}
+        ]
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+    ]);
+
+    const split = collection.split(3);
+
+    split.all();
+
+    /*
+      [
+        [
+          {foo: 1},
+          {foo: 2}
+        ],
+        [
+          {foo: 3},
+          {foo: 4}
+        ],
+        [
+          {foo: 5}
+        ]
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### splitIn()
+
+The `splitIn` method breaks a collection into the given number of groups, filling non-terminal groups completely before allocating the remainder to the final group:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+      {foo: 6},
+      {foo: 7},
+      {foo: 8},
+      {foo: 9},
+      {foo: 10},
+    ]);
+
+    const split = collection.splitIn(3);
+
+    split.all();
+
+    /*
+      [
+        [
+          {foo: 1},
+          {foo: 2},
+          {foo: 3}
+        ],
+        [
+          {foo: 4},
+          {foo: 5},
+          {foo: 6}
+        ],
+        [
+          {foo: 7},
+          {foo: 8},
+          {foo: 9},
+          {foo: 10}
+        ]
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {foo: 1},
+      {foo: 2},
+      {foo: 3},
+      {foo: 4},
+      {foo: 5},
+      {foo: 6},
+      {foo: 7},
+      {foo: 8},
+      {foo: 9},
+      {foo: 10},
+    ]);
+
+    const split = collection.splitIn(3);
+
+    split.all();
+
+    /*
+      [
+        [
+          {foo: 1},
+          {foo: 2},
+          {foo: 3}
+        ],
+        [
+          {foo: 4},
+          {foo: 5},
+          {foo: 6}
+        ],
+        [
+          {foo: 7},
+          {foo: 8},
+          {foo: 9},
+          {foo: 10}
+        ]
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Higher Order Messages
 
 ## Lazy Collections
