@@ -3826,6 +3826,436 @@ Finally, you may also pass your own closure to the `unique` method to specify wh
   </TabItem>
 </Tabs>
 
+### value()
+
+The `value` method retrieves a given value from the first element of the collection:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200}, 
+      {product: "Speaker", price: 400},
+    ]);
+
+    const value = collection.value("pice");
+
+    // 200
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {product: "Desk", price: 200}, 
+      {product: "Speaker", price: 400},
+    ]);
+
+    const value = collection.value("pice");
+
+    // 200
+    ```
+
+  </TabItem>
+</Tabs>
+
+### where()
+
+The `where` method filters the collection by a given key / value pair:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 100},
+      {product: "Bookcase", price: 150},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.where("price", 100);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Chair", price: 100},
+        {product: "Door", price: 100},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 100},
+      {product: "Bookcase", price: 150},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.where("price", 100);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Chair", price: 100},
+        {product: "Door", price: 100},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `where` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value.
+
+Optionally, you may pass a comparison operator as the second parameter. Supported operators are: 'eq', 'ne', 'gt', 'lt', 'gte', 'lte', 'in', 'nin', 'regex':
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {name: "Jim", deleted_at: "2019-01-01 00:00:00"},
+      {name: "Saly", deleted_at: "2019-01-02 00:00:00"},
+      {name: "Sue", deleted_at: null},
+    ]);
+
+    const filtered = collection.where("deleted_at", "ne", null);
+
+    filtered.all();
+
+    /*
+      [
+        {name: "Jim", deleted_at: "2019-01-01 00:00:00"},
+        {name: "Saly", deleted_at: "2019-01-02 00:00:00"},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {name: "Jim", deleted_at: "2019-01-01 00:00:00"},
+      {name: "Saly", deleted_at: "2019-01-02 00:00:00"},
+      {name: "Sue", deleted_at: null},
+    ]);
+
+    const filtered = collection.where("deleted_at", "ne", null);
+
+    filtered.all();
+
+    /*
+      [
+        {name: "Jim", deleted_at: "2019-01-01 00:00:00"},
+        {name: "Saly", deleted_at: "2019-01-02 00:00:00"},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### whereBetween()
+
+The `whereBetween` method filters the collection by determining if a specified item value is within a given range:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 80},
+      {product: "Bookcase", price: 150},
+      {product: "Pencil", price: 30},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.whereBetween("price", [100, 200]);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Desk", price: 200},
+        {product: "Bookcase", price: 150},
+        {product: "Door", price: 100},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 80},
+      {product: "Bookcase", price: 150},
+      {product: "Pencil", price: 30},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.whereBetween("price", [100, 200]);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Desk", price: 200},
+        {product: "Bookcase", price: 150},
+        {product: "Door", price: 100},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### whereIn()
+
+The `whereIn` method removes elements from the collection that do not have a specified item value that is contained within the given array:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 100},
+      {product: "Bookcase", price: 150},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.whereIn("price", [150, 200]);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Desk", price: 200},
+        {product: "Bookcase", price: 150},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 100},
+      {product: "Bookcase", price: 150},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.whereIn("price", [150, 200]);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Desk", price: 200},
+        {product: "Bookcase", price: 150},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### whereNotBetween()
+
+The `whereNotBetween` method filters the collection by determining if a specified item value is outside of a given range:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 80},
+      {product: "Bookcase", price: 150},
+      {product: "Pencil", price: 30},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.whereNotBetween("price", [100, 200]);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Chair", price: 80},
+        {product: "Pencil", price: 30},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 80},
+      {product: "Bookcase", price: 150},
+      {product: "Pencil", price: 30},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.whereNotBetween("price", [100, 200]);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Chair", price: 80},
+        {product: "Pencil", price: 30},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### whereNotIn()
+
+The `whereNotIn` method removes elements from the collection that have a specified item value that is contained within the given array:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 100},
+      {product: "Bookcase", price: 150},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.whereNotIn("price", [150, 200]);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Chair", price: 100},
+        {product: "Door", price: 100},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {product: "Desk", price: 200},
+      {product: "Chair", price: 100},
+      {product: "Bookcase", price: 150},
+      {product: "Door", price: 100},
+    ]);
+
+    const filtered = collection.whereNotIn("price", [150, 200]);
+
+    filtered.all();
+
+    /*
+      [
+        {product: "Chair", price: 100},
+        {product: "Door", price: 100},
+      ]
+    */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### whereNotNull()
+
+The `whereNotNull` method returns items from the collection where the given key is not null:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {name: "Desk"},
+      {name: null},
+      {name: "Bookcase"},
+    ]);
+
+    const filtered = collection.whereNotNull("name");
+
+    filtered.all();
+
+    /*
+      [
+        {name: "Desk"},
+        {name: "Bookcase"},
+      ]
+    */
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+
+    const collection = collect([
+      {name: "Desk"},
+      {name: null},
+      {name: "Bookcase"},
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+### whereNull()
+
+The `whereNull` method returns items from the collection where the given key is null:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect<IData>([
+      {name: "Desk"},
+      {name: null},
+      {name: "Bookcase"},
+    ]);
+
+    const filtered = collection.whereNull("name");
+
+    filtered.all();
+
+    // [{name: null}]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([
+      {name: "Desk"},
+      {name: null},
+      {name: "Bookcase"},
+    ]);
+
+    const filtered = collection.whereNull("name");
+
+    filtered.all();
+
+    // [{name: null}]
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Higher Order Messages
 
 ## Lazy Collections
