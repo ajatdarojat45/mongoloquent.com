@@ -320,34 +320,26 @@ The `collect` method returns a new `Collection` instance with the items currentl
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collectionA = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-    ]);
+    const collectionA = collect([1, 2, 3]);
 
     const collectionB = collectionA.collect();
 
     collectionB.all();
 
-    // [{foo: 1}, {foo: 2}, {foo: 3}]
+    // [1, 2, 3]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collectionA = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-    ]);
+    const collectionA = collect([1, 2, 3]);
 
     const collectionB = collectionA.collect();
 
     collectionB.all();
 
-    // [{foo: 1}, {foo: 2}, {foo: 3}]
+    // [1, 2, 3]
     ```
 
   </TabItem>
