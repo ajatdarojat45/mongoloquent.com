@@ -85,7 +85,7 @@ The `after` method returns the item after the given item. `null` is returned if 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<number>([1,2,3,4,5])
+    const collection = collect([1,2,3,4,5])
 
     collection.after(3);
 
@@ -118,7 +118,7 @@ This method searches for the given item using "loose" comparison, meaning a stri
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<number>([1,2,3,4,5]).after("4", true);
+    collect([1,2,3,4,5]).after("4", true);
 
     // null
     ```
@@ -139,7 +139,7 @@ Alternatively, you may provide your own closure to search for the first item tha
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<number>([2, 4, 6, 8]).after(function (item) {
+    collect([2, 4, 6, 8]).after(function (item) {
       return item > 5;
     });
 
@@ -166,7 +166,7 @@ The `all` method returns the underlying array represented by the collection:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<number>([1, 2, 3]).all();
+    collect([1, 2, 3]).all();
  
     // [1, 2, 3]
     ```
@@ -184,7 +184,7 @@ The `all` method returns the underlying array represented by the collection:
 
 ### average()
 
-Alias for the `avg` method.
+Alias for the [avg](#avg) method.
 
 ### avg()
 
