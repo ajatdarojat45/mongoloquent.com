@@ -522,15 +522,11 @@ The `countBy` method counts the occurrences of values in the collection. By defa
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 2},
-      {foo: 2},
-      {foo: 3},
-    ]);
+    const collection = collect([1, 2, 2, 2, 3]);
 
-    collection.countBy("foo");
+    const counted = collection.countBy();
+
+    counted.all();
 
     // {1: 1, 2: 3, 3: 1}
     ```
@@ -539,15 +535,11 @@ The `countBy` method counts the occurrences of values in the collection. By defa
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 2},
-      {foo: 2},
-      {foo: 3},
-    ]);
+    const collection = collect([1, 2, 2, 2, 3]);
 
-    collection.countBy("foo");
+    const counted = collection.countBy();
+
+    counted.all();
 
     // {1: 1, 2: 3, 3: 1}
     ```
@@ -560,11 +552,7 @@ You may pass a closure to the `countBy` method to count all items by a custom va
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {email: "ajat@gmail.com"},
-      {email: "udin@yahoo.com"},
-      {email: "kosasih@gamil.com"}
-    ]);
+    const collection = collect(["alice@gmail.com", "bob@yahoo.com", "carlos@gmail.com",]);
 
     const counted = collection.countBy((item) => {
       return item.email.split("@")[1];
@@ -579,11 +567,7 @@ You may pass a closure to the `countBy` method to count all items by a custom va
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {email: "ajat@gmail.com"},
-      {email: "udin@yahoo.com"},
-      {email: "kosasih@gamil.com"}
-    ]);
+    const collection = collect(["alice@gmail.com", "bob@yahoo.com", "carlos@gmail.com",]);
 
     const counted = collection.countBy((item) => {
       return item.email.split("@")[1];
@@ -604,17 +588,45 @@ The `doesntContain` method determines whether the collection does not contain a 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     collection.doesntContain((item) => {
-      return item.foo < 5;
-    })
+      return item < 5;
+    });
+
+    // false
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([1, 2, 3, 4, 5]);
+
+    collection.doesntContain((item) => {
+      return item < 5;
+    });
+
+    // false
+    ```
+
+  </TabItem>
+</Tabs>
+
+Alternatively, you may pass a string to the doesntContain method to determine whether the collection does not contain a given item value:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect([
+      {product: "Desk", price: 200}
+    ]);
+
+    collection.doesntContain("Table");
+
+    // true
+
+    collection.doesntContain("Desk");
 
     // false
     ```
@@ -624,16 +636,14 @@ The `doesntContain` method determines whether the collection does not contain a 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
     const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
+      {product: "Desk", price: 200}
     ]);
 
-    collection.doesntContain((item) => {
-      return item.foo < 5;
-    })
+    collection.doesntContain("Table");
+
+    // true
+
+    collection.doesntContain("Desk");
 
     // false
     ```
@@ -641,17 +651,17 @@ The `doesntContain` method determines whether the collection does not contain a 
   </TabItem>
 </Tabs>
 
-Alternatively, You may also pass a key / value pair to the doesntContain method, which will determine if the given pair does not exist in the collection:
+You may also pass a key / value pair to the `doesntContain` method, which will determine if the given pair does not exist in the collection:
 
 <Tabs>
-	<TabItem value="Typescript" label="Typescript" default>
+  <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {product: "Desk", price: 200}
       {product: "Chair", price: 100}
     ]);
 
-    collection.doesntContain("name", "Bookcase");
+    collection.doesntContain("product", "Bookcase");
 
     // true
     ```
@@ -660,12 +670,12 @@ Alternatively, You may also pass a key / value pair to the doesntContain method,
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect<IData>([
+    const collection = collect([
       {product: "Desk", price: 200}
       {product: "Chair", price: 100}
     ]);
 
-    collection.doesntContain("name", "Bookcase");
+    collection.doesntContain("product", "Bookcase");
 
     // true
     ```
