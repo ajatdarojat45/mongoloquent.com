@@ -352,32 +352,30 @@ The concat method appends the given array or collection's values onto the end of
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([{foo: 1}]);
+    const collection = collect(["Jhon Doe"])
 
-    const concatenated = collection.concat([
-      {foo: 2},
-      {foo: 3},
-    ]);
+    const concatenated = collection.concat(["Jane Doe"]).concat([
+      "Jhonny Doe",
+    ])
 
     concatenated.all();
 
-    // [{foo: 1}, {foo: 2}, {foo: 3}]
+    // ["Jhon Doe", "Jane Doe", "Jhonny Doe"]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([{foo: 1}]);
+    const collection = collect(["Jhon Doe"])
 
-    const concatenated = collection.concat([
-      {foo: 2},
-      {foo: 3},
-    ]);
+    const concatenated = collection.concat(["Jane Doe"]).concat([
+      "Jhonny Doe",
+    ])
 
     concatenated.all();
 
-    // [{foo: 1}, {foo: 2}, {foo: 3}]
+    // ["Jhon Doe", "Jane Doe", "Jhonny Doe"]
     ```
 
   </TabItem>
