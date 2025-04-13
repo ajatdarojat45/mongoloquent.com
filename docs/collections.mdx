@@ -806,12 +806,8 @@ The `isEvery` method may be used to verify that all elements of a collection pas
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-    ]).isEvery((item) => {
-      return item.foo > 2;
+    collect([1, 2, 3, 4]).isEvery((item) => {
+      return item > 2;
     });
 
     // false
@@ -821,12 +817,8 @@ The `isEvery` method may be used to verify that all elements of a collection pas
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-    ]).isEvery((item) => {
-      return item.foo > 2;
+    collect([1, 2, 3, 4]).isEvery((item) => {
+      return item > 2;
     });
 
     // false
@@ -835,12 +827,12 @@ The `isEvery` method may be used to verify that all elements of a collection pas
   </TabItem>
 </Tabs>
 
-If the collection is empty, the `every` method will return true:
+If the collection is empty, the `isEvery` method will return true:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([])
+    const collection = collect([])
     
     collection.isEvery((item) => {
       return item.foo > 2;
