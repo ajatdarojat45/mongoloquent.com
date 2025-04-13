@@ -391,8 +391,8 @@ The `contains` method determines whether the collection contains a given item. Y
     const collection = collect([1, 2, 3, 4, 5]);
 
     collection.contains((item) => {
-      return item.foo > 5;
-    })
+      return item > 5;
+    });
 
     // false
     ```
@@ -404,8 +404,8 @@ The `contains` method determines whether the collection contains a given item. Y
     const collection = collect([1, 2, 3, 4, 5]);
 
     collection.contains((item) => {
-      return item.foo > 5;
-    })
+      return item > 5;
+    });
 
     // false
     ```
@@ -413,20 +413,51 @@ The `contains` method determines whether the collection contains a given item. Y
   </TabItem>
 </Tabs>
 
-Alternatively, You may pass a key / value pair to the `contains` method, which will determine if the given pair exists in the collection:
+Alternatively, you may pass a string to the `contains` method to determine whether the collection contains a given item value:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect([{name: "Desk", price: 100}]);
+
+    collection.contains("Desk")
+
+    // true
+
+    collection.contains("New York")
+
+    // false
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([{name: "Desk", price: 100}]);
+
+    collection.contains("Desk")
+
+    // true
+
+    collection.contains("New York")
+
+    // false
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also pass a key / value pair to the `contains` method, which will determine if the given pair exists in the collection:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
     const collection = collect([
-      {name: "Desk", price: 100}
+      {product: "Desk", price: 200}
+      {product: "Chair", price: 100}
     ]);
 
-    collection.contains("name", "Desk");
-
-    // true
-
-    collection.contains("name", "New York");
+    collection.contains("product", "Bookcase");
 
     // false
     ```
@@ -436,14 +467,11 @@ Alternatively, You may pass a key / value pair to the `contains` method, which w
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
     const collection = collect([
-      {name: "Desk", price: 100}
+      {product: "Desk", price: 200}
+      {product: "Chair", price: 100}
     ]);
 
-    collection.contains("Desk");
-
-    // true
-
-    collection.contains("New York");
+    collection.contains("product", "Bookcase");
 
     // false
     ```
@@ -453,7 +481,7 @@ Alternatively, You may pass a key / value pair to the `contains` method, which w
 
 The `contains` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the [containsStrict](#containsStrict) method to filter using "strict" comparisons.
 
-> For the inverse of `contains`, see the [doesntContain](#doesntcontain) method.
+> For the inverse of `contains`, see the [doesntContain](#doesntContain) method.
 
 ### containsStrict()
 
