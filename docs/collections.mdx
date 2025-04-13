@@ -752,12 +752,7 @@ The `each` method iterates over the items in the collection and passes each item
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4]);
 
     collection.each((item) => {
       // ...
@@ -768,12 +763,7 @@ The `each` method iterates over the items in the collection and passes each item
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4]);
 
     collection.each((item) => {
       // ...
