@@ -388,13 +388,7 @@ The `contains` method determines whether the collection contains a given item. Y
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     collection.contains((item) => {
       return item.foo > 5;
@@ -407,13 +401,7 @@ The `contains` method determines whether the collection contains a given item. Y
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     collection.contains((item) => {
       return item.foo > 5;
@@ -430,15 +418,15 @@ Alternatively, You may pass a key / value pair to the `contains` method, which w
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {name: "Desk", price: 100}
     ]);
 
-    collection.contains("Desk");
+    collection.contains("name", "Desk");
 
     // true
 
-    collection.contains("New York");
+    collection.contains("name", "New York");
 
     // false
     ```
@@ -463,7 +451,7 @@ Alternatively, You may pass a key / value pair to the `contains` method, which w
   </TabItem>
 </Tabs>
 
-The `contains` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the `containsStrict` method to filter using "strict" comparisons.
+The `contains` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value. Use the [containsStrict](#containsStrict) method to filter using "strict" comparisons.
 
 > For the inverse of `contains`, see the [doesntContain](#doesntcontain) method.
 
