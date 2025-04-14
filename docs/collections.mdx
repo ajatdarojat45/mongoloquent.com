@@ -1873,7 +1873,7 @@ The `has` method determines if a given key exists in the collection:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([{accountId: 1, product: "Desk", amount: 5}]);
+    const collection = collect([{accountId: 1, product: "Desk", amount: 5}]);
 
     collection.has("product");
 
@@ -1917,7 +1917,7 @@ The `hasAny` method determines whether any of the given keys exist in the collec
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([{accountId: 1, product: "Desk", amount: 5}]);
+    const collection = collect([{accountId: 1, product: "Desk", amount: 5}]);
 
     collection.hasAny(["product", "price"]);
 
