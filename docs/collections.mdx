@@ -1620,6 +1620,90 @@ The `forPage` method returns a new collection containing the items that would be
   </TabItem>
 </Tabs>
 
+### get()
+
+The `get` method returns the item at a given key. If the key does not exist, `null` is returned:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect([{name: "ajat", framework: "mongoloquent"}])
+
+    collection.get("name");
+
+    // "ajat"
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([{name: "ajat", framework: "mongoloquent"}])
+
+    collection.get("name");
+
+    // "ajat"
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may optionally pass a default value as the second argument:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect([{name: "ajat", framework: "mongoloquent"}])
+
+    collection.get("age", 34);
+
+    // 34
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([{name: "ajat", framework: "mongoloquent"}])
+
+    collection.get("age", 34);
+
+    // 34
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may even pass a callback as the method's default value. The result of the callback will be returned if the specified key does not exist:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect([{name: "ajat", framework: "mongoloquent"}])
+
+    collection.get("email", () => {
+      return "ajat@example.com";
+    });
+
+    // ajat@example.com
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([{name: "ajat", framework: "mongoloquent"}])
+
+    collection.get("email", () => {
+      return "ajat@example.com";
+    });
+
+    // ajat@example.com
+    ```
+
+  </TabItem>
+</Tabs>
+
 ### groupBy()
 
 The `groupBy` method groups the collection's items by a given key:
