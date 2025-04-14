@@ -1417,12 +1417,7 @@ The `firstOrFail` method is identical to the first method; however, if no result
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]).first(item => {
+    collect([1, 2, 3, 4]).first(item => {
       return item.foo > 5;
     });
 
@@ -1433,12 +1428,7 @@ The `firstOrFail` method is identical to the first method; however, if no result
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]).first(item => {
+    collect([1, 2, 3, 4]).first(item => {
       return item.foo > 5;
     });
 
@@ -1453,7 +1443,7 @@ You may also call the `firstOrFail` method with no arguments to get the first el
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<IData>([]).first(item => {
+    collect([]).first(item => {
       return item.foo > 5;
     });
 
