@@ -1471,7 +1471,7 @@ The `firstWhere` method returns the first element in the collection with the giv
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {name: "Regena", age: null},
       {name: "Linda", age: 14},
       {name: "Diego", age: 23},
@@ -1519,6 +1519,28 @@ You may also call the `firstWhere` method with a comparison operator:
     collection.firstWhere("age", ">=", 18);
 
     // {name: "Diego", age: 23}
+    ```
+
+  </TabItem>
+</Tabs>
+
+Like the [where](#where) method, you may pass one argument to the `firstWhere` method. In this scenario, the `firstWhere` method will return the first item where the given item key's value is "truthy":
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    collection.firstWhere("age");
+
+    // {name: "Linda", age: 14}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    collection.firstWhere("age");
+
+    // {name: "Linda", age: 14}
     ```
 
   </TabItem>
