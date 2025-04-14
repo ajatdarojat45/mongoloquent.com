@@ -17,13 +17,9 @@ The `Collection` class provides a fluent, convenient wrapper for working with ar
     ```typescript
     import { collect } from "mongoloquent";
 
-    interface IData {
-      foo: string;
-    }
-
-    const collection = collect<IData>([{foo: "Ajat"}, {foo: "Udin"}])
+    const collection = collect(["Ajat", "Udin", null]);
     .where("foo", "Ajat")
-    .map((item) => item.foo.toUpperCase());
+    .map((item) => item.toUpperCase());
     ```
 
   </TabItem>
@@ -31,9 +27,9 @@ The `Collection` class provides a fluent, convenient wrapper for working with ar
     ```javascript
     import { collect } from "mongoloquent";
 
-    const collection = collect([{foo: "Ajat"}, {foo: "Udin"}])
-    .where("name", "Ajat")
-    .map((item) => item.foo.toUpperCase());
+    const collection = collect(["Ajat", "Udin", null]);
+    .where("foo", "Ajat")
+    .map((item) => item.toUpperCase());
     ```
 
   </TabItem>
@@ -50,11 +46,7 @@ As mentioned above, the `collect` helper returns a new `Collection` instance for
     ```typescript
     import { collect } from "mongoloquent";
 
-    interface IData {
-      foo: string;
-    }
-
-    const collection = collect<IData>([{foo: "Ajat"}, {foo: "Udin"}])
+    const collection = collect([1, 2, 3])
     ```
 
   </TabItem>
@@ -62,7 +54,7 @@ As mentioned above, the `collect` helper returns a new `Collection` instance for
     ```javascript
     import { collect } from "mongoloquent";
 
-    const collection = collect([{foo: "Ajat"}, {foo: "Udin"}])
+    const collection = collect([1, 2, 3])
     ```
 
   </TabItem>
@@ -70,7 +62,7 @@ As mentioned above, the `collect` helper returns a new `Collection` instance for
 
 You may also create a collection using the `make` methods.
 
-> The results `Mongoloquent` queries are always returned as `Collection` instances.
+> The results `Mongoloquent` queries array are always returned as `Collection` instances.
 
 ## Available Methods
 
