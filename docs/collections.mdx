@@ -1367,32 +1367,22 @@ The `first` method returns the first element in the collection that passes a giv
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]).first((item) => {
-      return item.foo > 2;
+    collect([1, 2, 3, 4]).first((item) => {
+      return item > 2;
     });
 
-    // {foo: 3}
+    // 3
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]).first((item) => {
-      return item.foo > 2;
+    collect([1, 2, 3, 4]).first((item) => {
+      return item > 2;
     });
 
-    // {foo: 3}
+    // 3
     ```
 
   </TabItem>
@@ -1403,28 +1393,18 @@ You may also call the `first` method with no arguments to get the first element 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]).first();
+    collect([1, 2, 3, 4]).first();
 
-    // {foo: 1}
+    // 1
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]).first();
+    collect([1, 2, 3, 4]).first();
 
-    // {foo: 1}
+    // 1
     ```
 
   </TabItem>
