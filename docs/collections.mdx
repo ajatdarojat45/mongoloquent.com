@@ -2094,23 +2094,17 @@ The `keyBy` method keys the collection by the given key. If multiple items have 
 
     const keyed = collection.keyBy("productId");
 
-    keyed.all();
-
     /*
-      [
-        {
-          "prod-100": {
-            "productId": "prod-100",
-            "product": "Desk"
-          }
+      {
+        "prod-100": {
+          productId: "prod-100",
+          product: "Desk",
         },
-        {
-          "prod-200": {
-            "productId": "prod-200",
-            "product": "Chair"
-          }
-        }
-      ]
+        "prod-200": {
+          productId: "prod-200",
+          product: "Chair",
+        },
+      }
     */
     ```
 
@@ -2125,23 +2119,17 @@ The `keyBy` method keys the collection by the given key. If multiple items have 
 
     const keyed = collection.keyBy("productId");
 
-    keyed.all();
-
     /*
-      [
-        {
-          "prod-100": {
-            "productId": "prod-100",
-            "product": "Desk"
-          }
+      {
+        "prod-100": {
+          productId: "prod-100",
+          product: "Desk",
         },
-        {
-          "prod-200": {
-            "productId": "prod-200",
-            "product": "Chair"
-          }
-        }
-      ]
+        "prod-200": {
+          productId: "prod-200",
+          product: "Chair",
+        },
+      }
     */
     ```
 
@@ -2157,23 +2145,17 @@ You may also pass a callback to the method. The callback should return the value
       return item.productId.toUpperCase();
     }));
 
-    keyed.all();
-
     /*
-      [
-        {
-          "PROD-100": {
-            "productId": "prod-100",
-            "product": "Desk"
-          }
+      {
+        "PROD-100": {
+          productId: "prod-100",
+          product: "Desk",
         },
-        {
-          "PROD-200": {
-            "productId": "prod-200",
-            "product": "Chair"
-          }
-        }
-      ]
+        "PROD-200": {
+          productId: "prod-200",
+          product: "Chair",
+        },
+      }
     */
     ```
 
@@ -2185,23 +2167,17 @@ You may also pass a callback to the method. The callback should return the value
       return item.productId.toUpperCase();
     }));
 
-    keyed.all();
-
     /*
-      [
-        {
-          "PROD-100": {
-            "productId": "prod-100",
-            "product": "Desk"
-          }
+      {
+        "PROD-100": {
+          productId: "prod-100",
+          product: "Desk",
         },
-        {
-          "PROD-200": {
-            "productId": "prod-200",
-            "product": "Chair"
-          }
-        }
-      ]
+        "PROD-200": {
+          productId: "prod-200",
+          product: "Chair",
+        },
+      }
     */
     ```
 
