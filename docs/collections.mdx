@@ -1953,7 +1953,7 @@ The `implode` method joins items in a collection. Its arguments depend on the ty
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {accountId: 1, product: "Desk"},
       {accountId: 2, product: "Chair"},
     ]);
@@ -1975,6 +1975,32 @@ The `implode` method joins items in a collection. Its arguments depend on the ty
     collection.implode("product", ", ");
 
     // "Desk, Chair"
+    ```
+
+  </TabItem>
+</Tabs>
+
+If the collection contains simple strings or numeric values, you should pass the "glue" as the only argument to the method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect([1, 2, 3, 4, 5]);
+
+    collection.implode("-");
+
+    // "1-2-3-4-5"
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([1, 2, 3, 4, 5]);
+
+    collection.implode("-");
+
+    // "1-2-3-4-5"
     ```
 
   </TabItem>
