@@ -1595,46 +1595,26 @@ The `forPage` method returns a new collection containing the items that would be
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-      {foo: 6},
-      {foo: 7},
-      {foo: 8},
-      {foo: 9},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
     const chunk = collection.forPage(2, 3);
 
     chunk.all();
 
-    // [{foo: 4}, {foo: 5}, {foo: 6}]
+    // [4, 5, 6]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-      {foo: 6},
-      {foo: 7},
-      {foo: 8},
-      {foo: 9},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9]);
 
     const chunk = collection.forPage(2, 3);
 
     chunk.all();
 
-    // [{foo: 4}, {foo: 5}, {foo: 6}]
+    // [4, 5, 6]
     ```
 
   </TabItem>
