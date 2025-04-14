@@ -2236,31 +2236,23 @@ You may also call the `last` method with no arguments to get the last element in
 
 ### make()
 
-The static make method creates a new collection instance. See the [Creating Collections](#creating-collections) section.
+The static `make` method creates a new collection instance. See the [Creating Collections](#creating-collections) section.
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import {Collection} from "mongoloquent";
+    import { Collection } from "mongoloquent";
 
-    const collection = Collection.make<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-    ]);
+    const collection = Collection.make([1, 2, 3, 4]);
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    import {Collection} from "mongoloquent";
+    import { Collection } from "mongoloquent";
 
-    const collection = Collection.make([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-    ]);
+    const collection = Collection.make([1, 2, 3, 4]);
     ```
 
   </TabItem>
