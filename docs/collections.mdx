@@ -2257,12 +2257,16 @@ The `max` method returns the maximum value of a given key:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const max = collect<IData>([
+    const max = collect([
       {foo: 10},
       {foo: 20},
     ]).max("foo");
 
     // 20
+
+    const max = collect([1, 2, 3, 4]).max();
+
+    // 4
     ```
 
   </TabItem>
@@ -2275,6 +2279,10 @@ The `max` method returns the maximum value of a given key:
     ]).max("foo");
 
     // 20
+
+    const max = collect([1, 2, 3, 4]).max();
+
+    // 4
     ```
 
   </TabItem>
