@@ -2694,48 +2694,6 @@ You may pass an integer to `random` to specify how many items you would like to 
 
 If the collection instance has fewer items than requested, the random method will throw an `MongoloquentInvalidArgumentException`.
 
-### range()
-
-The `range` method returns a collection containing integers between the specified range:
-
-<Tabs>
-	<TabItem value="Typescript" label="Typescript" default>
-    ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-      {foo: 6},
-    ]).range("foo", [3, 6]);
-
-    collection.all();
-
-    // [{foo: 3}, {foo: 4}, {foo: 5}, {foo: 6}]
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-      {foo: 6},
-    ]).range("foo", [3, 6]);
-
-    collection.all();
-
-    // [{foo: 3}, {foo: 4}, {foo: 5}, {foo: 6}]
-    ```
-
-  </TabItem>
-</Tabs>
-
 ### select()
 
 The select method selects the given keys from the collection, similar to an SQL `SELECT` statement:
