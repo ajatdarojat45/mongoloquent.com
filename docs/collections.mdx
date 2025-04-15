@@ -2473,7 +2473,7 @@ The `only` method returns the items in the collection with the specified keys:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {
         productId: 1,
         name: "Desk",
@@ -2521,7 +2521,7 @@ The pluck method retrieves all of the values for a given key:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {productId: 1, name: "Desk"},
       {productId: 2, name: "Chair"},
     ]);
@@ -2557,7 +2557,7 @@ You may also pass multiple keys to the `pluck` method.
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {productId: 1, name: "Desk"},
       {productId: 2, name: "Chair"},
     ]);
