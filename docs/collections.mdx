@@ -2423,54 +2423,22 @@ The `nth` method creates a new collection consisting of every n-th element:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: "a"},
-      {foo: "b"},
-      {foo: "c"},
-      {foo: "d"},
-      {foo: "e"},
-      {foo: "f"},
-    ]);
+    const collection = collect(["a", "b", "c", "d", "e", "f"]);
 
     collection.nth(4);
 
-    /*
-      [
-        {
-          "foo": "a"
-        },
-        {
-          "foo": "e"
-        }
-      ]
-    */
+    // ["a", "e"]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: "a"},
-      {foo: "b"},
-      {foo: "c"},
-      {foo: "d"},
-      {foo: "e"},
-      {foo: "f"},
-    ]);
+    const collection = collect(["a", "b", "c", "d", "e", "f"]);
 
     collection.nth(4);
 
-    /*
-      [
-        {
-          "foo": "a"
-        },
-        {
-          "foo": "e"
-        }
-      ]
-    */
+    // ["a", "e"]
     ```
 
   </TabItem>
@@ -2483,16 +2451,7 @@ You may optionally pass a starting offset as the second argument:
     ```typescript
     collection.nth(4, 1);
 
-    /*
-      [
-        {
-          "foo": "b"
-        },
-        {
-          "foo": "f"
-        }
-      ]
-    */
+    // [b, f]
     ```
 
   </TabItem>
@@ -2501,16 +2460,7 @@ You may optionally pass a starting offset as the second argument:
     ```javascript
     collection.nth(4, 1);
 
-    /*
-      [
-        {
-          "foo": "b"
-        },
-        {
-          "foo": "f"
-        }
-      ]
-    */
+    // [b, f]
     ```
 
   </TabItem>
