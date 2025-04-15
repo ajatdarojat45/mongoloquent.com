@@ -2777,48 +2777,26 @@ The `skip` method returns a new collection, with the given number of elements re
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-      {foo: 6},
-      {foo: 7},
-      {foo: 8},
-      {foo: 9},
-      {foo: 10},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
     const skipped = collection.skip(4);
 
     skipped.all();
 
-    // [{foo: 5}, {foo: 6}, {foo: 7}, {foo: 8}, {foo: 9}, {foo: 10}]
+    // [5, 6, 7, 8, 9, 10]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-     const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-      {foo: 6},
-      {foo: 7},
-      {foo: 8},
-      {foo: 9},
-      {foo: 10},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
     const skipped = collection.skip(4);
 
     skipped.all();
 
-    // [{foo: 5}, {foo: 6}, {foo: 7}, {foo: 8}, {foo: 9}, {foo: 10}]
+    // [5, 6, 7, 8, 9, 10]
     ```
 
   </TabItem>
