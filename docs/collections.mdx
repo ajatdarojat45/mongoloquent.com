@@ -2838,6 +2838,8 @@ The `skipUntil` method skips over items from the collection while the given call
   </TabItem>
 </Tabs>
 
+> If the given value is not found or the callback never returns `true`, the `skipUntil` method will return an empty collection.
+
 ### skipWhile()
 
 The `skipWhile` method skips over items from the collection while the given callback returns `true`. Once the callback returns `false` all of the remaining items in the collection will be returned as a new collection:
@@ -2845,12 +2847,7 @@ The `skipWhile` method skips over items from the collection while the given call
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const subset = collection.skipWhile((item) => {
       return item.foo <= 3;
@@ -2858,19 +2855,14 @@ The `skipWhile` method skips over items from the collection while the given call
 
     subset.all();
 
-    // [{foo: 4}]
+    // [4, 5]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const subset = collection.skipWhile((item) => {
       return item.foo <= 3;
@@ -2878,7 +2870,7 @@ The `skipWhile` method skips over items from the collection while the given call
 
     subset.all();
 
-    // [{foo: 4}]
+    // [4, 5]
     ```
 
   </TabItem>
