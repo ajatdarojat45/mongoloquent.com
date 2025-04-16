@@ -2885,13 +2885,7 @@ The sliding method returns a new collection of chunks representing a "sliding wi
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const chunks = collection.sliding(2);
 
@@ -2899,10 +2893,10 @@ The sliding method returns a new collection of chunks representing a "sliding wi
 
     /*
       [
-        [{foo: 1}, {foo: 2}],
-        [{foo: 2}, {foo: 3}],
-        [{foo: 3}, {foo: 4}],
-        [{foo: 4}, {foo: 5}],
+        [1, 2],
+        [2, 3],
+        [3, 4],
+        [4, 5],
       ]
     */
     ```
@@ -2911,13 +2905,7 @@ The sliding method returns a new collection of chunks representing a "sliding wi
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const chunks = collection.sliding(2);
 
@@ -2925,10 +2913,10 @@ The sliding method returns a new collection of chunks representing a "sliding wi
 
     /*
       [
-        [{foo: 1}, {foo: 2}],
-        [{foo: 2}, {foo: 3}],
-        [{foo: 3}, {foo: 4}],
-        [{foo: 4}, {foo: 5}],
+        [1, 2],
+        [2, 3],
+        [3, 4],
+        [4, 5],
       ]
     */
     ```
@@ -2941,13 +2929,7 @@ You may optionally pass a second "step" value, which determines the distance bet
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const chunks = collection.sliding(3, 2);
 
@@ -2955,8 +2937,8 @@ You may optionally pass a second "step" value, which determines the distance bet
 
     /*
       [
-        [{foo: 1}, {foo: 2}, {foo: 3}],
-        [{foo: 3}, {foo: 4}, {foo: 5}],
+        [1, 2, 3],
+        [3, 4, 5],
       ]
     */
     ```
@@ -2965,13 +2947,7 @@ You may optionally pass a second "step" value, which determines the distance bet
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const chunks = collection.sliding(3, 2);
 
@@ -2979,8 +2955,8 @@ You may optionally pass a second "step" value, which determines the distance bet
 
     /*
       [
-        [{foo: 1}, {foo: 2}, {foo: 3}],
-        [{foo: 3}, {foo: 4}, {foo: 5}],
+        [1, 2, 3],
+        [3, 4, 5],
       ]
     */
     ```
