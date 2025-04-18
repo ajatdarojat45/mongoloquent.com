@@ -3225,66 +3225,26 @@ The `split` method breaks a collection into the given number of groups:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const split = collection.split(3);
 
     split.all();
 
-    /*
-      [
-        [
-          {foo: 1},
-          {foo: 2}
-        ],
-        [
-          {foo: 3},
-          {foo: 4}
-        ],
-        [
-          {foo: 5}
-        ]
-      ]
-    */
+    // [[1, 2], [3, 4], [5]]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const split = collection.split(3);
 
     split.all();
 
-    /*
-      [
-        [
-          {foo: 1},
-          {foo: 2}
-        ],
-        [
-          {foo: 3},
-          {foo: 4}
-        ],
-        [
-          {foo: 5}
-        ]
-      ]
-    */
+    // [[1, 2], [3, 4], [5]]
     ```
 
   </TabItem>
@@ -3297,86 +3257,26 @@ The `splitIn` method breaks a collection into the given number of groups, fillin
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-      {foo: 6},
-      {foo: 7},
-      {foo: 8},
-      {foo: 9},
-      {foo: 10},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
     const split = collection.splitIn(3);
 
     split.all();
 
-    /*
-      [
-        [
-          {foo: 1},
-          {foo: 2},
-          {foo: 3}
-        ],
-        [
-          {foo: 4},
-          {foo: 5},
-          {foo: 6}
-        ],
-        [
-          {foo: 7},
-          {foo: 8},
-          {foo: 9},
-          {foo: 10}
-        ]
-      ]
-    */
+    // [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-      {foo: 6},
-      {foo: 7},
-      {foo: 8},
-      {foo: 9},
-      {foo: 10},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5, 6, 7, 8, 9, 10]);
 
     const split = collection.splitIn(3);
 
     split.all();
 
-    /*
-      [
-        [
-          {foo: 1},
-          {foo: 2},
-          {foo: 3}
-        ],
-        [
-          {foo: 4},
-          {foo: 5},
-          {foo: 6}
-        ],
-        [
-          {foo: 7},
-          {foo: 8},
-          {foo: 9},
-          {foo: 10}
-        ]
-      ]
-    */
+    // [[1, 2, 3, 4], [5, 6, 7, 8], [9, 10]]
     ```
 
   </TabItem>
