@@ -3748,7 +3748,7 @@ The `where` method filters the collection by a given key / value pair:
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {product: "Desk", price: 200},
       {product: "Chair", price: 100},
       {product: "Bookcase", price: 150},
@@ -3795,18 +3795,18 @@ The `where` method filters the collection by a given key / value pair:
 
 The `where` method uses "loose" comparisons when checking item values, meaning a string with an integer value will be considered equal to an integer of the same value.
 
-Optionally, you may pass a comparison operator as the second parameter. Supported operators are: 'eq', 'ne', 'gt', 'lt', 'gte', 'lte', 'in', 'nin', 'regex':
+Optionally, you may pass a comparison operator as the second parameter. Supported operators are: '`===`', '`!==`', '`!=`', '`==`', '`=`', '`<>`', '`>`', '`<`', '`>=`', and '`<=`':
 
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {name: "Jim", deleted_at: "2019-01-01 00:00:00"},
       {name: "Saly", deleted_at: "2019-01-02 00:00:00"},
       {name: "Sue", deleted_at: null},
     ]);
 
-    const filtered = collection.where("deleted_at", "ne", null);
+    const filtered = collection.where("deleted_at", "!=", null);
 
     filtered.all();
 
@@ -3828,7 +3828,7 @@ Optionally, you may pass a comparison operator as the second parameter. Supporte
       {name: "Sue", deleted_at: null},
     ]);
 
-    const filtered = collection.where("deleted_at", "ne", null);
+    const filtered = collection.where("deleted_at", "!=", null);
 
     filtered.all();
 
@@ -3850,7 +3850,7 @@ The `whereBetween` method filters the collection by determining if a specified i
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {product: "Desk", price: 200},
       {product: "Chair", price: 80},
       {product: "Bookcase", price: 150},
@@ -3906,7 +3906,7 @@ The `whereIn` method removes elements from the collection that do not have a spe
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {product: "Desk", price: 200},
       {product: "Chair", price: 100},
       {product: "Bookcase", price: 150},
@@ -3958,7 +3958,7 @@ The `whereNotBetween` method filters the collection by determining if a specifie
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {product: "Desk", price: 200},
       {product: "Chair", price: 80},
       {product: "Bookcase", price: 150},
@@ -4012,7 +4012,7 @@ The `whereNotIn` method removes elements from the collection that have a specifi
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {product: "Desk", price: 200},
       {product: "Chair", price: 100},
       {product: "Bookcase", price: 150},
@@ -4064,7 +4064,7 @@ The `whereNotNull` method returns items from the collection where the given key 
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {name: "Desk"},
       {name: null},
       {name: "Bookcase"},
@@ -4104,7 +4104,7 @@ The `whereNull` method returns items from the collection where the given key is 
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {name: "Desk"},
       {name: null},
       {name: "Bookcase"},
