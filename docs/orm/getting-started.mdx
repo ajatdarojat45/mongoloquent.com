@@ -45,12 +45,10 @@ Let's examine a basic model class and discuss some of Eloquent's key conventions
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Model } from "mongoloquent";
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
 
     interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
       name: string;
-      number: string;
-      active: boolean;
     }
 
     class Flight extends Model<IFlight> {
@@ -87,12 +85,10 @@ If your model's corresponding database collection does not fit this convention, 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Model } from "mongoloquent";
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
 
-    interface IFlight {
+    interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
       name: string;
-      number: string;
-      active: boolean;
     }
 
     class Flight extends Model<IFlight> {
@@ -108,7 +104,7 @@ If your model's corresponding database collection does not fit this convention, 
        *
        * @var string
        */
-      protected static $collection: string = "flights";
+      static $collection: string = "flights";
     }
     ```
 
@@ -137,12 +133,10 @@ By default, Mongoloquent expects `createdAt` and `updatedAt` columns to exist on
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Model } from "mongoloquent";
+    import { Model, IMongoloquentSchema } from "mongoloquent";
 
     interface IFlight extends IMongoloquentSchema {
       name: string;
-      number: string;
-      active: boolean;
     }
 
     class Flight extends Model<IFlight> {
@@ -158,7 +152,7 @@ By default, Mongoloquent expects `createdAt` and `updatedAt` columns to exist on
        *
        * @var boolean
        */
-      protected static $useTimestamps: boolean = false;
+      static $useTimestamps: boolean = false;
     }
     ```
 
@@ -187,12 +181,10 @@ By default, all `Mongoloquent` models will use the default database connection t
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Model } from "mongoloquent";
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
 
-    interface IFlight extends IMongoloquentSchema {
+    interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
       name: string;
-      number: string;
-      active: boolean;
     }
 
     class Flight extends Model<IFlight> {
@@ -320,17 +312,17 @@ Since all of Mongoloquent's collections implement Javascript's iterable interfac
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    for (const flight of flights) {
+    flights.forEach((flight) => {
       console.log(flight.name);
-    }
+    });
     ```
 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    for (const flight of flights) {
+    flights.forEach((flight) => {
       console.log(flight.name);
-    }
+    });
     ```
 
   </TabItem>
@@ -633,7 +625,7 @@ Updates can also be performed against models that match a given query. In this e
     ```javascript
     await Flight.where('active', true)
       .where('destination', 'San Diego')
-      .update({'delayed': true});
+      .updateMany({'delayed': true});
     ```
 
   </TabItem>
@@ -836,6 +828,50 @@ The `getChanges` method returns an object containing the attributes that changed
 
   </TabItem>
   </Tabs>
+
+### Mass Assignment
+
+You may use the create method to "save" a new model using a single Javascript statement. The inserted model instance will be returned to you by the method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    const flight = await Flight.create({
+      name: "London to Paris",
+    });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    const flight = await Flight.create({
+      name: "London to Paris",
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+you may use the create method to insert a new record in the database. The create method returns the newly created model instance:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flight = await Flight.create({name: "London to Paris"});
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flight = await Flight.create({name: "London to Paris"});
+    ```
+
+  </TabItem>
+</Tabs>
 
 ## Deleting Models
 
