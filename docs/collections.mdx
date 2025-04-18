@@ -3033,9 +3033,10 @@ The `sortBy` method sorts the collection by the given key. The sorted collection
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {name: "Desk", price: 200},
       {name: "Chair", price: 100},
+      {name: "Bookcase", price: 150},
     ]);
 
     const sorted = collection.sortBy("price")
@@ -3045,6 +3046,7 @@ The `sortBy` method sorts the collection by the given key. The sorted collection
     /*
       [
         {name: "Chair", price: 100},
+        {name: "Bookcase", price: 150},
         {name: "Desk", price: 200},
       ]
     */
@@ -3057,6 +3059,7 @@ The `sortBy` method sorts the collection by the given key. The sorted collection
     const collection = collect([
       {name: "Desk", price: 200},
       {name: "Chair", price: 100},
+      {name: "Bookcase", price: 150},
     ]);
 
     const sorted = collection.sortBy("price")
@@ -3066,6 +3069,7 @@ The `sortBy` method sorts the collection by the given key. The sorted collection
     /*
       [
         {name: "Chair", price: 100},
+        {name: "Bookcase", price: 150},
         {name: "Desk", price: 200},
       ]
     */
@@ -3079,7 +3083,7 @@ The sortBy method accepts `sort flags` as its second argument:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const colletion = collect<IData>([
+    const colletion = collect([
       {title: "Item 1"},
       {title: "Item 12"},
       {title: "Item 3"},
@@ -3102,7 +3106,7 @@ The sortBy method accepts `sort flags` as its second argument:
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const colletion = collect<IData>([
+    const colletion = collect([
       {title: "Item 1"},
       {title: "Item 12"},
       {title: "Item 3"},
@@ -3124,36 +3128,28 @@ The sortBy method accepts `sort flags` as its second argument:
   </TabItem>
 </Tabs>
 
-### sortByDesc()
-
-This method has the same signature as the [sortBy](#sortby) method, but will sort the collection in the opposite order.
-
-### sortDesc()
-
-This method will sort the collection in the opposite order as the `sort` method:
+Alternatively, you may pass your own closure to determine how to sort the collection's values:
 
 <Tabs>
-	<TabItem value="Typescript" label="Typescript" default>
+  <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 5},
-      {foo: 3},
-      {foo: 1},
-      {foo: 2},
-      {foo: 4},
+    const collection = collect([
+      {name: "Desk", colors: ["Black", "Mahogany"]},
+      {name: "Chair", colors: ["Black"]},
+      {name: "Bookcase", colors: ["Red", "Beige", "Brown"]},
     ]);
 
-    const sorted = collection.sortDesc();
+    const sorted = collection.sortBy((item) => {
+      return item.colors.length;
+    });
 
     sorted.all();
 
     /*
       [
-        {foo: 5},
-        {foo: 4},
-        {foo: 3},
-        {foo: 2},
-        {foo: 1},
+        {name: "Chair", colors: ["Black"]},
+        {name: "Desk", colors: ["Black", "Mahogany"]},
+        {name: "Bookcase", colors: ["Red", "Beige", "Brown"]},
       ]
     */
     ```
@@ -3162,27 +3158,61 @@ This method will sort the collection in the opposite order as the `sort` method:
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect<IData>([
-      {foo: 5},
-      {foo: 3},
-      {foo: 1},
-      {foo: 2},
-      {foo: 4},
+    const collection = collect([
+      {name: "Desk", colors: ["Black", "Mahogany"]},
+      {name: "Chair", colors: ["Black"]},
+      {name: "Bookcase", colors: ["Red", "Beige", "Brown"]},
     ]);
 
-    const sorted = collection.sortDesc();
+    const sorted = collection.sortBy((item) => {
+      return item.colors.length;
+    });
 
     sorted.all();
 
     /*
       [
-        {foo: 5},
-        {foo: 4},
-        {foo: 3},
-        {foo: 2},
-        {foo: 1},
+        {name: "Chair", colors: ["Black"]},
+        {name: "Desk", colors: ["Black", "Mahogany"]},
+        {name: "Bookcase", colors: ["Red", "Beige", "Brown"]},
       ]
     */
+    ```
+
+  </TabItem>
+</Tabs>
+
+### sortByDesc()
+
+This method has the same signature as the [sortBy](#sortby) method, but will sort the collection in the opposite order.
+
+### sortDesc()
+
+This method will sort the collection in descending order:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const collection = collect([1, 2, 3, 4]);
+
+    const sorted = collection.sortDesc();
+
+    sorted.all();
+
+    // [4, 3, 2, 1]
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    const collection = collect([1, 2, 3, 4]);
+
+    const sorted = collection.sortDesc();
+
+    sorted.all();
+
+    // [4, 3, 2, 1]
     ```
 
   </TabItem>
