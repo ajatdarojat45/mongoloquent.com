@@ -1,12 +1,13 @@
 ---
 sidebar_position: 2
+title: Relationships
 ---
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import Sponsor from "../sponsor.mdx";
 
-# Relationships
+# Mongoloquent: Relationships
 
 ## Introduction
 
@@ -22,21 +23,17 @@ Database tables are often related to one another. For example, a blog post may h
 
 ## Defining Relationships
 
-Mongoloquent relationships are defined as methods on your Mongoloquent model classes. Since relationships also serve as powerful [query builders](#query-builder), defining relationships as methods provides powerful method chaining and querying capabilities. For example, we may chain additional query constraints on this `posts` relationship:
+Mongoloquent relationships are defined as methods on your Mongoloquent model classes. Since relationships also serve as powerful [query builders](../database/query-builder), defining relationships as methods provides powerful method chaining and querying capabilities. For example, we may chain additional query constraints on this `posts` relationship:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const user = User.find("10ab7e3d05d58a1ad246ee87");
-
     const posts = await user.posts().where('active', true).get();
     ```
 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    const user = User.find("10ab7e3d05d58a1ad246ee87");
-
     const posts = await user.posts().where('active', true).get();
     ```
 
@@ -52,15 +49,26 @@ A one-to-one relationship is a very basic type of database relationship. For exa
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
     import Phone from './Models/Phone';
 
-    class User extends Mongoloquent {
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    class User extends Model<IUser> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IUser
+       */
+      static $schema: IUser
+
       /**
        * Get the phone associated with the user.
        */
       public function phone(){
-        return this.hasOne(Phone, "foreign_key");
+        return this.hasOne(Phone);
       }
     }
     ```
@@ -68,15 +76,15 @@ A one-to-one relationship is a very basic type of database relationship. For exa
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Phone from './Models/Phone';
 
-    class User extends Mongoloquent {
+    class User extends Model {
       /**
        * Get the phone associated with the user.
        */
       public function phone(){
-        return this.hasOne(Phone, "foreign_key");
+        return this.hasOne(Phone);
       }
     }
     ```
@@ -96,6 +104,23 @@ The first argument passed to the `hasOne` method is the name of the related mode
   <TabItem value="Javascript" label="Javascript">
     ```javascript
     const phone = await User.find("10ab7e3d05d58a1ad246ee87").phone().first();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Mongoloquent determines the foreign key of the relationship based on the parent model name. In this case, the `Phone` model is automatically assumed to have a `userId` foreign key. If you wish to override this convention, you may pass a second argument to the `hasOne` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    return this.hasOne(Phone, 'foreign_key');
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    return this.hasOne(Phone, 'foreign_key');
     ```
 
   </TabItem>
@@ -125,15 +150,28 @@ So, we can access the `Phone` model from our `User` model. Next, let's define a 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { ObjectID } from 'mongodb';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
     import User from './Models/User';
 
-    class Phone extends Mongoloquent {
+    interface IPhone extends IMongoloquentSchema, IMongoloquentTimestamps {
+      number: string
+      userId: ObjectID
+    }
+
+    class Phone extends Model<IPhone> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IPhone
+       */
+      static $schema: IPhone
+
       /**
        * Get the user that owns the phone.
        */
       public function user(){
-        return this.belongsTo(User, 'foreign_key');
+        return this.belongsTo(User);
       }
     }
     ```
@@ -141,15 +179,15 @@ So, we can access the `Phone` model from our `User` model. Next, let's define a 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from "mongoloquent";
     import User from './Models/User';
 
-    class Phone extends Mongoloquent {
+    class Phone extends Model {
       /**
        * Get the user that owns the phone.
        */
       public function user(){
-        return this.belongsTo(User, 'foreign_key');
+        return this.belongsTo(User);
       }
     }
     ```
@@ -157,39 +195,56 @@ So, we can access the `Phone` model from our `User` model. Next, let's define a 
   </TabItem>
 </Tabs>
 
-When invoking the `user` method, Mongoloquent will attempt to find a `User` model that has an `_id` which matches the `user_id` column on the Phone model.
+When invoking the `user` method, Mongoloquent will attempt to find a `User` model that has an `_id` which matches the `userId` column on the Phone model.
 
-If the parent model does not use `_id` as its primary key, or you wish to find the associated model using a different column, you may pass a third argument to the `belongsTo` method specifying the parent table's custom key:
+Mongoloquent determines the foreign key name by examining the name of the relationship method and suffixing the method name with `Id`. So, in this case, Mongoloquent assumes that the `Phone` model has a `userId` column. However, if the foreign key on the `Phone` model is not `userId`, you may pass a custom key name as the second argument to the `belongsTo` method:
 
 <Tabs>
-	<TabItem value="Typescript" label="Typescript" default>
+  <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
-    import User from './Models/User';
-
-    class Phone extends Mongoloquent {
-      /**
-       * Get the user that owns the phone.
-       */
-      public function user(){
-        return this.belongsTo(User, 'foreign_key', 'owner_key');
-      }
+    /**
+     * Get the user that owns the phone.
+     */
+    public function user(){
+      return this.belongsTo(User::class, 'foreign_key');
     }
     ```
 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
-    import User from './Models/User';
+    /**
+     * Get the user that owns the phone.
+     */
+    public function user(){
+      return this.belongsTo(User::class, 'foreign_key');
+    }
+    ```
 
-    class Phone extends Mongoloquent {
-      /**
-       * Get the user that owns the phone.
-       */
-      public function user(){
-        return this.belongsTo(User, 'foreign_key', 'owner_key');
-      }
+  </TabItem>
+</Tabs>
+
+If the parent model does not use `_id` as its primary key, or you wish to find the associated model using a different column, you may pass a third argument to the `belongsTo` method specifying the parent table's custom key:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    /**
+     * Get the user that owns the phone.
+     */
+    public function user(){
+      return this.belongsTo(User, 'foreign_key', 'owner_key');
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    /**
+     * Get the user that owns the phone.
+     */
+    public function user(){
+      return this.belongsTo(User, 'foreign_key', 'owner_key');
     }
     ```
 
