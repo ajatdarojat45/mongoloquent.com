@@ -3289,13 +3289,7 @@ The `sum` method returns the sum of all items in the collection:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]).sum("foo");
+    collect([1, 2, 3, 4, 5]).sum();
 
     // 15
     ```
@@ -3304,13 +3298,7 @@ The `sum` method returns the sum of all items in the collection:
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]).sum("foo");
+    collect([1, 2, 3, 4, 5]).sum();
 
     // 15
     ```
@@ -3323,7 +3311,7 @@ If the collection contains nested arrays or objects, you should pass a key that 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {'name': 'JavaScript: The Good Parts', 'pages': 176},
       {'name': 'JavaScript: The Definitive Guide', 'pages': 1096},
     ]);
@@ -3355,7 +3343,7 @@ In addition, you may pass your own closure to determine which values of the coll
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
+    const collection = collect([
       {name: "Chair", colors: ["Black"]},
       {name: "Desk", colors: ["Black", "Mahogany"]},
       {name: "Bookcase", colors: ["Red", "Beige", "Brown"]},
@@ -3396,40 +3384,26 @@ The `take` method returns a new collection with the specified number of items:
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 0}
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const taken = collection.take(3);
 
     taken.all();
 
-    // [{foo: 0}, {foo: 1}, {foo: 2}]
+    // [1, 2, 3]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 0}
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const taken = collection.take(3);
 
     taken.all();
 
-    // [{foo: 0}, {foo: 1}, {foo: 2}]
+    // [1, 2, 3]
     ```
 
   </TabItem>
@@ -3440,40 +3414,26 @@ You may also pass a negative integer to take the specified number of items from 
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 0}
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const taken = collection.take(-2);
 
     taken.all();
 
-    // [{foo: 4}, {foo: 5}]
+    // [4, 5]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 0}
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const taken = collection.take(-2);
 
     taken.all();
 
-    // [{foo: 4}, {foo: 5}]
+    // [4, 5]
     ```
 
   </TabItem>
@@ -3486,40 +3446,30 @@ The `takeUntil` method returns items in the collection until the given callback 
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4]);
 
     const subset = collection.takeUntil((item) => {
-      return item.foo >= 3;
+      return item >= 3;
     });
 
     subset.all();
 
-    // [{foo: 1}, {foo: 2}]
+    // [1, 2]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4]);
 
     const subset = collection.takeUntil((item) => {
-      return item.foo >= 3;
+      return item >= 3;
     });
 
     subset.all();
 
-    // [{foo: 1}, {foo: 2}]
+    // [1, 2]
     ```
 
   </TabItem>
@@ -3530,36 +3480,26 @@ You may also pass a simple value to the `takeUntil` method to get the items unti
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4]);
 
     const subset = collection.takeUntil(3);
 
     subset.all();
 
-    // [{foo: 1}, {foo: 2}]
+    // [1, 2]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4]);
 
     const subset = collection.takeUntil(3);
 
     subset.all();
 
-    // [{foo: 1}, {foo: 2}]
+    // [1, 2]
     ```
 
   </TabItem>
@@ -3574,40 +3514,30 @@ The `takeWhile` method returns items in the collection until the given callback 
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4]);
 
     const subset = collection.takeWhile((item) => {
-      return item.foo < 3;
+      return item < 3;
     });
 
     subset.all();
 
-    // [{foo: 1}, {foo: 2}]
+    // [1, 2]
     ```
 
   </TabItem>
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-    ]);
+    const collection = collect([1, 2, 3, 4]);
 
     const subset = collection.takeWhile((item) => {
-      return item.foo < 3;
+      return item < 3;
     });
 
     subset.all();
 
-    // [{foo: 1}, {foo: 2}]
+    // [1, 2]
     ```
 
   </TabItem>
