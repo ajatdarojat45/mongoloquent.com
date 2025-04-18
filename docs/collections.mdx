@@ -3552,16 +3552,10 @@ The `transform` method iterates over the collection and calls the given callback
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const collection = collect<IData>([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const transformed = collection.transform((item) => {
-      return item.foo * 2;
+      return item * 2;
     });
 
     transformed.all();
@@ -3573,16 +3567,10 @@ The `transform` method iterates over the collection and calls the given callback
 
   <TabItem value="Javascript" label="Javascript" default>
     ```javascript
-    const collection = collect([
-      {foo: 1},
-      {foo: 2},
-      {foo: 3},
-      {foo: 4},
-      {foo: 5},
-    ]);
+    const collection = collect([1, 2, 3, 4, 5]);
 
     const transformed = collection.transform((item) => {
-      return item.foo * 2;
+      return item * 2;
     });
 
     transformed.all();
