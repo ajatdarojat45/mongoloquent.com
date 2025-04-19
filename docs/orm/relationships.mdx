@@ -1345,8 +1345,8 @@ tags
 taggables
   _id - ObjectID
   tag_id - ObjectID
-  taggable_id - ObjectID
-  taggable_type - string
+  taggableId - ObjectID
+  taggableType - string
 
 ```
 
@@ -1356,15 +1356,32 @@ taggables
 
 Next, we're ready to define the relationships on the models. The `Post` and `Video` models will both contain a `tags` method that calls the `morphToMany` method provided by the base Eloquent model class.
 
-The morphToMany method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate table name and the keys it contains, we will refer to the relationship as "taggable":
+The `morphToMany` method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate table name and the keys it contains, we will refer to the relationship as "taggable":
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Tag from './Models/Tag';
 
-    class Post extends Mongoloquent {
+    interface IPost extends IMongoloquentSchema, IMongoloquentTimestamps {
+      title: string
+      body: string
+    }
+
+    class Post extends Model<IPost> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IPost
+       */
+      static $schema: IPost
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       protected static $collection: string = 'posts';
 
       /**
@@ -1379,10 +1396,15 @@ The morphToMany method accepts the name of the related model as well as the "rel
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Tag from './Models/Tag';
 
-    class Post extends Mongoloquent {
+    class Post extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'posts';
 
       /**
@@ -1406,12 +1428,28 @@ The `morphedByMany` method accepts the name of the related model as well as the 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Post from './Models/Post';
     import Video from './Models/Video';
 
-    class Tag extends Mongoloquent {
-      protected static $collection: string = 'tags';
+    interface ITag extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    class Tag extends Model<ITag> {
+      /**
+       * The attributes of the model.
+       *
+       * @var ITag
+       */
+      static $schema: ITag
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
+      static $collection: string = 'tags';
 
       /**
        * Get all of the posts that are tagged with the tag.
@@ -1432,11 +1470,16 @@ The `morphedByMany` method accepts the name of the related model as well as the 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Post from './Models/Post';
     import Video from './Models/Video';
 
-    class Tag extends Mongoloquent {
+    class Tag extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'tags';
 
       /**
@@ -1467,9 +1510,13 @@ Once your database table and models are defined, you may access the relationship
     ```typescript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const tags = await post.tags().get();
+
+    tags.forEach(tag => {
+      console.log(tag.name);
+    });
     ```
 
   </TabItem>
@@ -1477,9 +1524,13 @@ Once your database table and models are defined, you may access the relationship
     ```javascript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const tags = await post.tags().get();
+
+    tags.forEach(tag => {
+      console.log(tag.name);
+    });
     ```
 
   </TabItem>
@@ -1492,11 +1543,19 @@ You may retrieve the parent of a polymorphic relation from the polymorphic child
     ```typescript
     import Tag from './Models/Tag';
 
-    const tag = Tag.find("10ab7e3d05d58a1ad246ee87");
+    const tag = await Tag.find("10ab7e3d05d58a1ad246ee87");
 
     const posts = await tag.posts().get();
 
+    posts.forEach(post => {
+      console.log(post.title);
+    });
+
     const videos = await tag.videos().get();
+
+    videos.forEach(video => {
+      console.log(video.title);
+    });
     ```
 
   </TabItem>
@@ -1504,11 +1563,19 @@ You may retrieve the parent of a polymorphic relation from the polymorphic child
     ```javascript
     import Tag from './Models/Tag';
 
-    const tag = Tag.find("10ab7e3d05d58a1ad246ee87");
+    const tag = await Tag.find("10ab7e3d05d58a1ad246ee87");
 
     const posts = await tag.posts().get();
 
+    posts.forEach(post => {
+      console.log(post.title);
+    });
+
     const videos = await tag.videos().get();
+
+    videos.forEach(video => {
+      console.log(video.title);
+    });
     ```
 
   </TabItem>
