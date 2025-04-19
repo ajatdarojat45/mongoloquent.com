@@ -694,9 +694,9 @@ Many-to-many relations are slightly more complicated than `hasOne` and `hasMany`
 
 #### Table Structure
 
-To define this relationship, three database tables are needed: `users`, `roles`, and `role_user`. The `role_user` table is derived from the alphabetical order of the related model names and contains `user_id` and `role_id` columns. This table is used as an intermediate table linking the users and roles.
+To define this relationship, three database tables are needed: `users`, `roles`, and `roleUser`. The `roleUser` table is derived from the alphabetical order of the related model names and contains `userId` and `roleId` columns. This table is used as an intermediate table linking the users and roles.
 
-Remember, since a role can belong to many users, we cannot simply place a `user_id` column on the `roles` table. This would mean that a role could only belong to a single user. In order to provide support for roles being assigned to multiple users, the `role_user` table is needed. We can summarize the relationship's table structure like so:
+Remember, since a role can belong to many users, we cannot simply place a `userId` column on the `roles` table. This would mean that a role could only belong to a single user. In order to provide support for roles being assigned to multiple users, the `roleUser` table is needed. We can summarize the relationship's table structure like so:
 
 ```
 users
@@ -707,28 +707,31 @@ roles
   _id - ObjectID
   name - string
 
-role_user
-  user_id - ObjectID
-  role_id - ObjectID
+roleUser
+  userId - ObjectID
+  roleId - ObjectID
 ```
 
 #### Model Structure
 
-Many-to-many relationships are defined by writing a method that returns the result of the `belongsToMany` method. The `belongsToMany` method is provided by the `Mongoloquent Model` base class that is used by all of your application's Mongoloquent models. For example, let's define a `roles` method on our `User` model. The first argument passed to this method is the name of the related model class:
+Many-to-many relationships are defined by writing a method that returns the result of the `belongsToMany` method. The `belongsToMany` method is provided by the `Model` base class that is used by all of your application's Mongoloquent models. For example, let's define a `roles` method on our `User` model. The first argument passed to this method is the name of the related model class:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript 
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Role from './Models/Role';
-    import RoleUser from './Models/RoleUser';
 
-    class User extends Mongoloquent {
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    class User extends Model<IUser> {
       /**
        * The roles that belong to the user.
        */
       public function roles(){
-        return this.belongsToMany(Role, RoleUser, "user_id", "role_id");
+        return this.belongsToMany(Role);
       }
     }
     ```
@@ -738,14 +741,13 @@ Many-to-many relationships are defined by writing a method that returns the resu
     ```javascript
     import { Mongoloquent } from 'mongoloquent';
     import Role from './Models/Role';
-    import RoleUser from './Models/RoleUser';
 
     class User extends Mongoloquent {
       /**
        * The roles that belong to the user.
        */
       public function roles(){
-        return this.belongsToMany(Role, RoleUser, "user_id", "role_id");
+        return this.belongsToMany(Role);
       }
     }
     ```
@@ -760,9 +762,13 @@ Once the relationship is defined, you may access the user's `roles` using the ro
     ```typescript
     import User from './Models/User';
 
-    const user = User.find("10ab7e3d05d58a1ad246ee87");
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
 
     const roles = await user.roles().get();
+
+    roles.forEach(role => {
+      console.log(role.name);
+    });
     ```
 
   </TabItem>
@@ -770,9 +776,13 @@ Once the relationship is defined, you may access the user's `roles` using the ro
     ```javascript
     import User from './Models/User';
 
-    const user = User.find("10ab7e3d05d58a1ad246ee87");
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
 
     const roles = await user.roles().get();
+
+    roles.forEach(role => {
+      console.log(role.name);
+    });
     ```
 
   </TabItem>
@@ -783,33 +793,54 @@ Since all relationships also serve as query builders, you may add further constr
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const roles = await user.roles().orderBy('name').get();
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
+    
+    const roles = await user.orderBy('name').get();
     ```
 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    const roles = await user.roles().orderBy('name').get();
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
+    
+    const roles = await user.orderBy('name').get();
     ```
 
   </TabItem>
 </Tabs>
 
-You may also customize the column names of the keys on the table by passing additional arguments to the `belongsToMany` method. The third argument is the foreign key name of the model on which you are defining the relationship, while the fourth argument is the foreign key name of the model that you are joining to:
+To determine the table name of the relationship's intermediate table, Mongoloquent will join the two related model names in alphabetical order. However, you are free to override this convention. You may do so by passing a second argument to the `belongsToMany` method:
 
 <Tabs>
-	<TabItem value="Typescript" label="Typescript" default>
+  <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    return this.belongsToMany(Role, RoleUser, 'user_id', 'role_id');
+    return this.belongsToMany(Role, "roleUser");
     ```
 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    return this.belongsToMany(Role, RoleUser, 'user_id', 'role_id');
+    return this.belongsToMany(Role, "roleUser");
     ```
 
   </TabItem>
+</Tabs>
+
+In addition to customizing the name of the intermediate table, you may also customize the column names of the keys on the table by passing additional arguments to the `belongsToMany` method. The third argument is the foreign key name of the model on which you are defining the relationship, while the fourth argument is the foreign key name of the model that you are joining to:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    return this.belongsToMany(Role, "roleUser", "userId", "roleId");
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    return this.belongsToMany(Role, "roleUser", "userId", "roleId");
+    ```
+
+  </TabItem>  
 </Tabs>
 
 #### Defining the Inverse of the Relationship
@@ -819,16 +850,26 @@ To define the "inverse" of a many-to-many relationship, you should define a meth
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import User from './Models/User';
-    import RoleUser from './Models/RoleUser';
 
-    class Role extends Mongoloquent {
+    interface IRole extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    class Role extends Model<IRole> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IRole
+       */
+      static $schema: IRole
+
       /**
        * The users that belong to the role.
        */
       public function users(){
-        return this.belongsToMany(User, RoleUser, "role_id", "user_id");
+        return this.belongsToMany(User);
       }
     }
     ```
@@ -836,16 +877,15 @@ To define the "inverse" of a many-to-many relationship, you should define a meth
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import User from './Models/User';
-    import RoleUser from './Models/RoleUser';
 
-    class Role extends Mongoloquent {
+    class Role extends Model {
       /**
        * The users that belong to the role.
        */
       public function users(){
-        return this.belongsToMany(User, RoleUser, "role_id", "user_id");
+        return this.belongsToMany(User);
       }
     }
     ```
