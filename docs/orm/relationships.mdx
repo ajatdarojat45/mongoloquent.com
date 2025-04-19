@@ -1583,17 +1583,33 @@ You may retrieve the parent of a polymorphic relation from the polymorphic child
 
 ## Querying Relationships
 
-Since all Eloquent relationships are defined via methods, you may call those methods to obtain an instance of the relationship without actually executing a query to load the related models. In addition, all types of Eloquent relationships also serve as [query builders](#query-builders), allowing you to continue to chain constraints onto the relationship query before finally executing the SQL query against your database.
+Since all Mongoloquent relationships are defined via methods, you may call those methods to obtain an instance of the relationship without actually executing a query to load the related models. In addition, all types of Mongoloquent relationships also serve as [query builders](../database/query-builder), allowing you to continue to chain constraints onto the relationship query before finally executing the SQL query against your database.
 
-For example, imagine a blog application in which a User model has many associated `Post` models:
+For example, imagine a blog application in which a `User` model has many associated `Post` models:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
 
-    class User extends Mongoloquent {
-      protected static $collection: string = 'users';
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    class User extends Model<IUser> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IUser
+       */
+      static $schema: IUser
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
+      static $collection: string = 'users';
 
       /**
        * Get all of the posts for the user.
@@ -1607,9 +1623,14 @@ For example, imagine a blog application in which a User model has many associate
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
 
     class User extends Mongoloquent {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'users';
 
       /**
@@ -1650,7 +1671,7 @@ You may query the `posts` relationship and add additional constraints to the rel
   </TabItem>
 </Tabs>
 
-You are able to use any of the Laravel [query builders](#query-builders) methods on the relationship, so be sure to explore the query builder documentation to learn about all of the methods that are available to you.
+You are able to use any of the Mongoloquent [query builders](../database/query-builder) methods on the relationship, so be sure to explore the query builder documentation to learn about all of the methods that are available to you.
 
 #### Chaining `orWhere` Clauses After Relationships
 
@@ -1676,31 +1697,6 @@ As demonstrated in the example above, you are free to add additional constraints
 
   </TabItem>
 </Tabs>
-
-### Querying Relationship Existence
-
-When retrieving model records, you may wish to limit your results based on the existence of a relationship. For example, imagine you want to retrieve all blog posts that have at least one comment. To do so, you may pass the name of the relationship to the `with` method:
-
-<Tabs>
-	<TabItem value="Typescript" label="Typescript" default>
-    ```typescript
-    import Post from './Models/Post';
-
-    const posts = await Post.with('comments').get();
-    ```
-
-  </TabItem>
-  <TabItem value="Javascript" label="Javascript">
-    ```javascript
-    import Post from './Models/Post';
-
-    const posts = await Post.with('comments').get();
-    ```
-
-  </TabItem>
-</Tabs>
-
-> Mongoloquent does not currently support querying for relationship existence across databases. The relationships must exist within the same database.
 
 ## Eager Loading
 
