@@ -1127,26 +1127,62 @@ videos
 comments
   _id - ObjectID
   body - text
-  commentable_id - ObjectID
-  commentable_type - string
+  commentableId - ObjectID
+  commentableType - string
 ```
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
     // Comment.ts
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+    import { ObjectID } from "mongodb"
 
-    class Comment extends Mongoloquent {
+    interface IComment extends IMongoloquentSchema, IMongoloquentTimestamps {
+      body: string
+      commentableId: ObjectID
+      commentableType: string
+    }
+
+    class Comment extends Model<IComment> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IComment
+       */
+      static $schema: IComment
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       protected static $collection: string = 'comments';
     }
 
 
     // Post.ts
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Comment from './Models/Comment';
 
-    class Post extends Mongoloquent {
+    interface IPost extends IMongoloquentSchema, IMongoloquentTimestamps {
+      title: string
+      body: string
+    }
+
+    class Post extends Model<IPost> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IPost
+       */
+      static $schema: IPost
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       protected static $collection: string = 'posts';
 
       /**
@@ -1159,10 +1195,27 @@ comments
 
 
     // Video.ts
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Comment from './Models/Comment';
 
-    class Video extends Mongoloquent {
+    interface IVideo extends IMongoloquentSchema, IMongoloquentTimestamps {
+      title: string
+      url: string
+    }
+
+    class Video extends Model<IVideo> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IVideo
+       */
+      static $schema: IVideo
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       protected static $collection: string = 'videos';
 
       /**
@@ -1178,18 +1231,28 @@ comments
   <TabItem value="Javascript" label="Javascript">
     ```javascript
     // Comment.js
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
 
-    class Comment extends Mongoloquent {
+    class Comment extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'comments';
     }
 
 
     // Post.js
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Comment from './Models/Comment';
 
-    class Post extends Mongoloquent {
+    class Post extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'posts';
 
       /**
@@ -1202,10 +1265,15 @@ comments
 
 
     // Video.js
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Comment from './Models/Comment';
 
-    class Video extends Mongoloquent {
+    class Video extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'videos';
 
       /**
@@ -1229,9 +1297,13 @@ Once your database table and models are defined, you may access the relationship
     ```typescript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comments = await post.comments().get();
+
+    comments.forEach(comment => {
+      console.log(comment.body);
+    });
     ```
 
   </TabItem>
@@ -1239,9 +1311,13 @@ Once your database table and models are defined, you may access the relationship
     ```javascript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comments = await post.comments().get();
+
+    comments.forEach(comment => {
+      console.log(comment.body);
+    });
     ```
 
   </TabItem>
