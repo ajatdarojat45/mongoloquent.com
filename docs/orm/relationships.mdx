@@ -258,15 +258,26 @@ A one-to-many relationship is used to define relationships where a single model 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Comment from './Models/Comment';
 
-    class Post extends Mongoloquent {
+    interface IPost extends IMongoloquentSchema, IMongoloquentTimestamps {
+      title: string
+    }
+
+    class Post extends Model<IPost> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IPost
+       */
+      static $schema: IPost
+
       /**
        * Get the comments for the post.
        */
       public function comments(){
-        return this.hasMany(Comment, 'foreign_key');
+        return this.hasMany(Comment);
       }
     }
     ```
@@ -274,15 +285,15 @@ A one-to-many relationship is used to define relationships where a single model 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Comment from './Models/Comment';
 
-    class Post extends Mongoloquent {
+    class Post extends Model {
       /**
        * Get the comments for the post.
        */
       public function comments(){
-        return this.hasMany(Comment, 'foreign_key');
+        return this.hasMany(Comment);
       }
     }
     ```
@@ -290,14 +301,21 @@ A one-to-many relationship is used to define relationships where a single model 
   </TabItem>
 </Tabs>
 
-Once the relationship method has been defined, we can access the [collection](#collection) of related comments by accessing the comments property. Remember, since Mongoloquent provides "dynamic relationship methods", we can access relationship methods as if they were defined as methods on the model:
+Remember, Mongoloquent will automatically determine the proper foreign key column for the `Comment` model. By convention, Mongoloquent will take the "camel case" name of the parent model and suffix it with `Id`. So, in this example, Mongoloquent will assume the foreign key column on the `Comment` model is `postId`.
+
+Once the relationship method has been defined, we can access the [collection](./collection) of related `comments` by accessing the comments property. Remember, since Mongoloquent provides "dynamic relationship methods", we can access relationship methods as if they were defined as methods on the model:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
     import Post from './Models/Post';
 
-    const comments = await Post.find("10ab7e3d05d58a1ad246ee87").comments().get();
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87")
+    const comments = await post.comments().get();
+
+    comments.forEach(comment => {
+      console.log(comment.body);
+    });
     ```
 
   </TabItem>
@@ -305,7 +323,12 @@ Once the relationship method has been defined, we can access the [collection](#c
     ```javascript
     import Post from './Models/Post';
 
-    const comments = await Post.find("10ab7e3d05d58a1ad246ee87").comments().get();
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87")
+    const comments = await post.comments().get();
+
+    comments.forEach(comment => {
+      console.log(comment.body);
+    });
     ```
 
   </TabItem>
@@ -316,7 +339,9 @@ Since all relationships also serve as query builders, you may add further constr
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const comment = await Post.find("10ab7e3d05d58a1ad246ee87").comments()
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
+
+    const comment = await post.comments()
       .where('title', 'foo')
       .first();
     ```
@@ -324,7 +349,9 @@ Since all relationships also serve as query builders, you may add further constr
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    const comment = await Post.find("10ab7e3d05d58a1ad246ee87").comments()
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
+    
+    const comment = await post.comments()
       .where('title', 'foo')
       .first();
     ```
@@ -360,15 +387,27 @@ Now that we can access all of a post's comments, let's define a relationship to 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Post from './Models/Post';
 
-    class Comment extends Mongoloquent {
+    interface IComment extends IMongoloquentSchema, IMongoloquentTimestamps {
+      body: string
+      postId: ObjectID
+    }
+
+    class Comment extends Model<IComment> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IComment
+       */
+      static $schema: IComment
+
       /**
        * Get the post that owns the comment.
        */
       public function post(){
-        return this.belongsTo(Post, 'foreign_key');
+        return this.belongsTo(Post);
       }
     }
     ```
@@ -376,15 +415,15 @@ Now that we can access all of a post's comments, let's define a relationship to 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Post from './Models/Post';
 
-    class Comment extends Mongoloquent {
+    class Comment extends Model {
       /**
        * Get the post that owns the comment.
        */
       public function post(){
-        return this.belongsTo(Post, 'foreign_key');
+        return this.belongsTo(Post);
       }
     }
     ```
@@ -399,7 +438,7 @@ Once the relationship has been defined, we can retrieve a comment's parent `post
     ```typescript 
     import Comment from './Models/Comment';
 
-    const comment = Comment.find("10ab7e3d05d58a1ad246ee87");
+    const comment = await Comment.find("10ab7e3d05d58a1ad246ee87");
 
     const post = await comment.post().first();
     ```
@@ -409,7 +448,7 @@ Once the relationship has been defined, we can retrieve a comment's parent `post
     ```javascript
     import Comment from './Models/Comment';
 
-    const comment = Comment.find("10ab7e3d05d58a1ad246ee87");
+    const comment = await Comment.find("10ab7e3d05d58a1ad246ee87");
 
     const post = await comment.post().first();
     ```
@@ -417,7 +456,36 @@ Once the relationship has been defined, we can retrieve a comment's parent `post
   </TabItem>
 </Tabs>
 
-In the example above, Mongoloquent will attempt to find a `Post` model that has an `_id` which matches the `foreign_key` column on the `Comment` model.
+In the example above, Mongoloquent will attempt to find a `Post` model that has an `_id` which matches the `postId` column on the `Comment` model.
+
+Mongoloquent determines the default foreign key name by examining the name of the relationship method and suffixing the method name followed by the name of the parent model's primary key column. So, in this example, Mongoloquent will assume the `Post` model's foreign key on the `comments` table is `postId`.
+
+However, if the foreign key for your relationship does not follow these conventions, you may pass a custom foreign key name as the second argument to the `belongsTo` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript 
+    /**
+     * Get the post that owns the comment.
+     */
+    public function post(){
+      return this.belongsTo(Post, 'foreign_key');
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    /**
+     * Get the post that owns the comment.
+     */
+    public function post(){
+      return this.belongsTo(Post, 'foreign_key');
+    }
+    ```
+
+  </TabItem>
+</Tabs>
 
 If your parent model does not use `_id` as its primary key, or you wish to find the associated model using a different column, you may pass a third argument to the `belongsTo` method specifying your parent table's custom key:
 
