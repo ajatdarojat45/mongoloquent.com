@@ -917,11 +917,11 @@ users
 images
   _id - ObjectID
   url - string
-  imageable_id - ObjectID
-  imageable_type - string
+  imageableId - ObjectID
+  imageableType - string
 ```
 
-Note the `imageable_id` and `imageable_type` columns on the `images` collection. The `imageable_id` column will contain the ID value of the post or user, while the `imageable_type` column will contain the class name of the parent model. The `imageable_type` column is used by Mongoloquent to determine which "type" of parent model to return when accessing the `imageable` relation. In this case, the column would contain either `Post` or `User`.
+Note the `imageableId` and `imageableType` columns on the `images` collection. The `imageableId` column will contain the ID value of the post or user, while the `imageableType` column will contain the class name of the parent model. The `imageableType` column is used by Mongoloquent to determine which "type" of parent model to return when accessing the `imageable` relation. In this case, the column would contain either `Post` or `User`.
 
 #### Model Structure
 
@@ -931,19 +931,53 @@ Next, let's examine the model definitions needed to build this relationship:
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
     // Image.ts
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
 
-    class Image extends Mongoloquent {
-      protected static $collection: string = 'imagables';
+    interface IImage, IMongoloquentSchema, IMongoloquentTimestamps {
+      url: string
+      imageableId: ObjectID
+      imageableType: string
+    }
+
+    class Image extends Model<IImage> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IImage
+       */
+      static $schema: IImage
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
+      static $collection: string = 'imagables';
     }
 
 
     // Post.ts
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Image from './Models/Image';
 
-    class Post extends Mongoloquent {
-      protected static $collection: string = 'posts';
+    interface IPost extends IMongoloquentSchema, IMongoloquentTimestamps {
+      title: string
+    }
+
+    class Post extends Model<IPost> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IPost
+       */
+      static $schema: IPost
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
+      static $collection: string = 'posts';
 
       /**
        * Get the post's image.
@@ -955,11 +989,27 @@ Next, let's examine the model definitions needed to build this relationship:
 
 
     // User.ts
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Image from './Models/Image';
 
-    class User extends Mongoloquent {
-      protected static $collection: string = 'users';
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    class User extends Model<IUser> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IUser
+       */
+      static $schema: IUser
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
+      static $collection: string = 'users';
 
       /**
        * Get the user's image.
@@ -975,18 +1025,28 @@ Next, let's examine the model definitions needed to build this relationship:
   <TabItem value="Javascript" label="Javascript">
     ```javascript
     // Image.js
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
 
-    class Image extends Mongoloquent {
+    class Image extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'imagables';
     }
 
 
     // Post.js
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Image from './Models/Image';
 
-    class Post extends Mongoloquent {
+    class Post extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'posts';
 
       /**
@@ -999,10 +1059,15 @@ Next, let's examine the model definitions needed to build this relationship:
 
 
     // User.js
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Image from './Models/Image';
 
-    class User extends Mongoloquent {
+    class User extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'users';
 
       /**
@@ -1026,7 +1091,7 @@ Once your database table and models are defined, you may access the relationship
     ```typescript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const image = await post.image().first();
     ```
@@ -1036,7 +1101,7 @@ Once your database table and models are defined, you may access the relationship
     ```javascript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const image = await post.image().first();
     ```
