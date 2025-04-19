@@ -525,12 +525,12 @@ applications
 
 environments
   _id - ObjectID
-  application_id - ObjectID
+  applicationId - ObjectID
   name - string
 
 deployments
   _id - ObjectID
-  environment_id - ObjectID
+  environmentId - ObjectID
   commit_hash - string
 ```
 
@@ -539,16 +539,20 @@ Now that we have examined the table structure for the relationship, let's define
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript 
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Deployment from './Models/Deployment';
     import Environment from './Models/Environment';
 
-    class Application extends Mongoloquent {
+    interface IApplication extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    class Application extends Model<IApplication> {
       /**
        * Get all of the deployments for the application.
        */
       public function deployments(){
-        return this.hasManyThrough(Deployment, Environment, 'foreign_key', 'owner_key');
+        return this.hasManyThrough(Deployment, Environment);
       }
     }
     ```
@@ -556,16 +560,16 @@ Now that we have examined the table structure for the relationship, let's define
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Deployment from './Models/Deployment';
     import Environment from './Models/Environment';
 
-    class Application extends Mongoloquent {
+    class Application extends Model {
       /**
        * Get all of the deployments for the application.
        */
       public function deployments(){
-        return this.hasManyThrough(Deployment, Environment, 'application_id', 'environment_id');
+        return this.hasManyThrough(Deployment, Environment);
       }
     }
     ```
@@ -588,8 +592,8 @@ Typical Mongoloquent foreign key conventions will be used when performing the re
         return this.hasManyThrough(
           Deployment,
           Environment,
-          'application_id', // Foreign key on the environments table...
-          'environment_id', // Foreign key on the deployments table...
+          'applicationId', // Foreign key on the environments table...
+          'environmentId', // Foreign key on the deployments table...
           '_id', // Local key on the applications table...
           '_id' // Local key on the environments table...
         );
@@ -607,8 +611,8 @@ Typical Mongoloquent foreign key conventions will be used when performing the re
         return this.hasManyThrough(
           Deployment,
           Environment,
-          'application_id', // Foreign key on the environments table...
-          'environment_id', // Foreign key on the deployments table...
+          'applicationId', // Foreign key on the environments table...
+          'environmentId', // Foreign key on the deployments table...
           '_id', // Local key on the applications table...
           '_id' // Local key on the environments table...
         );
@@ -627,10 +631,21 @@ It's common to add additional methods to models that constrain relationships. Fo
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript 
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
     import Post from './Models/Post';
 
-    class User extends Mongoloquent {
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    class User extends Model<IUser> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IUser
+       */
+      static $schema: IUser
+
       /**
        * Get all of the user's posts.
        */
@@ -650,10 +665,10 @@ It's common to add additional methods to models that constrain relationships. Fo
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Post from './Models/Post';
 
-    class User extends Mongoloquent {
+    class User extends Model {
       /**
        * Get all of the user's posts.
        */
