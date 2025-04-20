@@ -609,6 +609,56 @@ You may use the `skip` and `take` methods to limit the number of results returne
   </TabItem>
 </Tabs>
 
+## Insert Statements
+
+The query builder also provides an `insert` method that may be used to insert records into the database collection. The `insert` method accepts an object of column names and values:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await DB.collection<IUser>("users").insert({
+      email: "kayla@example.com",
+      votes: 0
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await DB.collection<IUser>("users").insert({
+      email: "kayla@example.com",
+      votes: 0
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may insert several records at once by passing an array of objects. Each array represents a record that should be inserted into the table:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await DB.collection<IUser>("users").insertMany([
+      {email: "picard@example.com", votes: 0},
+      {email: "janeway@example.com", votes: 0},
+    ]);
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await DB.collection("users").insertMany([
+      {email: "picard@example.com", votes: 0},
+      {email: "janeway@example.com", votes: 0},
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
 ---
 
 <Sponsor />
