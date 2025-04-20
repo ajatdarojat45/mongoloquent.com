@@ -1,0 +1,102 @@
+---
+sidebar_position: 3
+title: Pagination
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "../sponsor.mdx";
+
+# Database: Pagination
+
+## Introduction
+
+Mongoloquent's paginator is integrated with the [query builder](../database/query-builder) and [Mongoloquent ORM](../orm/getting-started) and provides convenient, easy-to-use pagination of database records with zero configuration.
+
+## Basic Usage
+
+### Paginating Query Builder Results
+
+There are several ways to paginate items. The simplest is by using the `paginate` method on the [query builder](../database/query-builder).
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    const users = await DB.collection<IUser>('users')
+      .paginate(1, 15);
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const users = await DB.collection('users')
+      .paginate(1, 15);
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Paginating Mongoloquent Results
+
+You may also paginate [Mongoloquent](../orm/getting-started) queries. In this example, we will paginate the `Models/User` model and indicate that we plan to display 15 records per page. As you can see, the syntax is nearly identical to paginating query builder results:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import User from './Models/User';
+
+    const users = await User
+      .paginate(1, 15);
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import User from './Models/User';
+
+    const users = await User
+      .paginate(1, 15);
+    ```
+
+  </TabItem>
+</Tabs>
+
+Of course, you may call the `paginate` method after setting other constraints on the query, such as `where` clauses:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import User from './Models/User';
+
+    const users = await User
+      .where("votes", ">", 100)
+      .paginate(1, 15);
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import User from './Models/User';
+
+    const users = await User
+      .where('votes', '>', 100)
+      .paginate(1, 15);
+    ```
+
+  </TabItem>
+</Tabs>
+
+---
+
+<Sponsor />
