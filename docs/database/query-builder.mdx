@@ -659,6 +659,84 @@ You may insert several records at once by passing an array of objects. Each arra
   </TabItem>
 </Tabs>
 
+## Update Statements
+
+In addition to inserting records into the database, the query builder can also update existing records using the `update` method. The `update` method, like the `insert` method, accepts an object of column and value pairs indicating the columns to be updated. You may constrain the `update` query using `where` clauses:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await DB.collection<IUser>("users")
+      .where("_id", "=", "10ab7e3d05d58a1ad246ee87")
+      .update({ votes: 1 });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await DB.collection("users")
+      .where("_id", "=", "10ab7e3d05d58a1ad246ee87")
+      .update({ votes: 1 });
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Update or Insert
+
+Sometimes you may want to update an existing record in the database or create it if no matching record exists. In this scenario, the `updateOrInsert` method may be used. The `updateOrInsert` method accepts two arguments: an object of conditions by which to find the record, and an object of column and value pairs indicating the columns to be updated.
+
+The `updateOrInsert` method will attempt to locate a matching database record using the first argument's column and value pairs. If the record exists, it will be updated with the values in the second argument. If the record cannot be found, a new record will be inserted with the merged attributes of both arguments:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await DB.collection<IUser>("users")
+      .updateOrInsert(
+        { email: "john@example.com", name: "John" },
+        { votes: 2 } 
+      );
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await DB.collection("users")
+      .updateOrInsert(
+        { email: "john@example.com", name: "John" },
+        { votes: 2 } 
+      );
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Delete Statements
+
+The query builder's `delete` method may be used to delete records from the table. The `delete` method returns the number of affected rows. You may constrain `delete` statements by adding "where" clauses before calling the `delete` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const deleted = await DB.collection<IUser>("users").delete();
+
+    const deleted = await DB.collection<IUser>("users").where("votes", ">", 100).delete();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const deleted = await DB.collection("users").delete();
+      
+    const deleted = await DB.collection("users").where("votes", ">", 100).delete();
+    ```
+
+  </TabItem>
+</Tabs>
+
 ---
 
 <Sponsor />
