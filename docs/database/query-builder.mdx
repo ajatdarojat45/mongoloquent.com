@@ -507,7 +507,7 @@ The `whereNotNull` method verifies that the column's value is not `NULL`:
 
 ### Ordering
 
-#### The orderBy Method
+#### The `orderBy` Method
 
 The `orderBy` method allows you to sort the results of the query by a given column. The first argument accepted by the `orderBy` method should be the column you wish to sort by, while the second argument determines the direction of the sort and may be either `asc` or `desc`:
 
@@ -575,6 +575,34 @@ As you might expect, the groupBy method may be used to group the query results:
     ```javascript
     const users = await DB.collection("users")
       .groupBy("accountId")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Limit and Offset
+
+#### The `skip` and `take` Methods
+
+You may use the `skip` and `take` methods to limit the number of results returned from the query or to skip a given number of results in the query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .skip(10)
+      .take(5)
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .skip(10)
+      .take(5)
       .get();
     ```
 
