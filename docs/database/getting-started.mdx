@@ -18,8 +18,13 @@ Almost every modern web application interacts with a database. Mongoloquent make
 The configuration for database is located in your application's `.env` configuration file. In this file, you may define your database connections, as well as specify which connection should be used by default. Most of the configuration options within this file are driven by the values of your application's environment variables.
 
 ```env
+// default: mongoloquent
 MONGOLOQUENT_DATABASE_NAME=your-database
+
+// default: mongodb://localhost:27017
 MONGOLOQUENT_DATABASE_URI=mongodb://localhost:27017
+
+// default: Asia/Jakarta
 MONGOLOQUENT_TIMEZONE=Asia/Jakarta
 ```
 
@@ -29,7 +34,7 @@ Once you have configured your database connection, you may run queries using the
 
 #### Running a Select Query
 
-To run a basic SELECT query, you may use the `select` method on the `DB` class:
+To run a basic SELECT query, you may use the `collection` method on the `DB` class:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -166,7 +171,7 @@ The `delete` method should be used to delete records from the database. the numb
 
 ### Using Multiple Database Connections
 
-If your application using multiple connections, you may define each connection via the connection method provided by the `DB` class.
+If your application using multiple connections, you may define each connection via the `connection` and `database` methods provided by the `DB` class.
 
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
