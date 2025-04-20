@@ -1,0 +1,167 @@
+---
+sidebar_position: 1
+title: Getting Started
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "../sponsor.mdx";
+
+# Database: Getting Started
+
+## Introduction
+
+Almost every modern web application interacts with a database. Mongoloquent makes interacting with MongoDB databases extremely simple.
+
+### Configuration
+
+The configuration for database is located in your application's `.env` configuration file. In this file, you may define your database connections, as well as specify which connection should be used by default. Most of the configuration options within this file are driven by the values of your application's environment variables.
+
+```env
+MONGOLOQUENT_DATABASE_NAME=your-database
+MONGOLOQUENT_DATABASE_URI=mongodb://localhost:27017
+MONGOLOQUENT_TIMEZONE=Asia/Jakarta
+```
+
+## Running SQL Queries
+
+Once you have configured your database connection, you may run queries using the `DB` class. The `DB` class provides methods for each type of query: select, update, insert, and delete.
+
+#### Running a Select Query
+
+To run a basic SELECT query, you may use the `select` method on the `DB` class:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from 'mongoloquent';
+
+    interface IUser {
+      name: string;
+    }
+
+    const users = await DB.collection<IUser>("users").select("name").get();
+
+    for (const user of users) {
+      console.log(user.name);
+    }
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const users = await DB.collection("users").select("name").get();
+
+    for (const user of users) {
+      console.log(user.name);
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Running an Insert Statement
+
+To execute an `insert` statement, you may use the `insert` method on the `DB` class.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from 'mongoloquent';
+
+    interface IUser {
+      name: string;
+    }
+
+    const user = await DB.collection<IUser>("users").insert({name: "John Doe"})
+
+    console.log(user);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const user = await DB.collection("users").insert({name: "John Doe"})
+
+    console.log(user);
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Running an Update Statement
+
+The `update` method should be used to update existing records in the database.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from 'mongoloquent';
+
+    interface IUser {
+      name: string;
+    }
+
+    const user = await DB.collection<IUser>("users")
+      .where("name", "John Doe")
+      .update({name: "Jane Doe"})
+
+    console.log(user);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const user = await DB.collection("users")
+      .where("name", "John Doe")
+      .update({name: "Jane Doe"})
+
+    console.log(user);
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Running a Delete Statement
+
+The `delete` method should be used to delete records from the database. the number of rows affected will be returned by the method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from 'mongoloquent';
+
+    interface IUser {
+      name: string;
+    }
+
+    const user = await DB.collection<IUser>("users")
+      .where("name", "John Doe")
+      .delete()
+
+    console.log(user);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const user = await DB.collection("users")
+      .where("name", "John Doe")
+      .delete()
+
+    console.log(user);
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Using Multiple Database Connections
