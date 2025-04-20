@@ -1820,14 +1820,14 @@ Sometimes you may need to eager load several different relationships.
 
 ### The `save` Method
 
-Mongoloquent provides convenient methods for adding new models to relationships. For example, perhaps you need to add a new comment to a post. Instead of manually setting the `post_id` attribute on the `Comment` model you may insert the comment using the relationship's `save` method:
+Mongoloquent provides convenient methods for adding new models to relationships. For example, perhaps you need to add a new comment to a post. Instead of manually setting the `postId` attribute on the `Comment` model you may insert the comment using the relationship's `save` method:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comment = await post.comments().save({ message: 'A new comment.' });
     ```
@@ -1837,13 +1837,15 @@ Mongoloquent provides convenient methods for adding new models to relationships.
     ```javascript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comment = await post.comments().save({ message: 'A new comment.' });
     ```
 
   </TabItem>
 </Tabs>
+
+Note that we did not access the `comments` relationship as a dynamic property. Instead, we called the `comments` method to obtain an instance of the relationship. The `save` method will automatically add the appropriate `postId` value to the new `Comment` model.
 
 If you need to save multiple related models, you may use the `saveMany` method:
 
@@ -1852,7 +1854,7 @@ If you need to save multiple related models, you may use the `saveMany` method:
     ```typescript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comment = await post.comments().saveMany([
       { message: 'A new comment.' },
@@ -1865,7 +1867,7 @@ If you need to save multiple related models, you may use the `saveMany` method:
     ```javascript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comment = await post.comments().saveMany([
       { message: 'A new comment.' },
@@ -1878,14 +1880,14 @@ If you need to save multiple related models, you may use the `saveMany` method:
 
 ### The `create` Method
 
-In addition to the `save` and `saveMany` methods, you may also use the create method, which accepts an array of attributes, creates a model, and inserts it into the database.
+In addition to the `save` and `saveMany` methods, you may also use the `create` method, which accepts an array of attributes, creates a model, and inserts it into the database. The difference between `save` and `create` is that save accepts a full Mongoloquent model instance while create accepts a plain Javascript object. The newly created model will be returned by the `create` method:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comment = await post.comments().create({ message: 'A new comment.' });
     ```
@@ -1895,7 +1897,7 @@ In addition to the `save` and `saveMany` methods, you may also use the create me
     ```javascript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comment = await post.comments().create({ message: 'A new comment.' });
     ```
@@ -1910,7 +1912,7 @@ You may use the `createMany` method to create multiple related models:
     ```typescript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comment = await post.comments().createMany([
       { message: 'A new comment.' },
@@ -1923,12 +1925,56 @@ You may use the `createMany` method to create multiple related models:
     ```javascript
     import Post from './Models/Post';
 
-    const post = Post.find("10ab7e3d05d58a1ad246ee87");
+    const post = await Post.find("10ab7e3d05d58a1ad246ee87");
 
     const comment = await post.comments().createMany([
       { message: 'A new comment.' },
       { message: 'Another new comment.' }
     ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Belongs To Relationships
+
+If you would like to assign a child model to a new parent model, you may use the `associate` method. In this example, the `User` model defines a `belongsTo` relationship to the `Account` model. This `associate` method will set the foreign key on the child model:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Account from './Models/Account';
+
+    const account = await Account.find("10ab7e3d05d58a1ad246ee87");
+
+    await user.account().associate(account);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Account from './Models/Account';
+
+    const account = await Account.find("10ab7e3d05d58a1ad246ee87");
+
+    await user.account().associate(account);
+    ```
+
+  </TabItem>
+</Tabs>
+
+To remove a parent model from a child model, you may use the `dissociate` method. This method will set the relationship's foreign key to `null`:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await user.account().dissociate();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await user.account().dissociate();
     ```
 
   </TabItem>
