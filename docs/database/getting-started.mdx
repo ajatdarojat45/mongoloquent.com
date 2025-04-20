@@ -190,13 +190,9 @@ If your application using multiple connections, you may define each connection v
     ```javascript
     import { DB } from 'mongoloquent';
 
-    interface IUser {
-      name: string;
-    }
-
     const users = await DB.connection("uri")
       .database("databaseName")
-      .collection<IUser>("users")
+      .collection("users")
       .get();
 
     console.log(user);
@@ -204,3 +200,7 @@ If your application using multiple connections, you may define each connection v
 
   </TabItem>
 </Tabs>
+
+---
+
+<Sponsor />
