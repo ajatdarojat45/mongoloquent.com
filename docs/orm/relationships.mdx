@@ -1991,9 +1991,9 @@ Mongoloquent also provides methods to make working with many-to-many relationshi
     ```typescript
     import User from './Models/User';
 
-    const user = User.find("10ab7e3d05d58a1ad246ee87");
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
 
-    await user.roles().attach("10ab7e3d05d58a1ad246ee87");
+    await user.roles().attach(roleId);
     ```
 
   </TabItem>
@@ -2003,7 +2003,24 @@ Mongoloquent also provides methods to make working with many-to-many relationshi
 
     const user = User.find("10ab7e3d05d58a1ad246ee87");
 
-    await user.roles().attach("10ab7e3d05d58a1ad246ee87");
+    await user.roles().attach(roleId);
+    ```
+
+  </TabItem>
+</Tabs>
+
+When attaching a relationship to a model, you may also pass an object of additional data to be inserted into the intermediate table:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await user.roles().attach(roleId, { "expires": expires });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await user.roles().attach(roleId, { "expires": expires });
     ```
 
   </TabItem>
@@ -2015,7 +2032,7 @@ Sometimes it may be necessary to remove a role from a user. To remove a many-to-
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
     // Detach a single role from the user...
-    await user.roles().detach("10ab7e3d05d58a1ad246ee87");
+    await user.roles().detach(roleId);
     
     // Detach all roles from the user...
     await user.roles().detach();
@@ -2025,7 +2042,7 @@ Sometimes it may be necessary to remove a role from a user. To remove a many-to-
   <TabItem value="Javascript" label="Javascript">
     ```javascript
     // Detach a single role from the user...
-    await user.roles().detach("10ab7e3d05d58a1ad246ee87");
+    await user.roles().detach(roleId);
 
     // Detach all roles from the user...
     await user.roles().detach();
@@ -2039,7 +2056,7 @@ For convenience, `attach` and `detach` also accept arrays of IDs as input:
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const user = User.find("10ab7e3d05d58a1ad246ee87");
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
 
     await user.roles().detach([
       "10ab7e3d05d58a1ad246ee87",
@@ -2049,13 +2066,13 @@ For convenience, `attach` and `detach` also accept arrays of IDs as input:
     await user.roles().attach([
       "10ab7e3d05d58a1ad246ee87",
       "10ab7e3d05d58a1ad246ee88"
-    ]);
+    ], { "expires": expires });
     ```
 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    const user = User.find("10ab7e3d05d58a1ad246ee87");
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
 
     await user.roles().detach([
       "10ab7e3d05d58a1ad246ee87",
@@ -2065,7 +2082,7 @@ For convenience, `attach` and `detach` also accept arrays of IDs as input:
     await user.roles().attach([
       "10ab7e3d05d58a1ad246ee87",
       "10ab7e3d05d58a1ad246ee88"
-    ]);
+    ], { "expires": expires });
     ```
 
   </TabItem>
@@ -2088,6 +2105,100 @@ You may also use the `sync` method to construct many-to-many associations. The `
   <TabItem value="Javascript" label="Javascript">
     ```javascript
     await user.roles().sync([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also pass additional intermediate table values with the IDs:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await user.roles().sync([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ], { "expires": expires });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await user.roles().sync([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ], { "expires": expires });
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you would like to insert the same intermediate table values with each of the synced model IDs, you may use the `syncWithPivotValues` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await user.roles().syncWithPivotValues([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ], { "expires": expires });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await user.roles().syncWithPivotValues([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ], { "active": true });
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you do not want to detach existing IDs that are missing from the given array, you may use the `syncWithoutDetaching` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await user.roles().syncWithoutDetaching([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await user.roles().syncWithoutDetaching([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Toggling Associations
+
+The many-to-many relationship also provides a `toggle` method which "toggles" the attachment status of the given related model IDs. If the given ID is currently attached, it will be detached. Likewise, if it is currently detached, it will be attached:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await user.roles().toggle([
+      "10ab7e3d05d58a1ad246ee87",
+      "10ab7e3d05d58a1ad246ee88"
+    ]);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await user.roles().toggle([
       "10ab7e3d05d58a1ad246ee87",
       "10ab7e3d05d58a1ad246ee88"
     ]);
