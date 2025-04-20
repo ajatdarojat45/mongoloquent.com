@@ -1,0 +1,250 @@
+---
+sidebar_position: 2
+title: Query Builder
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "../sponsor.mdx";
+
+# Database: Query Builder
+
+## Introduction
+
+Mongoloquent's database query builder provides a convenient, fluent interface to creating and running database queries. It can be used to perform most database operations in your application.
+
+## Running Database Queries
+
+#### Retrieving All Rows From a Collection
+
+You may use the `collection` method provided by the `DB` class to begin a query. The `collection` method returns a fluent query builder instance for the given collection, allowing you to chain more constraints onto the query and then finally retrieve the results of the query using the `get` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+      title: string
+    }
+
+    const users = await DB.collection<IUser>("users").get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const users = await DB.collection("users").get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `get` method returns an `Collection` instance containing the results of the query where each result is an instance of the Javascript object. You may access each column's value by accessing the column as a property of the object:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users").get();
+
+    users.forEach((user) => {
+      console.log(user.name);
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users").get();
+
+    users.forEach((user) => {
+      console.log(user.name);
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+> Mongoloquent collections provide a variety of extremely powerful methods for mapping and reducing data. For more information on Mongoloquent collections, check out the [collection documentation](../collections).
+
+#### Retrieving a Single Row / Column From a Collection
+
+If you just need to retrieve a single row from a database collection, you may use the `DB` class's `first` method. This method will return a single object:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await DB.collection<IUser>("users").where("name", "Jhon").first();
+
+    console.log(user.name);
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = await DB.collection("users").where("name", "Jhon").first();
+
+    console.log(user.name);
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you would like to retrieve a single row from a database table, but throw an `MongoloquentRecordNotFoundException` if no matching row is found, you may use the `firstOrFail` method.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await DB.collection<IUser>("users").where("name", "Jhon").firstOrFail();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = await DB.collection("users").where("name", "Jhon").firstOrFail();
+    ```
+
+  </TabItem>
+</Tabs>
+
+To retrieve a single row by its id column value, use the `find` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await DB.collection<IUser>("users").find("10ab7e3d05d58a1ad246ee87");
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = await DB.collection("users").find("10ab7e3d05d58a1ad246ee87");
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Retrieving a List of Column Values
+
+If you would like to retrieve an `Collection` instance containing the values of a single column, you may use the `pluck` method. In this example, we'll retrieve a collection of user titles:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const titles = await DB.collection<IUser>("users").pluck("title");
+
+    titles.forEach(title => {
+      console.log(title)
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const titles = await DB.collection("users").pluck("title");
+
+    titles.forEach(title => {
+      console.log(title)
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may specify the column that the resulting collection should use as its keys by providing a second argument to the `pluck` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const items = await DB.collection<IUser>("users").pluck("title", "name");
+
+    items.forEach(item => {
+      console.log(item.title, item.name)
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const items = await DB.collection("users").pluck("title", "name");
+
+    items.forEach(item => {
+      console.log(item.title, item.name)
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Aggregates
+
+The query builder also provides a variety of methods for retrieving aggregate values like `count`, `max`, `min`, `avg`, and `sum`. You may call any of these methods after constructing your query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent"
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    interface IOrder extends IMongoloquentSchema, IMongoloquentTimestamps {
+      price: number
+      finalized: boolean
+    }
+
+    const users = await DB.collection<IUser>("users").count();
+
+    const price = await DB.collection<IOrder>("orders").max("price")
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { DB } from "mongoloquent"
+
+    const users = await DB.collection("users").count();
+
+    const price = await DB.collection("orders").max("price")
+    ```
+
+  </TabItem>
+</Tabs>
+
+Of course, you may combine these methods with other clauses to fine-tune how your aggregate value is calculated:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const price = await DB.collection<IOrder>("orders")
+      .where("finalized", true)
+      .avg("price")
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const price = await DB.collection("orders")
+      .where("finalized", true)
+      .avg("price")
+    ```
+
+  </TabItem>
+</Tabs>
+
+---
+
+<Sponsor />
