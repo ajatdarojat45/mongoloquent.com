@@ -165,3 +165,42 @@ The `delete` method should be used to delete records from the database. the numb
 </Tabs>
 
 ### Using Multiple Database Connections
+
+If your application using multiple connections, you may define each connection via the connection method provided by the `DB` class.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from 'mongoloquent';
+
+    interface IUser {
+      name: string;
+    }
+
+    const users = await DB.connection("uri")
+      .database("databaseName")
+      .collection<IUser>("users")
+      .get();
+
+    console.log(user);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    interface IUser {
+      name: string;
+    }
+
+    const users = await DB.connection("uri")
+      .database("databaseName")
+      .collection<IUser>("users")
+      .get();
+
+    console.log(user);
+    ```
+
+  </TabItem>
+</Tabs>
