@@ -1700,15 +1700,33 @@ As demonstrated in the example above, you are free to add additional constraints
 
 ## Eager Loading
 
-We can use eager loading to reduce this operation to just two queries. When building a query, you may specify which relationships should be eager loaded using the `with` method:
+Mongoloquent can "eager load" relationships at the time you query the parent model. Eager loading alleviates the "N + 1" query problem.
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+    import { ObjectID } from "mongodb"
     import Author from './Models/Author';
 
+    interface IBook extends IMongoloquentSchema, IMongoloquentTimestamps {
+      title: string
+      authorId: ObjectID
+    }
+
     class Book extends Mongoloquent {
+      /**
+       * The attributes of the model.
+       *
+       * @var IBook
+       */
+      static $schema: IBook
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       protected static $collection: string = 'books';
 
       /**
@@ -1723,10 +1741,15 @@ We can use eager loading to reduce this operation to just two queries. When buil
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Author from './Models/Author';
 
     class Book extends Mongoloquent {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
       static $collection = 'books';
 
       /**
@@ -1741,7 +1764,7 @@ We can use eager loading to reduce this operation to just two queries. When buil
   </TabItem>
 </Tabs>
 
-Now, let's retrieve all books and their authors:
+We can use eager loading to reduce this operation to just two queries. When building a query, you may specify which relationships should be eager loaded using the `with` method:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -1749,6 +1772,10 @@ Now, let's retrieve all books and their authors:
     import Book from './Models/Book';
 
     const books = await Book.with('author').get();
+
+    books.forEach(book => {
+      console.log(book.author.name);
+    });
     ```
 
   </TabItem>
@@ -1757,6 +1784,10 @@ Now, let's retrieve all books and their authors:
     import Book from './Models/Book';
 
     const books = await Book.with('author').get();
+
+    books.forEach(book => {
+      console.log(book.author.name);
+    });
     ```
 
   </TabItem>
