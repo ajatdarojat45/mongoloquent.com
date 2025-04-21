@@ -245,6 +245,122 @@ Of course, you may combine these methods with other clauses to fine-tune how you
   </TabItem>
 </Tabs>
 
+## Raw Expressions
+
+Sometimes you may need to insert an arbitrary MongoDB document into a query. To create a raw expression, you may use the raw method provided by the DB:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .raw({
+        $match: {
+          name: "John Doe"
+        }
+      })
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .raw({
+        $match: {
+          name: "John Doe"
+        }
+      })
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `raw` method accepts array of MongoDB documents. The documents will be merged with the query builder's existing query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .raw([
+        {
+          $match: {
+            name: "John Doe"
+          }
+        },
+        {
+          $projection: {
+            name: 1,
+          }
+        }
+      ])
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection<IUser>("users")
+      .raw([
+        {
+          $match: {
+            name: "John Doe"
+          }
+        },
+        {
+          $projection: {
+            name: 1,
+          }
+        }
+      ])
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Also you may use chaining `raw` methods:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .raw({
+        $match: {
+          name: "John Doe"
+        }
+      })
+      .raw({
+        $projection: {
+          name: 1,
+        }
+      })
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .raw({
+        $match: {
+          name: "John Doe"
+        }
+      })
+      .raw({
+        $projection: {
+          name: 1,
+        }
+      })
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Basic Where Clauses
 
 ### Where Clauses
