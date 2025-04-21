@@ -361,6 +361,84 @@ Also you may use chaining `raw` methods:
   </TabItem>
 </Tabs>
 
+## Lookup
+
+The query builder may also be used to add lookup clauses to your queries. To perform a basic "lookup", you may use the `lookup` method on a query builder instance. You may even join multiple collections in a single query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .lookup({
+        from: "posts",
+        localField: "_id",
+        foreignField: "userId",
+        as: "posts"
+      })
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .lookup({
+        from: "posts",
+        localField: "_id",
+        foreignField: "userId",
+        as: "posts"
+      })
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also use the `lookup` method to join multiple collections in a single query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .lookup({
+        from: "posts",
+        localField: "_id",
+        foreignField: "userId",
+        as: "posts"
+      })
+      .lookup({
+        from: "orders",
+        localField: "_id",
+        foreignField: "userId",
+        as: "orders"
+      })
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .lookup({
+        from: "posts",
+        localField: "_id",
+        foreignField: "userId",
+        as: "posts"
+      })
+      .lookup({
+        from: "orders",
+        localField: "_id",
+        foreignField: "userId",
+        as: "orders"
+      })
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Basic Where Clauses
 
 ### Where Clauses
