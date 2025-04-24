@@ -66,21 +66,15 @@ const config: Config = {
 			},
 			items: [
 				{
-					to: "/docs/introductions/getting-started",
+					to: "/docs/getting-started/installation",
 					label: "Getting Started",
 					position: "left",
 				},
-				{
-					to: "/docs/category/tutorials",
-					label: "Tutorial",
-					position: "left",
-				},
-				{
-					to: "/docs/introductions/usage-guide",
-					label: "Usage Guide",
-					position: "left",
-				},
-				{ to: "/docs/category/api-references", label: "API", position: "left" },
+				{ 
+					label: "API References", 
+					position: "left", 
+					href: "https://google.com"
+				 },
 				{
 					type: "docsVersionDropdown",
 					position: "right",
