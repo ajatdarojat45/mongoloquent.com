@@ -7,13 +7,13 @@ import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import Sponsor from "../sponsor.mdx";
 
-# Mongoloquent: Getting Started
+# Mongoloquent ORM: Getting Started
 
 ## Introduction
 
-Mongoloquent is a lightweight [MongoDB](https://www.mongodb.com) ORM library for Javascript/Typescript, inspired by the simplicity of [Laravel Eloquent](https://laravel.com). It provides an intuitive and expressive syntax for working with MongoDB databases, making it easy to interact with your data in a Node.js environment. When using Mongoloquent, each database collection has a corresponding "Model" that is used to interact with that collection. In addition to retrieving records from the database collection, Mongoloquent models allow you to insert, update, and delete records from the table as well.
+Mongoloquent ORM is a lightweight [MongoDB](https://www.mongodb.com) ORM library for Javascript/Typescript, inspired by the simplicity of [Laravel Eloquent](https://laravel.com). It provides an intuitive and expressive syntax for working with MongoDB databases, making it easy to interact with your data in a Node.js environment. When using Mongoloquent ORM, each database collection has a corresponding "Model" that is used to interact with that collection. In addition to retrieving records from the database collection, Mongoloquent models allow you to insert, update, and delete records from the table as well.
 
-> Before getting started, be sure to configure a database connection in your application's `.env` configuration file. For more information on configuring your database, [check out the database configuration documentation](https://www.mongodb.com).
+> Before getting started, be sure to configure a database connection in your application's `.env` configuration file. For more information on configuring your database, [check out the database configuration documentation](../getting-started/installation#initial-configuration).
 
 ## Generating Model Classes
 
@@ -40,7 +40,7 @@ $ mkdir Models
 
 ## Mongoloquent Model Conventions
 
-Let's examine a basic model class and discuss some of Eloquent's key conventions:
+Let's examine a basic model class and discuss some of Mongoloquent's key conventions:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -200,7 +200,7 @@ By default, all `Mongoloquent` models will use the default database connection t
        *
        * @var string
        */
-      protected static $connection: string = "connection-url";
+      static $connection: string = "connection-url";
     }
     ```
 
@@ -222,9 +222,71 @@ By default, all `Mongoloquent` models will use the default database connection t
   </TabItem>
 </Tabs>
 
+#### Set Database Name
+
+You can also set database name specifically for your model by defined `$databaseName` property in your model.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
+
+    interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    class Flight extends Model<IFlight> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IFlight
+       */
+      static $schema: IFlight
+
+      /**
+       * The database connection that should be used by the model.
+       *
+       * @var string
+       */
+      static $connection: string = "connection-url";
+
+      /**
+       * The database name that should be used by the model.
+       *
+       * @var string
+       */
+      static $databaseName: string = "your-database-name";
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class Flight extends Model {
+      /**
+       * The database connection that should be used by the model.
+       *
+       * @var string
+       */
+      static $connection = "connection-url";
+
+      /**
+       * The database name that should be used by the model.
+       *
+       * @var string
+       */
+      static $databaseName: string = "your-database-name";
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Retrieving Models
 
-Once you have created a model and `its associated database collection`, you are ready to start retrieving data from your database. You can think of each Mongoloquent model as a powerful [query builder](/docs/database/query-builder) allowing you to fluently query the database collection associated with the model. The model's `all` method will retrieve all of the records from the model's associated database collection:
+Once you have created a model and `its associated database collection`, you are ready to start retrieving data from your database. You can think of each Mongoloquent model as a powerful [query builder](../database/query-builder.mdx) allowing you to fluently query the database collection associated with the model. The model's `all` method will retrieve all of the records from the model's associated database collection:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -255,7 +317,7 @@ Once you have created a model and `its associated database collection`, you are 
 
 #### Building Queries
 
-The Mongoloquent `all` method will return all of the results in the model's table. However, since each Mongoloquent model serves as a [query builder](/docs/database/query-builder), you may add additional constraints to queries and then invoke the `get` method to retrieve the results:
+The Mongoloquent `all` method will return all of the results in the model's collection. However, since each Mongoloquent model serves as a [query builder](../database/query-builder), you may add additional constraints to queries and then invoke the `get` method to retrieve the results:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -278,13 +340,13 @@ The Mongoloquent `all` method will return all of the results in the model's tabl
   </TabItem>
 </Tabs>
 
-> Since Mongoloquent models are query builders, you should review all of the methods provided by Mongoloquent's [query builder](/docs/database/query-builder). You may use any of these methods when writing your Mongoloquent queries.
+> Since Mongoloquent models are query builders, you should review all of the methods provided by Mongoloquent's [query builder](../database/query-builder). You may use any of these methods when writing your Mongoloquent queries.
 
 ### Collections
 
 As we have seen, Mongoloquent methods like `all` and `get` retrieve multiple records from the database. However, these methods don't return a plain JavaScript array. Instead, an instance of `Collection` is returned.
 
-The Mongoloquent `Collection` class extends Mongoloquent's base `Collection` class, which provides a [variety of helpful methods](/docs/digging-deeper/collections#available-methods) for interacting with data collections. For example, the `sortBy` method may be used to sort models from a collection based on the results of an invoked closure:
+The Mongoloquent `Collection` class extends Mongoloquent's base `Collection` class, which provides a [variety of helpful methods](../collections#available-methods) for interacting with data collections. For example, the `sortBy` method may be used to sort models from a collection based on the results of an invoked closure:
 
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
@@ -305,7 +367,7 @@ The Mongoloquent `Collection` class extends Mongoloquent's base `Collection` cla
   </TabItem>
 </Tabs>
 
-In addition to the methods provided by Mongoloquent's base collection class, the Mongoloquent collection class provides [a few extra methods](#available-methods) that are specifically intended for interacting with collections of Mongoloquent models.
+In addition to the methods provided by Mongoloquent's base collection class, the Mongoloquent collection class provides [a few extra methods](../collections#available-methods) that are specifically intended for interacting with collections of Mongoloquent models.
 
 Since all of Mongoloquent's collections implement Javascript's iterable interfaces, you may loop over collections as if they were an array:
 
@@ -459,7 +521,7 @@ The `firstOrNew` method, like `firstOrCreate`, will attempt to locate a record i
 
 ### Retrieving Aggregates
 
-When interacting with Mongoloquent models, you may also use the `count`, `sum`, `max`, and other [aggregate methods](/docs/database/query-builder#aggregates) provided by the Mongoloquent [query builder](/docs/database/query-builder). As you might expect, these methods return a scalar value instead of an Mongoloquent model instance:
+When interacting with Mongoloquent models, you may also use the `count`, `sum`, `max`, and other [aggregate methods](../database/query-builder#aggregates) provided by the Mongoloquent [query builder](../database/query-builder). As you might expect, these methods return a scalar value instead of an Mongoloquent model instance:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -982,7 +1044,7 @@ To delete all models in a collection, you should execute a query without adding 
 
 ### Soft Deleting
 
-In addition to actually removing records from your database, Eloquent can also "soft delete" models. When models are soft deleted, they are not actually removed from your database. Instead, a `deleted_at` attribute is set on the model indicating the date and time at which the model was "deleted". To enable soft deletes for a model, add the `$useSoftDelete` trait to the model:
+In addition to actually removing records from your database, Mongoloquent can also "soft delete" models. When models are soft deleted, they are not actually removed from your database. Instead, a `deletedAt` attribute is set on the model indicating the date and time at which the model was "deleted". To enable soft deletes for a model, add the `$useSoftDelete` trait to the model:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -1058,13 +1120,13 @@ Sometimes you may wish to "un-delete" a soft deleted model. To restore a soft de
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    await Flight.restore();
+    await flight.restore();
     ```
 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    await Flight.restore();
+    await flight.restore();
     ```
 
   </TabItem>
@@ -1091,7 +1153,7 @@ You may also use the `restore` method in a query to restore multiple models. Aga
   </TabItem>
 </Tabs>
 
-The `restore` method may also be used when building [relationship](https://www.mongodb.com) queries:
+The `restore` method may also be used when building [relationship](./relationships) queries:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -1119,13 +1181,13 @@ Sometimes you may need to truly remove a model from your database. You may use t
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    await Flight.forceDelete();
+    await flight.forceDelete();
     ```
 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    await Flight.forceDelete();
+    await flight.forceDelete();
     ```
 
   </TabItem>
@@ -1181,7 +1243,7 @@ As noted above, soft deleted models will automatically be excluded from query re
   </TabItem>
 </Tabs>
 
-The `withTrashed` method may also be called when building a [relationship](/docs/orm//relationships) query:
+The `withTrashed` method may also be called when building a [relationship](./relationships) query:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
