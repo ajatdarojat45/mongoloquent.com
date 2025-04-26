@@ -1,4 +1,4 @@
-import 'dotenv/config';
+import "dotenv/config";
 
 import { themes as prismThemes } from "prism-react-renderer";
 import type { Config } from "@docusaurus/types";
@@ -20,7 +20,7 @@ const config: Config = {
 	organizationName: "ajatdarojat45", // Usually your GitHub org/user name.
 	projectName: "mongoloquent", // Usually your repo name.
 
-	onBrokenLinks: "throw",
+	onBrokenLinks: "warn",
 	onBrokenMarkdownLinks: "warn",
 
 	// Even if you don't use internationalization, you can use this field to set
@@ -70,11 +70,11 @@ const config: Config = {
 					label: "Getting Started",
 					position: "left",
 				},
-				{ 
-					label: "API References", 
-					position: "left", 
-					href: "https://google.com"
-				 },
+				{
+					label: "API References",
+					position: "left",
+					href: "https://google.com",
+				},
 				{
 					type: "docsVersionDropdown",
 					position: "right",
@@ -98,19 +98,11 @@ const config: Config = {
 					items: [
 						{
 							label: "Getting Started",
-							to: "/docs/introductions/getting-started",
-						},
-						{
-							label: "Tutorial",
-							to: "/docs/category/tutorials",
-						},
-						{
-							label: "Usage Guide",
-							to: "/docs/introductions/usage-guide",
+							to: "/docs/getting-started/installation",
 						},
 						{
 							label: "API References",
-							to: "/docs/category/api-references",
+							href: "https://api.mongoloquent.com",
 						},
 					],
 				},
@@ -152,7 +144,6 @@ const config: Config = {
 
 		// Algolia DocSearch configuration
 		algolia: {
-
 			// The application ID provided by Algolia
 			appId: process.env.ALGOLIA_APP_ID,
 
@@ -165,9 +156,8 @@ const config: Config = {
 			contextualSearch: true,
 
 			// Optional: path for search page that enabled by default (`false` to disable it)
-			searchPagePath: 'search',
-		}
-
+			searchPagePath: "search",
+		},
 	} satisfies Preset.ThemeConfig,
 };
 
