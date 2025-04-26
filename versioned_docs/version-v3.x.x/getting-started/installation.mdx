@@ -1,0 +1,35 @@
+---
+sidebar_position: 1
+title: Installation
+---
+
+# Installation
+
+## Meet Mongoloquent
+
+Mongoloquent is a lightweight [MongoDB](https://www.mongodb.com) ORM library for Javascript/Typescript, inspired by the simplicity of [Laravel Eloquent](https://laravel.com). It provides an intuitive and expressive syntax for working with MongoDB databases, making it easy to interact with your data in a Node.js environment. When using Mongoloquent, each database collection has a corresponding "Model" that is used to interact with that collection. In addition to retrieving records from the database collection, Mongoloquent models allow you to insert, update, and delete records from the collection as well.
+
+## Installation Mongoloquent
+
+Before installing Mongoloquent, make sure you have [NodeJS and NPM](https://nodejs.org/en/download/) installed on your machine.
+
+If you already have NodeJS and NPM installed, you may install the mongoloquent on your project via NPM:
+
+```bash
+npm install mongoloquent
+```
+
+## Initial Configuration
+
+You can configure Mongoloquent by creating a `.env` file in the root of your project. This file will contain the configuration settings for your MongoDB connection.
+
+```env
+// default: mongodb://localhost:27017
+MONGOLOQUENT_DATABASE_URI=mongodb://localhost:27017
+
+// default: mongoloquent
+MONGOLOQUENT_DATABASE_NAME=mongoloquent
+
+// default: Asia/Jakarta
+MONGOLOQUENT_TIMEZONE=Asia/Jakarta
+```

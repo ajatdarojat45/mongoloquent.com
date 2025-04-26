@@ -1,0 +1,211 @@
+---
+sidebar_position: 1
+title: Getting Started
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "../sponsor.mdx";
+
+# Database: Getting Started
+
+## Introduction
+
+Almost every modern web application interacts with a database. Mongoloquent makes interacting with MongoDB databases extremely simple.
+
+### Configuration
+
+You can configure Mongoloquent by creating a `.env` file in the root of your project. This file will contain the configuration settings for your MongoDB connection.
+
+```env
+// default: mongodb://localhost:27017
+MONGOLOQUENT_DATABASE_URI=mongodb://localhost:27017
+
+// default: mongoloquent
+MONGOLOQUENT_DATABASE_NAME=mongoloquent
+
+// default: Asia/Jakarta
+MONGOLOQUENT_TIMEZONE=Asia/Jakarta
+```
+
+## Running SQL Queries
+
+Once you have configured your database connection, you may run queries using the `DB` class. The `DB` class provides methods for each type of query: select, update, insert, and delete.
+
+#### Running a Select Query
+
+To run a basic SELECT query, you may use the `collection` method on the `DB` class:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+
+    interface IUser, extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    const users = await DB.collection<IUser>("users").select("name").get();
+
+    for (const user of users) {
+      console.log(user.name);
+    }
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const users = await DB.collection("users").select("name").get();
+
+    for (const user of users) {
+      console.log(user.name);
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Running an Insert Statement
+
+To execute an `insert` statement, you may use the `insert` method on the `DB` class.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    const user = await DB.collection<IUser>("users").insert({name: "John Doe"})
+
+    console.log(user);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const user = await DB.collection("users").insert({name: "John Doe"})
+
+    console.log(user);
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Running an Update Statement
+
+The `update` method should be used to update existing records in the database.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    const user = await DB.collection<IUser>("users")
+      .where("name", "John Doe")
+      .update({name: "Jane Doe"})
+
+    console.log(user);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const user = await DB.collection("users")
+      .where("name", "John Doe")
+      .update({name: "Jane Doe"})
+
+    console.log(user);
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Running a Delete Statement
+
+The `delete` method should be used to delete records from the database. the number of rows affected will be returned by the method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    const user = await DB.collection<IUser>("users")
+      .where("name", "John Doe")
+      .delete()
+
+    console.log(user);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const user = await DB.collection("users")
+      .where("name", "John Doe")
+      .delete()
+
+    console.log(user);
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Using Multiple Database Connections
+
+If your application using multiple connections, you may define each connection via the `connection` and `database` methods provided by the `DB` class.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    const users = await DB.connection("uri")
+      .database("databaseName")
+      .collection<IUser>("users")
+      .get();
+
+    console.log(user);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const users = await DB.connection("uri")
+      .database("databaseName")
+      .collection("users")
+      .get();
+
+    console.log(user);
+    ```
+
+  </TabItem>
+</Tabs>
+
+---
+
+<Sponsor />

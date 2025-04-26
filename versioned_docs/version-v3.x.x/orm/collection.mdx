@@ -1,0 +1,65 @@
+---
+title: Collections
+sidebar_position: 3
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "../sponsor.mdx";
+
+# Mongoloquent: Collections
+
+## Introduction
+
+All Mongoloquent methods that return more than one model result will return instances of the `Collectio` class, including results retrieved via the `get` method or accessed via a relationship. The Mongoloquent collection object extends Laravel's [base collection](../collections), so it naturally inherits dozens of methods used to fluently work with the underlying array of Mongoloquent models. Be sure to review the Mongoloquent collection documentation to learn all about these helpful methods!
+
+All collections also serve as iterators, allowing you to loop over them as if they were simple Javascript arrays:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import User from './Models/User';
+
+    const users = await User.where('active', true).get();
+
+    for (const user of users) {
+      console.log(user.name);
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import User from './Models/User';
+
+    const users = await User.where('active', true).get();
+
+    for (const user of users) {
+      console.log(user.name);
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+However, as previously mentioned, collections are much more powerful than arrays and expose a variety of map / reduce operations that may be chained using an intuitive interface.
+
+#### Eloquent Collection Conversion
+
+While most Mongoloquent collection methods return a new instance of an Mongoloquent collection, the `pluck` and others methods return a [base collection](../collections) instance. Likewise, if a map operation returns a collection that does not contain any Mongoloquent models, it will be converted to a base collection instance.
+
+## Available Methods
+
+All collections extend the base [Mongoloquent collection](../collections) object; therefore, they inherit all of the powerful methods provided by the base collection class.
+
+In addition, `Collection` class provides a superset of methods to aid with managing your model collections. Most methods return `Collection` instances.
+
+- [contains](../collections#contains)
+- [except](../collections#except)
+- [only](../collections#only)
+- [unique](../collections#unique)
+- [other methods](../collections)
+
+---
+
+<Sponsor />

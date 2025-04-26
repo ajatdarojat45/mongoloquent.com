@@ -1,0 +1,1292 @@
+---
+sidebar_position: 1
+title: Getting Started
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "../sponsor.mdx";
+
+# Mongoloquent ORM: Getting Started
+
+## Introduction
+
+Mongoloquent ORM is a lightweight [MongoDB](https://www.mongodb.com) ORM library for Javascript/Typescript, inspired by the simplicity of [Laravel Eloquent](https://laravel.com). It provides an intuitive and expressive syntax for working with MongoDB databases, making it easy to interact with your data in a Node.js environment. When using Mongoloquent ORM, each database collection has a corresponding "Model" that is used to interact with that collection. In addition to retrieving records from the database collection, Mongoloquent models allow you to insert, update, and delete records from the table as well.
+
+> Before getting started, be sure to configure a database connection in your application's `.env` configuration file. For more information on configuring your database, [check out the database configuration documentation](../getting-started/installation#initial-configuration).
+
+## Generating Model Classes
+
+To get started, let's create an Mongoloquent model. Models typically live in the `Models` directory and extend the `Mongoloquent` class. You may use the bash command to ceate a new model:
+
+```bash
+$ mkdir Models
+```
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```bash
+    $ touch Models/Flight.ts
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```bash
+    $ touch Models/Flight.js
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Mongoloquent Model Conventions
+
+Let's examine a basic model class and discuss some of Mongoloquent's key conventions:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
+
+    interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    class Flight extends Model<IFlight> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IFlight
+       */
+      static $schema: IFlight
+
+      // ...
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class Flight extends Model {
+      // ...
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Collection Names
+
+After glancing at the example above, you may have noticed that we did not tell Mongoloquent which database collection corresponds to our `Flight` model. By convention, the "camel case", plural name of the class will be used as the collection name unless another name is explicitly specified. So, in this case, Mongoloquent will assume the `Flight` model stores records in the `flights` collection.
+
+If your model's corresponding database collection does not fit this convention, you may manually specify the model's collection name by defining a `$collection` property on the model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
+
+    interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    class Flight extends Model<IFlight> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IFlight
+       */
+      static $schema: IFlight
+
+      /**
+       * The collection associated with the model.
+       *
+       * @var string
+       */
+      static $collection: string = "flights";
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Mongoloquent } from "mongoloquent";
+
+    class Flight extends Mongoloquent {
+      /**
+       * The collection associated with the model.
+       *
+       * @var string
+       */
+      static $collection = "flights";
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Timestamps
+
+By default, Mongoloquent expects `createdAt` and `updatedAt` columns to exist on your model's corresponding database collection. Mongoloquent will automatically set these column's values when models are created or updated. If you do not want these columns to be automatically managed by Mongoloquent, you should define a `$useTimestamps` property on your model with a value of `false`:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema } from "mongoloquent";
+
+    interface IFlight extends IMongoloquentSchema {
+      name: string;
+    }
+
+    class Flight extends Model<IFlight> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IFlight
+       */
+      static $schema: IFlight
+
+      /**
+       * Indicates if the model should be timestamped.
+       *
+       * @var boolean
+       */
+      static $useTimestamps: boolean = false;
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class Flight extends Model {
+      /**
+       * Indicates if the model should be timestamped.
+       *
+       * @var boolean
+       */
+      static $useTimestamps = false;
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Database Connections
+
+By default, all `Mongoloquent` models will use the default database connection that is configured for your application. If you would like to specify a different connection that should be used when interacting with a particular model, you should define a `$connection` property on the model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
+
+    interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    class Flight extends Model<IFlight> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IFlight
+       */
+      static $schema: IFlight
+
+      /**
+       * The database connection that should be used by the model.
+       *
+       * @var string
+       */
+      static $connection: string = "connection-url";
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class Flight extends Model {
+      /**
+       * The database connection that should be used by the model.
+       *
+       * @var string
+       */
+      static $connection = "connection-url";
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Set Database Name
+
+You can also set database name specifically for your model by defined `$databaseName` property in your model.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
+
+    interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+    }
+
+    class Flight extends Model<IFlight> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IFlight
+       */
+      static $schema: IFlight
+
+      /**
+       * The database connection that should be used by the model.
+       *
+       * @var string
+       */
+      static $connection: string = "connection-url";
+
+      /**
+       * The database name that should be used by the model.
+       *
+       * @var string
+       */
+      static $databaseName: string = "your-database-name";
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class Flight extends Model {
+      /**
+       * The database connection that should be used by the model.
+       *
+       * @var string
+       */
+      static $connection = "connection-url";
+
+      /**
+       * The database name that should be used by the model.
+       *
+       * @var string
+       */
+      static $databaseName: string = "your-database-name";
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Retrieving Models
+
+Once you have created a model and `its associated database collection`, you are ready to start retrieving data from your database. You can think of each Mongoloquent model as a powerful [query builder](../database/query-builder.mdx) allowing you to fluently query the database collection associated with the model. The model's `all` method will retrieve all of the records from the model's associated database collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    const flights = await Flight.all();
+
+    flights.forEach((flight) => {
+      console.log(flight.name);
+    });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    const flights = await Flight.all();
+
+    flights.forEach((flight) => {
+      console.log(flight.name);
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Building Queries
+
+The Mongoloquent `all` method will return all of the results in the model's collection. However, since each Mongoloquent model serves as a [query builder](../database/query-builder), you may add additional constraints to queries and then invoke the `get` method to retrieve the results:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flights = await Flight.where("active", true)
+      .orderBy("name").
+      .take(10)
+      .get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flights = await Flight.where("active", true)
+      .orderBy("name").
+      .take(10)
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+> Since Mongoloquent models are query builders, you should review all of the methods provided by Mongoloquent's [query builder](../database/query-builder). You may use any of these methods when writing your Mongoloquent queries.
+
+### Collections
+
+As we have seen, Mongoloquent methods like `all` and `get` retrieve multiple records from the database. However, these methods don't return a plain JavaScript array. Instead, an instance of `Collection` is returned.
+
+The Mongoloquent `Collection` class extends Mongoloquent's base `Collection` class, which provides a [variety of helpful methods](../collections#available-methods) for interacting with data collections. For example, the `sortBy` method may be used to sort models from a collection based on the results of an invoked closure:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flights = await Fligh.where("distination", "Paris").get();
+
+    const sortedFlights = flights.sortBy((flight) => flight.name);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flights = await Fligh.where("distination", "Paris").get();
+
+    const sortedFlights = flights.sortBy((flight) => flight.name);
+    ```
+
+  </TabItem>
+</Tabs>
+
+In addition to the methods provided by Mongoloquent's base collection class, the Mongoloquent collection class provides [a few extra methods](../collections#available-methods) that are specifically intended for interacting with collections of Mongoloquent models.
+
+Since all of Mongoloquent's collections implement Javascript's iterable interfaces, you may loop over collections as if they were an array:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    flights.forEach((flight) => {
+      console.log(flight.name);
+    });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    flights.forEach((flight) => {
+      console.log(flight.name);
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Retrieving Single Models / Aggregates
+
+In addition to retrieving all of the records matching a given query, you may also retrieve single records using the `first` or `firstWhere` methods.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    // Retrieve a model by its primary key...
+    const flight = await Flight.find("10ab7e3d05d58a1ad246ee87").first();
+
+    // Retrieve the first model matching the query constraints...
+    const flight = await Flight.where('active', true).first();
+
+    // Alternative to retrieving the first model matching the query constraints...
+    const flight = await Flight.firstWhere('active', true);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    // Retrieve a model by its primary key...
+    const flight = await Flight.find("10ab7e3d05d58a1ad246ee87").first();
+
+    // Retrieve the first model matching the query constraints...
+    const flight = await Flight.where('active', true).first();
+
+    // Alternative to retrieving the first model matching the query constraints...
+    const flight = await Flight.firstWhere('active', true);
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Not Found Exceptions
+
+Sometimes you may wish to throw an exception if a model is not found. This is particularly useful in routes or controllers. The `firstOrFail` method will retrieve the first result of the query; however, if no result is found, an `MongoloquentNotFoundException` will be thrown:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flight = await Flight.find("10ab7e3d05d58a1ad246ee87").findOrFail();
+
+    const flight = await Flight.where('legs', '>', 3).firstOrFail();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flight = await Flight.find("10ab7e3d05d58a1ad246ee87").findOrFail();
+
+    const flight = await Flight.where('legs', '>', 3).firstOrFail();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Retrieving or Creating Models
+
+The `firstOrCreate` method will attempt to locate a database record using the given column / value pairs. If the model cannot be found in the database, a record will be inserted with the attributes resulting from merging the first object argument with the optional second object argument:
+
+The `firstOrNew` method, like `firstOrCreate`, will attempt to locate a record in the database matching the given attributes. However, if a model is not found, a new model instance will be returned. Note that the model returned by firstOrNew has not yet been persisted to the database. You will need to manually call the save method to persist it:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    // Retrieve flight by name or create it if it doesn't exist...
+    const flight = await Flight.firstOrCreate({
+      'name': 'London to Paris'
+    });
+
+    // Retrieve flight by name or create it with the name, delayed, and arrival_time attributes...
+    const flight = await Flight.firstOrCreate({
+      'name': 'London to Paris',
+      'delayed': true,
+      'arrival_time': '11:30'
+    });
+
+    // Retrieve flight by name or instantiate a new Flight instance...
+    const flight = await Flight.firstOrNew({
+      'name': 'London to Paris'
+    });
+
+    // Retrieve flight by name or instantiate with the name, delayed, and arrival_time attributes...
+    const flight = await Flight.firstOrNew({
+      'name': 'Tokyo to Sydney',
+      'delayed': true ,
+      'arrival_time': '11:30'
+    });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    // Retrieve flight by name or create it if it doesn't exist...
+    const flight = await Flight.firstOrCreate({
+      'name': 'London to Paris'
+    });
+
+    // Retrieve flight by name or create it with the name, delayed, and arrival_time attributes...
+    const flight = await Flight.firstOrCreate({
+      'name': 'London to Paris',
+      'delayed': true,
+      'arrival_time': '11:30'
+    });
+
+    // Retrieve flight by name or instantiate a new Flight instance...
+    const flight = await Flight.firstOrNew({
+      'name': 'London to Paris'
+    });
+
+    // Retrieve flight by name or instantiate with the name, delayed, and arrival_time attributes...
+    const flight = await Flight.firstOrNew({
+      'name': 'Tokyo to Sydney',
+      'delayed': true ,
+      'arrival_time': '11:30'
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Retrieving Aggregates
+
+When interacting with Mongoloquent models, you may also use the `count`, `sum`, `max`, and other [aggregate methods](../database/query-builder#aggregates) provided by the Mongoloquent [query builder](../database/query-builder). As you might expect, these methods return a scalar value instead of an Mongoloquent model instance:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const count = await Flight.where('active', true).count();
+ 
+    const max = await Flight.where('active', true).max('price');
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const count = await Flight.where('active', true).count();
+ 
+    const max = await Flight.where('active', true).max('price');
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Inserting and Updating Models
+
+### Inserts
+
+Of course, when using Mongoloquent, we don't only need to retrieve models from the database. We also need to insert new records. Thankfully, Mongoloquent makes it simple. To insert a new record into the database, you should instantiate a new model instance and set attributes on the model. Then, call the `save` method on the model instance:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    const flight = new Flight();
+
+    flight.name = "London to Paris";
+
+    await flight.save();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    const flight = new Flight();
+
+    flight.name = "London to Paris";
+
+    await flight.save();
+    ```
+
+  </TabItem>
+</Tabs>
+
+In this example, we assign `London to Paris` to the name attribute of the `Models/Flight` model instance. When we call the save method, a record will be inserted into the database. The model's `createdAt` and `updatedAt` timestamps will automatically be set when the `save` method is called, so there is no need to set them manually.
+
+Alternatively, you may use the `create` method to "save" a new model using a single Javascript statement. The inserted model instance will be returned to you by the `create` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    const flight = await Flight.create({
+      name: "London to Paris",
+    });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    const flight = await Flight.create({
+      name: "London to Paris",
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Updates
+
+The `save` method may also be used to update models that already exist in the database. To update a model, you should retrieve it and set any attributes you wish to update. Then, you should call the model's `save` method. Again, the `updatedAt` timestamp will automatically be updated, so there is no need to manually set its value:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    const flight = await Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    flight.name = "London to Paris";
+
+    await flight.save();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    const flight = await Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    flight.name = "London to Paris";
+
+    await flight.save();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Occasionally, you may need to update an existing model or create a new model if no matching model exists. Like the `firstOrCreate` method, the `updateOrCreate` method persists the model, so there's no need to manually call the `save` method.
+
+In the example below, if a flight exists with a `departure` location of `Oakland` and a `destination` location of `San Diego`, its `price` and `discounted` columns will be updated. If no such flight exists, a new flight will be created which has the attributes resulting from merging the first argument array with the second argument array:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flight = await Flight.updateOrCreate(
+      {
+        departure: "Oakland",
+        destination: "San Diego",
+      },
+      {
+        price: 99,
+        discounted: true,
+      }
+    );
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flight = await Flight.updateOrCreate(
+      {
+        departure: "Oakland",
+        destination: "San Diego",
+      },
+      {
+        price: 99,
+        discounted: true,
+      }
+    );
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Mass Updates
+
+Updates can also be performed against models that match a given query. In this example, all flights that are `active` and have a `destination` of `San Diego` will be marked as delayed:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await Flight.where('active', true)
+      .where('destination', 'San Diego')
+      .updateMany({'delayed': true});
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await Flight.where('active', true)
+      .where('destination', 'San Diego')
+      .updateMany({'delayed': true});
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `updateMany` method expects an object of column and value pairs representing the columns that should be updated. The `updateMany` method returns the number of affected rows.
+
+#### Examining Attribute Changes
+
+Mongoloquent provides the `isDirty`, `isClean`, and `wasChanged` methods to examine the internal state of your model and determine how its attributes have changed from when the model was originally retrieved.
+
+The `isDirty` method determines if any of the model's attributes have been changed since the model was retrieved. You may pass a specific attribute name or an array of attributes to the `isDirty` method to determine if any of the attributes are "dirty". The `isClean` method will determine if an attribute has remained unchanged since the model was retrieved. This method also accepts an optional attribute argument:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import User from "./Models/User";
+
+    const user = await User.create({
+      firstName: "Ajat",
+      lastName: "Darojat",
+      title: "Developer",
+    })
+
+    user.title = "Painter";
+
+    user.isDirty(); // true
+    user.isDirty("title"); // true
+    user.isDirty("firstName"); // false
+    user.isDirty(["firstName", "title"]); // true
+
+    user.isClean(); // false
+    user.isClean("title"); // false
+    user.isClean("firstName"); // true
+    user.isClean(["firstName", "title"]); // false
+
+    user.save();
+
+    user.isDirty(); // false
+    user.isClean(); // true
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import User from "./Models/User";
+
+    const user = await User.create({
+      firstName: "Ajat",
+      lastName: "Darojat",
+      title: "Developer",
+    })
+
+    user.title = "Painter";
+
+    user.isDirty(); // true
+    user.isDirty("title"); // true
+    user.isDirty("firstName"); // false
+    user.isDirty(["firstName", "title"]); // true
+
+    user.isClean(); // false
+    user.isClean("title"); // false
+    user.isClean("firstName"); // true
+    user.isClean(["firstName", "title"]); // false
+
+    user.save();
+
+    user.isDirty(); // false
+    user.isClean(); // true
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `wasChanged` method determines if any attributes were changed when the model was last saved within the current request cycle. If needed, you may pass an attribute name to see if a particular attribute was changed:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await User.create({
+      firstName: "Ajat",
+      lastName: "Darojat",
+      title: "Developer",
+    })
+
+    user.title = "Painter";
+
+    user.save();
+
+    user.wasChanged(); // true
+    user.wasChanged("title"); // true
+    user.wasChanged(["title", "slug"]); // true
+    user.wasChanged("firstName"); // false
+    user.wasChanged(["firstName", "title"]); // true
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = await User.create({
+      firstName: "Ajat",
+      lastName: "Darojat",
+      title: "Developer",
+    })
+
+    user.title = "Painter";
+
+    user.save();
+
+    user.wasChanged(); // true
+    user.wasChanged("title"); // true
+    user.wasChanged(["title", "slug"]); // true
+    user.wasChanged("firstName"); // false
+    user.wasChanged(["firstName", "title"]); // true
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `getOriginal` method returns an array containing the original attributes of the model regardless of any changes to the model since it was retrieved. If needed, you may pass a specific attribute name to get the original value of a particular attribute:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
+
+    user.name; // Jhon
+    user.emai; // jhon@example.com
+
+    user.name = "Jack";
+    user.name; // Jack
+
+    user.getOriginal("name"); // Jhon
+    user.getOriginal(); // Object of original attributes...
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
+
+    user.name; // Jhon
+    user.emai; // jhon@example.com
+
+    user.name = "Jack";
+    user.name; // Jack
+
+    user.getOriginal("name"); // Jhon
+    user.getOriginal(); // Object of original attributes...
+    ```
+
+  </TabItem>  
+</Tabs>
+
+The `getChanges` method returns an object containing the attributes that changed when the model was last saved:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
+    user.name; // Jhon
+    user.email; // jhon@example.com
+
+    await user.update({
+      name: "Jack",
+      email: "jack@example.com",
+    });
+
+    user.getChanges();
+
+    /*
+      {
+        name: 'Jack',
+        email: 'jack@example.com'
+      }
+    */
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```typescript
+    const user = await User.find("10ab7e3d05d58a1ad246ee87");
+    user.name; // Jhon
+    user.email; // jhon@example.com
+
+    await user.update({
+      name: "Jack",
+      email: "jack@example.com",
+    });
+
+    user.getChanges();
+
+    /*
+      {
+        name: 'Jack',
+        email: 'jack@example.com'
+      }
+    */
+    ```
+
+  </TabItem>
+  </Tabs>
+
+### Mass Assignment
+
+You may use the create method to "save" a new model using a single Javascript statement. The inserted model instance will be returned to you by the method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    const flight = await Flight.create({
+      name: "London to Paris",
+    });
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    const flight = await Flight.create({
+      name: "London to Paris",
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+you may use the create method to insert a new record in the database. The create method returns the newly created model instance:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flight = await Flight.create({name: "London to Paris"});
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flight = await Flight.create({name: "London to Paris"});
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Deleting Models
+
+To delete a model, you may call the delete method on the model instance:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    const flight = Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    await flight.delete();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    const flight = Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    await flight.delete();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Deleting an Existing Model by its Primary Key
+
+In the example above, we are retrieving the model from the database before calling the `delete` method. However, if you know the primary key of the model, you may delete the model without explicitly retrieving it by calling the `destroy` method. In addition to accepting the single primary key, the `destroy` method will accept multiple primary keys, or an array of primary keys:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await Flight.destroy("10ab7e3d05d58a1ad246ee87");
+
+    await Flight.destroy("10ab7e3d05d58a1ad246ee87", "10ab7e3d05d58a1ad246ee88", "10ab7e3d05d58a1ad246ee89");
+
+    await Flight.destroy(["10ab7e3d05d58a1ad246ee87", "10ab7e3d05d58a1ad246ee88", "10ab7e3d05d58a1ad246ee89"]);
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await Flight.destroy("10ab7e3d05d58a1ad246ee87");
+
+    await Flight.destroy("10ab7e3d05d58a1ad246ee87", "10ab7e3d05d58a1ad246ee88", "10ab7e3d05d58a1ad246ee89");
+
+    await Flight.destroy(["10ab7e3d05d58a1ad246ee87", "10ab7e3d05d58a1ad246ee88", "10ab7e3d05d58a1ad246ee89"]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you are utilizing [soft deleting models](/docs/orm#soft-deleting), you may permanently delete models via the `forceDestroy` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await Flight.forceDestroy("10ab7e3d05d58a1ad246ee87");
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await Flight.forceDestroy("10ab7e3d05d58a1ad246ee87");
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Deleting Models Using Queries
+
+Of course, you may build an Mongoloquent query to delete all models matching your query's criteria. In this example, we will delete flight that is marked as inactive.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const deleted = await Flight.where("active", false).delete();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const deleted = await Flight.where("active", false).delete();
+    ```
+
+  </TabItem>
+</Tabs>
+
+To delete all models in a collection, you should execute a query without adding any conditions:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const deleted = await Flight.deleteMany();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const deleted = await Flight.deleteMany();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Soft Deleting
+
+In addition to actually removing records from your database, Mongoloquent can also "soft delete" models. When models are soft deleted, they are not actually removed from your database. Instead, a `deletedAt` attribute is set on the model indicating the date and time at which the model was "deleted". To enable soft deletes for a model, add the `$useSoftDelete` trait to the model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema } from "mongoloquent";
+
+    interface IFlight extends IMongoloquentSchema {
+      name: string;
+      number: string;
+      active: boolean;
+    }
+
+    class Flight extends Model<IFlight> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IFlight
+       */
+      static $schema: IFlight
+
+      /**
+       * Indicates if the model should be soft deleted.
+       *
+       * @var boolean
+       */
+      static $useSoftDelete: boolean = true;
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class Flight extends Model {
+      /**
+       * Indicates if the model should be soft deleted.
+       *
+       * @var boolean
+       */
+      static $useSoftDelete = true;
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+> The `useSoftDelete` trait will automatically cast the `deletedAt` attribute to a `DateTime / dayjs` instance for you.
+
+Now, when you call the `delete` method on the model, the `deletedAt` and `isDeleted` columns will be set to the current date and time. However, the model's database record will be left in the collection. When querying a model that uses soft deletes, the soft deleted models will automatically be excluded from all query results.
+
+To determine if a given model instance has been soft deleted, you may use the `withTrashed` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flights = await Flight.withTrashed().get()
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flights = await Flight.withTrashed().get()
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Restoring Soft Deleted Models
+
+Sometimes you may wish to "un-delete" a soft deleted model. To restore a soft deleted model, you may call the `restore` method on a model instance. The `restore` method will set the model's `isDeleted` column to `null`:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await flight.restore();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await flight.restore();
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also use the `restore` method in a query to restore multiple models. Again, like other "mass" operations, this will not dispatch any model events for the models that are restored:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await Flight.withTrashed()
+      .where('airline_id', "10ab7e3d05d58a1ad246ee87")
+      .restore();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await Flight.withTrashed()
+      .where('airline_id', "10ab7e3d05d58a1ad246ee87")
+      .restore();
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `restore` method may also be used when building [relationship](./relationships) queries:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flight = Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    await flight.history().restore();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flight = Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    await flight.history().restore();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Permanently Deleting Models
+
+Sometimes you may need to truly remove a model from your database. You may use the `forceDelete` method to permanently remove a soft deleted model from the database collection:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await flight.forceDelete();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await flight.forceDelete();
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also use the `forceDelete` method when building Mongoloquent relationship queries:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flight = Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    await flight.history().forceDelete();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flight = Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    await flight.history().forceDelete();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Querying Soft Deleted Models
+
+#### Including Soft Deleted Models
+
+As noted above, soft deleted models will automatically be excluded from query results. However, you may force soft deleted models to be included in a query's results by calling the `withTrashed` method on the query:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import Flight from "./Models/Flight";
+
+    const flights = await Flight.withTrashed()
+      .where("account_id", "10ab7e3d05d58a1ad246ee87")
+      .get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import Flight from "./Models/Flight";
+
+    const flights = await Flight.withTrashed()
+      .where("account_id", "10ab7e3d05d58a1ad246ee87")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `withTrashed` method may also be called when building a [relationship](./relationships) query:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flight = Flight.find("10ab7e3d05d58a1ad246ee87");
+
+    await flight.history().withTrashed().get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flight = Flight.find("10ab7e3d05d58a1ad246ee87");
+    
+    await flight.history().withTrashed().get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Retrieving Only Soft Deleted Models
+
+The `onlyTrashed` method will retrieve only soft deleted models:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const flights = await Flight.onlyTrashed()
+      .where("airline_id", "10ab7e3d05d58a1ad246ee87")
+      .get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const flights = await Flight.onlyTrashed()
+      .where("airline_id", "10ab7e3d05d58a1ad246ee87")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+---
+
+<Sponsor />

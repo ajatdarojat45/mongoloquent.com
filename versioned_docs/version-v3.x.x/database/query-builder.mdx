@@ -1,0 +1,936 @@
+---
+sidebar_position: 2
+title: Query Builder
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "../sponsor.mdx";
+
+# Database: Query Builder
+
+## Introduction
+
+Mongoloquent's database query builder provides a convenient, fluent interface to creating and running MongoDB queries. It can be used to perform most MongoDB operations in your application.
+
+## Running Database Queries
+
+#### Retrieving All Rows From a Collection
+
+You may use the `collection` method provided by the `DB` class to begin a query. The `collection` method returns a fluent query builder instance for the given collection, allowing you to chain more constraints onto the query and then finally retrieve the results of the query using the `get` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+      title: string
+    }
+
+    const users = await DB.collection<IUser>("users").get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    const users = await DB.collection("users").get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `get` method returns an `Collection` instance containing the results of the query where each result is an instance of the Javascript object. You may access each column's value by accessing the column as a property of the object:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users").get();
+
+    users.forEach((user) => {
+      console.log(user.name);
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users").get();
+
+    users.forEach((user) => {
+      console.log(user.name);
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+> Mongoloquent collections provide a variety of extremely powerful methods for mapping and reducing data. For more information on Mongoloquent collections, check out the [collection documentation](../collections).
+
+#### Retrieving a Single Row / Column From a Collection
+
+If you just need to retrieve a single row from a database collection, you may use the `DB` class's `first` method. This method will return a single object:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await DB.collection<IUser>("users").where("name", "Jhon").first();
+
+    console.log(user.name);
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = await DB.collection("users").where("name", "Jhon").first();
+
+    console.log(user.name);
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you would like to retrieve a single row from a database collection, but throw an `MongoloquentRecordNotFoundException` if no matching row is found, you may use the `firstOrFail` method.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await DB.collection<IUser>("users").where("name", "Jhon").firstOrFail();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = await DB.collection("users").where("name", "Jhon").firstOrFail();
+    ```
+
+  </TabItem>
+</Tabs>
+
+To retrieve a single row by its id column value, use the `find` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const user = await DB.collection<IUser>("users").find("10ab7e3d05d58a1ad246ee87");
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const user = await DB.collection("users").find("10ab7e3d05d58a1ad246ee87");
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Retrieving a List of Column Values
+
+If you would like to retrieve an `Collection` instance containing the values of a single column, you may use the `pluck` method. In this example, we'll retrieve a collection of user titles:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const titles = await DB.collection<IUser>("users").pluck("title");
+
+    titles.forEach(title => {
+      console.log(title)
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const titles = await DB.collection("users").pluck("title");
+
+    titles.forEach(title => {
+      console.log(title)
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may specify the column that the resulting collection should use as its keys by providing a second argument to the `pluck` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const items = await DB.collection<IUser>("users").pluck("title", "name");
+
+    items.forEach(item => {
+      console.log(item.title, item.name)
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const items = await DB.collection("users").pluck("title", "name");
+
+    items.forEach(item => {
+      console.log(item.title, item.name)
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Aggregates
+
+The query builder also provides a variety of methods for retrieving aggregate values like `count`, `max`, `min`, `avg`, and `sum`. You may call any of these methods after constructing your query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent"
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string
+    }
+
+    interface IOrder extends IMongoloquentSchema, IMongoloquentTimestamps {
+      price: number
+      finalized: boolean
+    }
+
+    const users = await DB.collection<IUser>("users").count();
+
+    const price = await DB.collection<IOrder>("orders").max("price")
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { DB } from "mongoloquent"
+
+    const users = await DB.collection("users").count();
+
+    const price = await DB.collection("orders").max("price")
+    ```
+
+  </TabItem>
+</Tabs>
+
+Of course, you may combine these methods with other clauses to fine-tune how your aggregate value is calculated:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const price = await DB.collection<IOrder>("orders")
+      .where("finalized", true)
+      .avg("price")
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const price = await DB.collection("orders")
+      .where("finalized", true)
+      .avg("price")
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Raw Expressions
+
+Sometimes you may need to insert an arbitrary MongoDB document into a query. To create a raw expression, you may use the raw method provided by the DB:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .raw({
+        $match: {
+          name: "John Doe"
+        }
+      })
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .raw({
+        $match: {
+          name: "John Doe"
+        }
+      })
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `raw` method accepts array of MongoDB documents. The documents will be merged with the query builder's existing query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .raw([
+        {
+          $match: {
+            name: "John Doe"
+          }
+        },
+        {
+          $projection: {
+            name: 1,
+          }
+        }
+      ])
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection<IUser>("users")
+      .raw([
+        {
+          $match: {
+            name: "John Doe"
+          }
+        },
+        {
+          $projection: {
+            name: 1,
+          }
+        }
+      ])
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Also you may use chaining `raw` methods:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .raw({
+        $match: {
+          name: "John Doe"
+        }
+      })
+      .raw({
+        $projection: {
+          name: 1,
+        }
+      })
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .raw({
+        $match: {
+          name: "John Doe"
+        }
+      })
+      .raw({
+        $projection: {
+          name: 1,
+        }
+      })
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Lookup
+
+The query builder may also be used to add lookup clauses to your queries. To perform a basic "lookup", you may use the `lookup` method on a query builder instance. You may even join multiple collections in a single query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .lookup({
+        from: "posts",
+        localField: "_id",
+        foreignField: "userId",
+        as: "posts"
+      })
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .lookup({
+        from: "posts",
+        localField: "_id",
+        foreignField: "userId",
+        as: "posts"
+      })
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may also use the `lookup` method to join multiple collections in a single query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .lookup({
+        from: "posts",
+        localField: "_id",
+        foreignField: "userId",
+        as: "posts"
+      })
+      .lookup({
+        from: "orders",
+        localField: "_id",
+        foreignField: "userId",
+        as: "orders"
+      })
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .lookup({
+        from: "posts",
+        localField: "_id",
+        foreignField: "userId",
+        as: "posts"
+      })
+      .lookup({
+        from: "orders",
+        localField: "_id",
+        foreignField: "userId",
+        as: "orders"
+      })
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Basic Where Clauses
+
+### Where Clauses
+
+You may use the query builder's `where` method to add "where" clauses to the query. The most basic call to the `where` method requires three arguments. The first argument is the name of the column. The second argument is an operator, which can be any of the database's supported operators. The third argument is the value to compare against the column's value.
+
+For example, the following query retrieves users where the value of the `votes` column is equal to `100` and the value of the `age` column is greater than `35`:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .where("votes", "=", 100)
+      .where("age", ">", 35)
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .where("votes", "=", 100)
+      .where("age", ">", 35)
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+For convenience, if you want to verify that a column is `=` to a given value, you may pass the value as the second argument to the `where` method. Mongoloquent will assume you would like to use the `=` operator:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .where("votes", 100)
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .where("votes", 100)
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+As previously mentioned, you may use any operator that is supported by MongoDB system:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .where("votes", ">=", 100)
+      .get();
+
+    const users = await DB.collection<IUser>("users")
+      .where("votes", "<>", 100)
+      .get();
+
+    const users = await DB.collection<IUser>("users")
+      .where("name", "like", "T")
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .where("votes", ">=", 100)
+      .get();
+
+    const users = await DB.collection("users")
+      .where("votes", "<>", 100)
+      .get();
+
+    const users = await DB.collection("users")
+      .where("name", "like", "T")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Or Where Clauses
+
+When chaining together calls to the query builder's `where` method, the "where" clauses will be joined together using the `and` operator. However, you may use the `orWhere` method to join a clause to the query using the `or` operator. The `orWhere` method accepts the same arguments as the where method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .where("votes", ">", 100)
+      .orWhere("name", "Jhon")
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .where("votes", ">", 100)
+      .orWhere("name", "Jhon")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Additional Where Clauses
+
+#### whereIn / whereNotIn / orWhereIn / orWhereNotIn
+
+The `whereIn` method verifies that a given column's value is contained within the given array:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .whereIn("votes", [100, 200, 300])
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .whereIn("votes", [100, 200, 300])
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `whereNotIn` method verifies that the given column's value is not contained in the given array:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .whereNotIn("votes", [100, 200, 300])
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .whereNotIn("votes", [100, 200, 300])
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### whereBetween / orWhereBetween
+
+The `whereBetween` method verifies that a column's value is between two values:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .whereBetween("votes", [1, 100])
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .whereBetween("votes", [1, 100])
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### whereNotBetween / orWhereNotBetween
+
+The `whereNotBetween` method verifies that a column's value lies outside of two values:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .whereNotBetween("votes", [1, 100])
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .whereNotBetween("votes", [1, 100])
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### whereNull / whereNotNull / orWhereNull / orWhereNotNull
+
+The `whereNull` method verifies that the value of the given column is `NULL`:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .whereNull("updateAt")
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .whereNull("updateAt")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+The `whereNotNull` method verifies that the column's value is not `NULL`:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .whereNotNull("updateAt")
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .whereNotNull("updateAt")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Ordering, Grouping, Limit and Offset
+
+### Ordering
+
+#### The `orderBy` Method
+
+The `orderBy` method allows you to sort the results of the query by a given column. The first argument accepted by the `orderBy` method should be the column you wish to sort by, while the second argument determines the direction of the sort and may be either `asc` or `desc`:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .orderBy("name", "desc")
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .orderBy("name", "desc")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+To sort by multiple columns, you may simply invoke `orderBy` as many times as necessary:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .orderBy("name", "desc")
+      .orderBy("email", "asc")
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .orderBy("name", "desc")
+      .orderBy("email", "asc")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Grouping
+
+#### The `groupBy`
+
+As you might expect, the groupBy method may be used to group the query results:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .groupBy("accountId")
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .groupBy("accountId")
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Limit and Offset
+
+#### The `skip` and `take` Methods
+
+You may use the `skip` and `take` methods to limit the number of results returned from the query or to skip a given number of results in the query:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const users = await DB.collection<IUser>("users")
+      .skip(10)
+      .take(5)
+      .get();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const users = await DB.collection("users")
+      .skip(10)
+      .take(5)
+      .get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Insert Statements
+
+The query builder also provides an `insert` method that may be used to insert records into the database collection. The `insert` method accepts an object of column names and values:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await DB.collection<IUser>("users").insert({
+      email: "kayla@example.com",
+      votes: 0
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await DB.collection<IUser>("users").insert({
+      email: "kayla@example.com",
+      votes: 0
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+You may insert several records at once by passing an array of objects. Each array represents a record that should be inserted into the table:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await DB.collection<IUser>("users").insertMany([
+      {email: "picard@example.com", votes: 0},
+      {email: "janeway@example.com", votes: 0},
+    ]);
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await DB.collection("users").insertMany([
+      {email: "picard@example.com", votes: 0},
+      {email: "janeway@example.com", votes: 0},
+    ]);
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Update Statements
+
+In addition to inserting records into the database, the query builder can also update existing records using the `update` method. The `update` method, like the `insert` method, accepts an object of column and value pairs indicating the columns to be updated. You may constrain the `update` query using `where` clauses:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await DB.collection<IUser>("users")
+      .where("_id", "=", "10ab7e3d05d58a1ad246ee87")
+      .update({ votes: 1 });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await DB.collection("users")
+      .where("_id", "=", "10ab7e3d05d58a1ad246ee87")
+      .update({ votes: 1 });
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Update or Insert
+
+Sometimes you may want to update an existing record in the database or create it if no matching record exists. In this scenario, the `updateOrInsert` method may be used. The `updateOrInsert` method accepts two arguments: an object of conditions by which to find the record, and an object of column and value pairs indicating the columns to be updated.
+
+The `updateOrInsert` method will attempt to locate a matching database record using the first argument's column and value pairs. If the record exists, it will be updated with the values in the second argument. If the record cannot be found, a new record will be inserted with the merged attributes of both arguments:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await DB.collection<IUser>("users")
+      .updateOrInsert(
+        { email: "john@example.com", name: "John" },
+        { votes: 2 } 
+      );
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await DB.collection("users")
+      .updateOrInsert(
+        { email: "john@example.com", name: "John" },
+        { votes: 2 } 
+      );
+    ```
+
+  </TabItem>
+</Tabs>
+
+## Delete Statements
+
+The query builder's `delete` method may be used to delete records from the table. The `delete` method returns the number of affected rows. You may constrain `delete` statements by adding "where" clauses before calling the `delete` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const deleted = await DB.collection<IUser>("users").delete();
+
+    const deleted = await DB.collection<IUser>("users").where("votes", ">", 100).delete();
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const deleted = await DB.collection("users").delete();
+      
+    const deleted = await DB.collection("users").where("votes", ">", 100).delete();
+    ```
+
+  </TabItem>
+</Tabs>
+
+---
+
+<Sponsor />
