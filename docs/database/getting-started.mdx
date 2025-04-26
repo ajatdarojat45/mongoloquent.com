@@ -39,9 +39,9 @@ To run a basic SELECT query, you may use the `collection` method on the `DB` cla
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { DB } from 'mongoloquent';
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
 
-    interface IUser {
+    interface IUser, extends IMongoloquentSchema, IMongoloquentTimestamps {
       name: string;
     }
 
@@ -75,9 +75,9 @@ To execute an `insert` statement, you may use the `insert` method on the `DB` cl
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { DB } from 'mongoloquent';
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
 
-    interface IUser {
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
       name: string;
     }
 
@@ -106,9 +106,9 @@ The `update` method should be used to update existing records in the database.
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { DB } from 'mongoloquent';
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
 
-    interface IUser {
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
       name: string;
     }
 
@@ -141,9 +141,9 @@ The `delete` method should be used to delete records from the database. the numb
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { DB } from 'mongoloquent';
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
 
-    interface IUser {
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
       name: string;
     }
 
@@ -176,9 +176,9 @@ If your application using multiple connections, you may define each connection v
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { DB } from 'mongoloquent';
+    import { DB, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
 
-    interface IUser {
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
       name: string;
     }
 
