@@ -73,7 +73,7 @@ const config: Config = {
 				{
 					label: "API References",
 					position: "left",
-					href: "https://google.com",
+					href: "https://api.mongoloquent.com",
 				},
 				{
 					type: "docsVersionDropdown",
