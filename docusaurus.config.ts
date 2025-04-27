@@ -159,6 +159,15 @@ const config: Config = {
 			searchPagePath: "search",
 		},
 	} satisfies Preset.ThemeConfig,
+
+	scripts: [
+		{
+			src: "https://cloud.umami.is/script.js",
+			async: true,
+			defer: true,
+			"data-website-id": process.env.UMAMI_WEBSITE_ID,
+		},
+	],
 };
 
 export default config;
