@@ -1714,7 +1714,7 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
       authorId: ObjectID
     }
 
-    class Book extends Mongoloquent {
+    class Book extends Model<IBook> {
       /**
        * The attributes of the model.
        *
@@ -1727,7 +1727,7 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
        *
        * @var string
        */
-      protected static $collection: string = 'books';
+      static $collection: string = 'books';
 
       /**
        * Get the author that wrote the book.
@@ -1744,7 +1744,7 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
     import { Model } from 'mongoloquent';
     import Author from './Models/Author';
 
-    class Book extends Mongoloquent {
+    class Book extends Model {
       /**
        * The collection name.
        *
