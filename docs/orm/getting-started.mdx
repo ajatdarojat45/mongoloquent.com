@@ -434,7 +434,7 @@ Sometimes you may wish to throw an exception if a model is not found. This is pa
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const flight = await Flight.find("10ab7e3d05d58a1ad246ee87").findOrFail();
+    const flight = await Flight.findOrFail("10ab7e3d05d58a1ad246ee87");
 
     const flight = await Flight.where('legs', '>', 3).firstOrFail();
     ```
@@ -442,7 +442,7 @@ Sometimes you may wish to throw an exception if a model is not found. This is pa
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    const flight = await Flight.find("10ab7e3d05d58a1ad246ee87").findOrFail();
+    const flight = await Flight.findOrFail("10ab7e3d05d58a1ad246ee87");
 
     const flight = await Flight.where('legs', '>', 3).firstOrFail();
     ```
