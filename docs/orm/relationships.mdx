@@ -126,7 +126,7 @@ Mongoloquent determines the foreign key of the relationship based on the parent 
   </TabItem>
 </Tabs>
 
-Additionally, Mongoloquent assumes that the foreign key should have a value matching the primary key column of the parent. In other words, Mongoloquent will look for the value of the user's id column in the `user_id` column of the `Phone` record. If you would like the relationship to use a primary key value other than `_id`, you may pass a third argument to the `hasOne` method:
+Additionally, Mongoloquent assumes that the foreign key should have a value matching the primary key column of the parent. In other words, Mongoloquent will look for the value of the user's id column in the `userId` column of the `Phone` record. If you would like the relationship to use a primary key value other than `_id`, you may pass a third argument to the `hasOne` method:
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -206,7 +206,7 @@ Mongoloquent determines the foreign key name by examining the name of the relati
      * Get the user that owns the phone.
      */
     public function user(){
-      return this.belongsTo(User::class, 'foreign_key');
+      return this.belongsTo(User, 'foreign_key');
     }
     ```
 
@@ -217,7 +217,7 @@ Mongoloquent determines the foreign key name by examining the name of the relati
      * Get the user that owns the phone.
      */
     public function user(){
-      return this.belongsTo(User::class, 'foreign_key');
+      return this.belongsTo(User, 'foreign_key');
     }
     ```
 
@@ -1344,7 +1344,7 @@ tags
 
 taggables
   _id - ObjectID
-  tag_id - ObjectID
+  tagId - ObjectID
   taggableId - ObjectID
   taggableType - string
 
@@ -1354,7 +1354,7 @@ taggables
 
 #### Model Structure
 
-Next, we're ready to define the relationships on the models. The `Post` and `Video` models will both contain a `tags` method that calls the `morphToMany` method provided by the base Eloquent model class.
+Next, we're ready to define the relationships on the models. The `Post` and `Video` models will both contain a `tags` method that calls the `morphToMany` method provided by the base Mongoloquent model class.
 
 The `morphToMany` method accepts the name of the related model as well as the "relationship name". Based on the name we assigned to our intermediate table name and the keys it contains, we will refer to the relationship as "taggable":
 
