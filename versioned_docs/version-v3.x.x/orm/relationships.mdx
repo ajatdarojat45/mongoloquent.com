@@ -67,7 +67,7 @@ A one-to-one relationship is a very basic type of database relationship. For exa
       /**
        * Get the phone associated with the user.
        */
-      public function phone(){
+      public phone(){
         return this.hasOne(Phone);
       }
     }
@@ -83,7 +83,7 @@ A one-to-one relationship is a very basic type of database relationship. For exa
       /**
        * Get the phone associated with the user.
        */
-      public function phone(){
+      public phone(){
         return this.hasOne(Phone);
       }
     }
@@ -170,7 +170,7 @@ So, we can access the `Phone` model from our `User` model. Next, let's define a 
       /**
        * Get the user that owns the phone.
        */
-      public function user(){
+      public user(){
         return this.belongsTo(User);
       }
     }
@@ -186,7 +186,7 @@ So, we can access the `Phone` model from our `User` model. Next, let's define a 
       /**
        * Get the user that owns the phone.
        */
-      public function user(){
+      public user(){
         return this.belongsTo(User);
       }
     }
@@ -205,7 +205,7 @@ Mongoloquent determines the foreign key name by examining the name of the relati
     /**
      * Get the user that owns the phone.
      */
-    public function user(){
+    public user(){
       return this.belongsTo(User, 'foreign_key');
     }
     ```
@@ -216,7 +216,7 @@ Mongoloquent determines the foreign key name by examining the name of the relati
     /**
      * Get the user that owns the phone.
      */
-    public function user(){
+    public user(){
       return this.belongsTo(User, 'foreign_key');
     }
     ```
@@ -232,7 +232,7 @@ If the parent model does not use `_id` as its primary key, or you wish to find t
     /**
      * Get the user that owns the phone.
      */
-    public function user(){
+    public user(){
       return this.belongsTo(User, 'foreign_key', 'owner_key');
     }
     ```
@@ -243,7 +243,7 @@ If the parent model does not use `_id` as its primary key, or you wish to find t
     /**
      * Get the user that owns the phone.
      */
-    public function user(){
+    public user(){
       return this.belongsTo(User, 'foreign_key', 'owner_key');
     }
     ```
@@ -276,7 +276,7 @@ A one-to-many relationship is used to define relationships where a single model 
       /**
        * Get the comments for the post.
        */
-      public function comments(){
+      public comments(){
         return this.hasMany(Comment);
       }
     }
@@ -292,7 +292,7 @@ A one-to-many relationship is used to define relationships where a single model 
       /**
        * Get the comments for the post.
        */
-      public function comments(){
+      public comments(){
         return this.hasMany(Comment);
       }
     }
@@ -406,7 +406,7 @@ Now that we can access all of a post's comments, let's define a relationship to 
       /**
        * Get the post that owns the comment.
        */
-      public function post(){
+      public post(){
         return this.belongsTo(Post);
       }
     }
@@ -422,7 +422,7 @@ Now that we can access all of a post's comments, let's define a relationship to 
       /**
        * Get the post that owns the comment.
        */
-      public function post(){
+      public post(){
         return this.belongsTo(Post);
       }
     }
@@ -468,7 +468,7 @@ However, if the foreign key for your relationship does not follow these conventi
     /**
      * Get the post that owns the comment.
      */
-    public function post(){
+    public post(){
       return this.belongsTo(Post, 'foreign_key');
     }
     ```
@@ -479,7 +479,7 @@ However, if the foreign key for your relationship does not follow these conventi
     /**
      * Get the post that owns the comment.
      */
-    public function post(){
+    public post(){
       return this.belongsTo(Post, 'foreign_key');
     }
     ```
@@ -495,7 +495,7 @@ If your parent model does not use `_id` as its primary key, or you wish to find 
     /**
      * Get the post that owns the comment.
      */
-    public function post(){
+    public post(){
       return this.belongsTo(Post, 'foreign_key', 'owner_key');
     }
     ```
@@ -506,7 +506,7 @@ If your parent model does not use `_id` as its primary key, or you wish to find 
     /**
      * Get the post that owns the comment.
      */
-    public function post(){
+    public post(){
       return this.belongsTo(Post, 'foreign_key', 'owner_key');
     }
     ```
@@ -551,7 +551,7 @@ Now that we have examined the table structure for the relationship, let's define
       /**
        * Get all of the deployments for the application.
        */
-      public function deployments(){
+      public deployments(){
         return this.hasManyThrough(Deployment, Environment);
       }
     }
@@ -568,7 +568,7 @@ Now that we have examined the table structure for the relationship, let's define
       /**
        * Get all of the deployments for the application.
        */
-      public function deployments(){
+      public deployments(){
         return this.hasManyThrough(Deployment, Environment);
       }
     }
@@ -588,7 +588,7 @@ Typical Mongoloquent foreign key conventions will be used when performing the re
     ```typescript 
     class Application extends Model{
 
-      public function deployments(){
+      public deployments(){
         return this.hasManyThrough(
           Deployment,
           Environment,
@@ -607,7 +607,7 @@ Typical Mongoloquent foreign key conventions will be used when performing the re
     ```javascript
     class Application extends Model{
 
-      public function deployments(){
+      public deployments(){
         return this.hasManyThrough(
           Deployment,
           Environment,
@@ -649,14 +649,14 @@ It's common to add additional methods to models that constrain relationships. Fo
       /**
        * Get all of the user's posts.
        */
-      public function posts(){
+      public posts(){
         return this.hasMany(Post, 'foreign_key');
       }
 
       /**
        * Get all of the user's featured posts.
        */
-      public function featuredPosts(){
+      public featuredPosts(){
         return this.posts().where('featured', true);
       }
     }
@@ -672,14 +672,14 @@ It's common to add additional methods to models that constrain relationships. Fo
       /**
        * Get all of the user's posts.
        */
-      public function posts(){
+      public posts(){
         return this.hasMany(Post, 'foreign_key');
       }
 
       /**
        * Get all of the user's featured posts.
        */
-      public function featuredPosts(){
+      public featuredPosts(){
         return this.posts().where('featured', true);
       }
     }
@@ -730,7 +730,7 @@ Many-to-many relationships are defined by writing a method that returns the resu
       /**
        * The roles that belong to the user.
        */
-      public function roles(){
+      public roles(){
         return this.belongsToMany(Role);
       }
     }
@@ -746,7 +746,7 @@ Many-to-many relationships are defined by writing a method that returns the resu
       /**
        * The roles that belong to the user.
        */
-      public function roles(){
+      public roles(){
         return this.belongsToMany(Role);
       }
     }
@@ -868,7 +868,7 @@ To define the "inverse" of a many-to-many relationship, you should define a meth
       /**
        * The users that belong to the role.
        */
-      public function users(){
+      public users(){
         return this.belongsToMany(User);
       }
     }
@@ -884,7 +884,7 @@ To define the "inverse" of a many-to-many relationship, you should define a meth
       /**
        * The users that belong to the role.
        */
-      public function users(){
+      public users(){
         return this.belongsToMany(User);
       }
     }
@@ -982,7 +982,7 @@ Next, let's examine the model definitions needed to build this relationship:
       /**
        * Get the post's image.
        */
-      public function image(){
+      public image(){
         return this.morphTo(Image, 'imageable');
       }
     }
@@ -1014,7 +1014,7 @@ Next, let's examine the model definitions needed to build this relationship:
       /**
        * Get the user's image.
        */
-      public function image(){
+      public image(){
         return this.morphTo(Image, 'imageable');
       }
     }
@@ -1052,7 +1052,7 @@ Next, let's examine the model definitions needed to build this relationship:
       /**
        * Get the post's image.
        */
-      public function image(){
+      public image(){
         return this.morphTo(Image, 'imageable');
       }
     }
@@ -1073,7 +1073,7 @@ Next, let's examine the model definitions needed to build this relationship:
       /**
        * Get the user's image.
        */
-      public function image(){
+      public image(){
         return this.morphTo(Image, 'imageable');
       }
     }
@@ -1188,7 +1188,7 @@ comments
       /**
        * Get all of the post's comments.
        */
-      public function comments(){
+      public comments(){
         return this.morphMany(Comment, 'commentable');
       }
     }
@@ -1221,7 +1221,7 @@ comments
       /**
        * Get all of the video's comments.
        */
-      public function comments(){
+      public comments(){
         return this.morphMany(Comment, 'commentable');
       }
     }
@@ -1258,7 +1258,7 @@ comments
       /**
        * Get all of the post's comments.
        */
-      public function comments(){
+      public comments(){
         return this.morphMany(Comment, 'commentable');
       }
     }
@@ -1279,7 +1279,7 @@ comments
       /**
        * Get all of the video's comments.
        */
-      public function comments(){
+      public comments(){
         return this.morphMany(Comment, 'commentable');
       }
     }
@@ -1387,7 +1387,7 @@ The `morphToMany` method accepts the name of the related model as well as the "r
       /**
        * Get all of the tags for the post.
        */
-      public function tags(){
+      public tags(){
         return this.morphToMany(Tag, 'taggable');
       }
     }
@@ -1410,7 +1410,7 @@ The `morphToMany` method accepts the name of the related model as well as the "r
       /**
        * Get all of the tags for the post.
        */
-      public function tags(){
+      public tags(){
         return this.morphToMany(Tag, 'taggable');
       }
     }
@@ -1454,14 +1454,14 @@ The `morphedByMany` method accepts the name of the related model as well as the 
       /**
        * Get all of the posts that are tagged with the tag.
        */
-      public function posts(){
+      public posts(){
         return this.morphedByMany(Post, 'taggable');
       }
 
       /**
        * Get all of the videos that are tagged with the tag.
        */
-      public function videos(){
+      public videos(){
         return this.morphedByMany(Video, 'taggable');
       }
     }
@@ -1485,14 +1485,14 @@ The `morphedByMany` method accepts the name of the related model as well as the 
       /**
        * Get all of the posts that are tagged with the tag.
        */
-      public function posts(){
+      public posts(){
         return this.morphedByMany(Post, 'taggable');
       }
 
       /**
        * Get all of the videos that are tagged with the tag.
        */
-      public function videos(){
+      public videos(){
         return this.morphedByMany(Video, 'taggable');
       }
     }
@@ -1614,7 +1614,7 @@ For example, imagine a blog application in which a `User` model has many associa
       /**
        * Get all of the posts for the user.
        */
-      public function posts(){
+      public posts(){
         return this.hasMany(Post, 'foreign_key');
       }
     }
@@ -1636,7 +1636,7 @@ For example, imagine a blog application in which a `User` model has many associa
       /**
        * Get all of the posts for the user.
        */
-      public function posts(){
+      public posts(){
         return this.hasMany(Post, 'foreign_key');
       }
     }
@@ -1732,7 +1732,7 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
       /**
        * Get the author that wrote the book.
        */
-      public function author(){
+      public author(){
         return this.belongsTo(Author, 'foreign_key');
       }
     }
@@ -1755,7 +1755,7 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
       /**
        * Get the author that wrote the book.
        */
-      public function author(){
+      public author(){
         return this.belongsTo(Author, 'foreign_key');
       }
     }
