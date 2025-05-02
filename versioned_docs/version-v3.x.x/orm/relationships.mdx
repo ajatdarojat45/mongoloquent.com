@@ -62,7 +62,7 @@ A one-to-one relationship is a very basic type of database relationship. For exa
        *
        * @var IUser
        */
-      static $schema: IUser
+      public static $schema: IUser
 
       /**
        * Get the phone associated with the user.
@@ -165,7 +165,7 @@ So, we can access the `Phone` model from our `User` model. Next, let's define a 
        *
        * @var IPhone
        */
-      static $schema: IPhone
+      public static $schema: IPhone
 
       /**
        * Get the user that owns the phone.
@@ -271,7 +271,7 @@ A one-to-many relationship is used to define relationships where a single model 
        *
        * @var IPost
        */
-      static $schema: IPost
+      public static $schema: IPost
 
       /**
        * Get the comments for the post.
@@ -401,7 +401,7 @@ Now that we can access all of a post's comments, let's define a relationship to 
        *
        * @var IComment
        */
-      static $schema: IComment
+      public static $schema: IComment
 
       /**
        * Get the post that owns the comment.
@@ -644,7 +644,7 @@ It's common to add additional methods to models that constrain relationships. Fo
        *
        * @var IUser
        */
-      static $schema: IUser
+      public static $schema: IUser
 
       /**
        * Get all of the user's posts.
@@ -739,10 +739,10 @@ Many-to-many relationships are defined by writing a method that returns the resu
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from 'mongoloquent';
+    import { Model } from 'mongoloquent';
     import Role from './Models/Role';
 
-    class User extends Mongoloquent {
+    class User extends Model {
       /**
        * The roles that belong to the user.
        */
@@ -863,7 +863,7 @@ To define the "inverse" of a many-to-many relationship, you should define a meth
        *
        * @var IRole
        */
-      static $schema: IRole
+      public static $schema: IRole
 
       /**
        * The users that belong to the role.
@@ -945,14 +945,14 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var IImage
        */
-      static $schema: IImage
+      public static $schema: IImage
 
       /**
        * The collection name.
        *
        * @var string
        */
-      static $collection: string = 'imagables';
+      public static $collection: string = 'imagables';
     }
 
 
@@ -970,14 +970,14 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var IPost
        */
-      static $schema: IPost
+      public static $schema: IPost
 
       /**
        * The collection name.
        *
        * @var string
        */
-      static $collection: string = 'posts';
+      public static $collection: string = 'posts';
 
       /**
        * Get the post's image.
@@ -1002,14 +1002,14 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var IUser
        */
-      static $schema: IUser
+      public static $schema: IUser
 
       /**
        * The collection name.
        *
        * @var string
        */
-      static $collection: string = 'users';
+      public static $collection: string = 'users';
 
       /**
        * Get the user's image.
@@ -1033,7 +1033,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      static $collection = 'imagables';
+      public static $collection = 'imagables';
     }
 
 
@@ -1047,7 +1047,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      static $collection = 'posts';
+      public static $collection = 'posts';
 
       /**
        * Get the post's image.
@@ -1068,7 +1068,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      static $collection = 'users';
+      public static $collection = 'users';
 
       /**
        * Get the user's image.
@@ -1150,14 +1150,14 @@ comments
        *
        * @var IComment
        */
-      static $schema: IComment
+      public static $schema: IComment
 
       /**
        * The collection name.
        *
        * @var string
        */
-      protected static $collection: string = 'comments';
+      public static $collection: string = 'comments';
     }
 
 
@@ -1176,14 +1176,14 @@ comments
        *
        * @var IPost
        */
-      static $schema: IPost
+      public static $schema: IPost
 
       /**
        * The collection name.
        *
        * @var string
        */
-      protected static $collection: string = 'posts';
+      public static $collection: string = 'posts';
 
       /**
        * Get all of the post's comments.
@@ -1209,14 +1209,14 @@ comments
        *
        * @var IVideo
        */
-      static $schema: IVideo
+      public static $schema: IVideo
 
       /**
        * The collection name.
        *
        * @var string
        */
-      protected static $collection: string = 'videos';
+      public static $collection: string = 'videos';
 
       /**
        * Get all of the video's comments.
@@ -1239,7 +1239,7 @@ comments
        *
        * @var string
        */
-      static $collection = 'comments';
+      public static $collection = 'comments';
     }
 
 
@@ -1253,7 +1253,7 @@ comments
        *
        * @var string
        */
-      static $collection = 'posts';
+      public static $collection = 'posts';
 
       /**
        * Get all of the post's comments.
@@ -1274,7 +1274,7 @@ comments
        *
        * @var string
        */
-      static $collection = 'videos';
+      public static $collection = 'videos';
 
       /**
        * Get all of the video's comments.
@@ -1375,14 +1375,14 @@ The `morphToMany` method accepts the name of the related model as well as the "r
        *
        * @var IPost
        */
-      static $schema: IPost
+      public static $schema: IPost
 
       /**
        * The collection name.
        *
        * @var string
        */
-      protected static $collection: string = 'posts';
+      public static $collection: string = 'posts';
 
       /**
        * Get all of the tags for the post.
@@ -1405,7 +1405,7 @@ The `morphToMany` method accepts the name of the related model as well as the "r
        *
        * @var string
        */
-      static $collection = 'posts';
+      public static $collection = 'posts';
 
       /**
        * Get all of the tags for the post.
@@ -1442,14 +1442,14 @@ The `morphedByMany` method accepts the name of the related model as well as the 
        *
        * @var ITag
        */
-      static $schema: ITag
+      public static $schema: ITag
 
       /**
        * The collection name.
        *
        * @var string
        */
-      static $collection: string = 'tags';
+      public static $collection: string = 'tags';
 
       /**
        * Get all of the posts that are tagged with the tag.
@@ -1480,7 +1480,7 @@ The `morphedByMany` method accepts the name of the related model as well as the 
        *
        * @var string
        */
-      static $collection = 'tags';
+      public static $collection = 'tags';
 
       /**
        * Get all of the posts that are tagged with the tag.
@@ -1602,14 +1602,14 @@ For example, imagine a blog application in which a `User` model has many associa
        *
        * @var IUser
        */
-      static $schema: IUser
+      public static $schema: IUser
 
       /**
        * The collection name.
        *
        * @var string
        */
-      static $collection: string = 'users';
+      public static $collection: string = 'users';
 
       /**
        * Get all of the posts for the user.
@@ -1625,13 +1625,13 @@ For example, imagine a blog application in which a `User` model has many associa
     ```javascript
     import { Model } from 'mongoloquent';
 
-    class User extends Mongoloquent {
+    class User extends Model {
       /**
        * The collection name.
        *
        * @var string
        */
-      static $collection = 'users';
+      public static $collection = 'users';
 
       /**
        * Get all of the posts for the user.
@@ -1720,14 +1720,14 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
        *
        * @var IBook
        */
-      static $schema: IBook
+      public static $schema: IBook
 
       /**
        * The collection name.
        *
        * @var string
        */
-      static $collection: string = 'books';
+      public static $collection: string = 'books';
 
       /**
        * Get the author that wrote the book.
@@ -1750,7 +1750,7 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
        *
        * @var string
        */
-      static $collection = 'books';
+      public static $collection = 'books';
 
       /**
        * Get the author that wrote the book.
