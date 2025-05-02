@@ -57,7 +57,7 @@ Let's examine a basic model class and discuss some of Mongoloquent's key convent
        *
        * @var IFlight
        */
-      static $schema: IFlight
+      public static $schema: IFlight
 
       // ...
     }
@@ -97,14 +97,14 @@ If your model's corresponding database collection does not fit this convention, 
        *
        * @var IFlight
        */
-      static $schema: IFlight
+      public static $schema: IFlight
 
       /**
        * The collection associated with the model.
        *
        * @var string
        */
-      static $collection: string = "flights";
+      public static $collection: string = "flights";
     }
     ```
 
@@ -119,7 +119,7 @@ If your model's corresponding database collection does not fit this convention, 
        *
        * @var string
        */
-      static $collection = "flights";
+      public static $collection = "flights";
     }
     ```
 
@@ -145,14 +145,14 @@ By default, Mongoloquent expects `createdAt` and `updatedAt` columns to exist on
        *
        * @var IFlight
        */
-      static $schema: IFlight
+      public static $schema: IFlight
 
       /**
        * Indicates if the model should be timestamped.
        *
        * @var boolean
        */
-      static $useTimestamps: boolean = false;
+      public static $useTimestamps: boolean = false;
     }
     ```
 
@@ -167,7 +167,7 @@ By default, Mongoloquent expects `createdAt` and `updatedAt` columns to exist on
        *
        * @var boolean
        */
-      static $useTimestamps = false;
+      public static $useTimestamps = false;
     }
     ```
 
@@ -193,14 +193,14 @@ By default, all `Mongoloquent` models will use the default database connection t
        *
        * @var IFlight
        */
-      static $schema: IFlight
+      public static $schema: IFlight
 
       /**
        * The database connection that should be used by the model.
        *
        * @var string
        */
-      static $connection: string = "connection-url";
+      public static $connection: string = "connection-url";
     }
     ```
 
@@ -215,7 +215,7 @@ By default, all `Mongoloquent` models will use the default database connection t
        *
        * @var string
        */
-      static $connection = "connection-url";
+      public static $connection = "connection-url";
     }
     ```
 
@@ -241,21 +241,21 @@ You can also set database name specifically for your model by defined `$database
        *
        * @var IFlight
        */
-      static $schema: IFlight
+      public static $schema: IFlight
 
       /**
        * The database connection that should be used by the model.
        *
        * @var string
        */
-      static $connection: string = "connection-url";
+      public static $connection: string = "connection-url";
 
       /**
        * The database name that should be used by the model.
        *
        * @var string
        */
-      static $databaseName: string = "your-database-name";
+      public static $databaseName: string = "your-database-name";
     }
     ```
 
@@ -270,14 +270,14 @@ You can also set database name specifically for your model by defined `$database
        *
        * @var string
        */
-      static $connection = "connection-url";
+      public static $connection = "connection-url";
 
       /**
        * The database name that should be used by the model.
        *
        * @var string
        */
-      static $databaseName: string = "your-database-name";
+      public static $databaseName: string = "your-database-name";
     }
     ```
 
@@ -1063,14 +1063,14 @@ In addition to actually removing records from your database, Mongoloquent can al
        *
        * @var IFlight
        */
-      static $schema: IFlight
+      public static $schema: IFlight
 
       /**
        * Indicates if the model should be soft deleted.
        *
        * @var boolean
        */
-      static $useSoftDelete: boolean = true;
+      public static $useSoftDelete: boolean = true;
     }
     ```
 
@@ -1085,7 +1085,7 @@ In addition to actually removing records from your database, Mongoloquent can al
        *
        * @var boolean
        */
-      static $useSoftDelete = true;
+      public static $useSoftDelete = true;
     }
     ```
 
