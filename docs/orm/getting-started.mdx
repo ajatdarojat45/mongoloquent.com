@@ -284,6 +284,59 @@ You can also set database name specifically for your model by defined `$database
   </TabItem>
 </Tabs>
 
+### Default Attribute Values
+
+By default, a newly instantiated model instance will not contain any attribute values. If you would like to define the default values for some of your model's attributes, you may define an `$attributes` property on your model. Attribute values placed in the `$attributes` object should be in their raw, "storable" format as if they were just read from the database:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
+
+    interface IFlight extends IMongoloquentSchema, IMongoloquentTimestamps {
+      name: string;
+      delayed?: boolean;
+    }
+
+    class Flight extends Model<IFlight> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IFlight
+       */
+      public static $schema: IFlight
+
+      /**
+       * The model's default values for attributes.
+       *
+       * @var object
+       */
+      public static $attributes: Partial<IFlight> = {
+        delayed: false,
+      };
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class Flight extends Model {
+      /**
+       * The model's default values for attributes.
+       *
+       * @var object
+       */
+      public static $attributes = {
+        delayed: false,
+      };
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
 ## Retrieving Models
 
 Once you have created a model and `its associated database collection`, you are ready to start retrieving data from your database. You can think of each Mongoloquent model as a powerful [query builder](../database/query-builder.mdx) allowing you to fluently query the database collection associated with the model. The model's `all` method will retrieve all of the records from the model's associated database collection:
