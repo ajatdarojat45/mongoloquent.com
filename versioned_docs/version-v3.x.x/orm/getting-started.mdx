@@ -104,7 +104,7 @@ If your model's corresponding database collection does not fit this convention, 
        *
        * @var string
        */
-      public static $collection: string = "flights";
+      protected $collection: string = "flights";
     }
     ```
 
@@ -119,7 +119,7 @@ If your model's corresponding database collection does not fit this convention, 
        *
        * @var string
        */
-      public static $collection = "flights";
+      public $collection = "flights";
     }
     ```
 
@@ -152,7 +152,7 @@ By default, Mongoloquent expects `createdAt` and `updatedAt` columns to exist on
        *
        * @var boolean
        */
-      public static $useTimestamps: boolean = false;
+      protected $useTimestamps: boolean = false;
     }
     ```
 
@@ -167,7 +167,7 @@ By default, Mongoloquent expects `createdAt` and `updatedAt` columns to exist on
        *
        * @var boolean
        */
-      public static $useTimestamps = false;
+      public $useTimestamps = false;
     }
     ```
 
@@ -200,7 +200,7 @@ By default, all `Mongoloquent` models will use the default database connection t
        *
        * @var string
        */
-      public static $connection: string = "connection-url";
+      protected $connection: string = "connection-url";
     }
     ```
 
@@ -215,7 +215,7 @@ By default, all `Mongoloquent` models will use the default database connection t
        *
        * @var string
        */
-      public static $connection = "connection-url";
+      public $connection = "connection-url";
     }
     ```
 
@@ -248,14 +248,14 @@ You can also set database name specifically for your model by defined `$database
        *
        * @var string
        */
-      public static $connection: string = "connection-url";
+      protected $connection: string = "connection-url";
 
       /**
        * The database name that should be used by the model.
        *
        * @var string
        */
-      public static $databaseName: string = "your-database-name";
+      protected $databaseName: string = "your-database-name";
     }
     ```
 
@@ -270,14 +270,14 @@ You can also set database name specifically for your model by defined `$database
        *
        * @var string
        */
-      public static $connection = "connection-url";
+      public $connection = "connection-url";
 
       /**
        * The database name that should be used by the model.
        *
        * @var string
        */
-      public static $databaseName: string = "your-database-name";
+      public $databaseName = "your-database-name";
     }
     ```
 
@@ -311,7 +311,7 @@ By default, a newly instantiated model instance will not contain any attribute v
        *
        * @var object
        */
-      public static $attributes: Partial<IFlight> = {
+      protected $attributes: Partial<IFlight> = {
         delayed: false,
       };
     }
@@ -328,7 +328,7 @@ By default, a newly instantiated model instance will not contain any attribute v
        *
        * @var object
        */
-      public static $attributes = {
+      public $attributes = {
         delayed: false,
       };
     }
@@ -1123,7 +1123,7 @@ In addition to actually removing records from your database, Mongoloquent can al
        *
        * @var boolean
        */
-      public static $useSoftDelete: boolean = true;
+      protected $useSoftDelete: boolean = true;
     }
     ```
 
@@ -1138,7 +1138,7 @@ In addition to actually removing records from your database, Mongoloquent can al
        *
        * @var boolean
        */
-      public static $useSoftDelete = true;
+      public $useSoftDelete = true;
     }
     ```
 
