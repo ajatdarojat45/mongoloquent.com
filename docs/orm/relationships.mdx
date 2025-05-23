@@ -952,7 +952,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      public static $collection: string = 'imagables';
+      protected $collection: string = 'imagables';
     }
 
 
@@ -977,7 +977,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      public static $collection: string = 'posts';
+      protected $collection: string = 'posts';
 
       /**
        * Get the post's image.
@@ -1009,7 +1009,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      public static $collection: string = 'users';
+      protected $collection: string = 'users';
 
       /**
        * Get the user's image.
@@ -1033,7 +1033,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      public static $collection = 'imagables';
+      public $collection = 'imagables';
     }
 
 
@@ -1047,7 +1047,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      public static $collection = 'posts';
+      public $collection = 'posts';
 
       /**
        * Get the post's image.
@@ -1068,7 +1068,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      public static $collection = 'users';
+      public $collection = 'users';
 
       /**
        * Get the user's image.
@@ -1157,7 +1157,7 @@ comments
        *
        * @var string
        */
-      public static $collection: string = 'comments';
+      protected $collection: string = 'comments';
     }
 
 
@@ -1183,7 +1183,7 @@ comments
        *
        * @var string
        */
-      public static $collection: string = 'posts';
+      protected $collection: string = 'posts';
 
       /**
        * Get all of the post's comments.
@@ -1216,7 +1216,7 @@ comments
        *
        * @var string
        */
-      public static $collection: string = 'videos';
+      protected $collection: string = 'videos';
 
       /**
        * Get all of the video's comments.
@@ -1239,7 +1239,7 @@ comments
        *
        * @var string
        */
-      public static $collection = 'comments';
+      public $collection = 'comments';
     }
 
 
@@ -1253,7 +1253,7 @@ comments
        *
        * @var string
        */
-      public static $collection = 'posts';
+      public $collection = 'posts';
 
       /**
        * Get all of the post's comments.
@@ -1274,7 +1274,7 @@ comments
        *
        * @var string
        */
-      public static $collection = 'videos';
+      public $collection = 'videos';
 
       /**
        * Get all of the video's comments.
@@ -1382,7 +1382,7 @@ The `morphToMany` method accepts the name of the related model as well as the "r
        *
        * @var string
        */
-      public static $collection: string = 'posts';
+      protected $collection: string = 'posts';
 
       /**
        * Get all of the tags for the post.
@@ -1405,7 +1405,7 @@ The `morphToMany` method accepts the name of the related model as well as the "r
        *
        * @var string
        */
-      public static $collection = 'posts';
+      public $collection = 'posts';
 
       /**
        * Get all of the tags for the post.
@@ -1449,7 +1449,7 @@ The `morphedByMany` method accepts the name of the related model as well as the 
        *
        * @var string
        */
-      public static $collection: string = 'tags';
+      protected $collection: string = 'tags';
 
       /**
        * Get all of the posts that are tagged with the tag.
@@ -1480,7 +1480,7 @@ The `morphedByMany` method accepts the name of the related model as well as the 
        *
        * @var string
        */
-      public static $collection = 'tags';
+      public $collection = 'tags';
 
       /**
        * Get all of the posts that are tagged with the tag.
@@ -1609,7 +1609,7 @@ For example, imagine a blog application in which a `User` model has many associa
        *
        * @var string
        */
-      public static $collection: string = 'users';
+      protected $collection: string = 'users';
 
       /**
        * Get all of the posts for the user.
@@ -1631,7 +1631,7 @@ For example, imagine a blog application in which a `User` model has many associa
        *
        * @var string
        */
-      public static $collection = 'users';
+      public $collection = 'users';
 
       /**
        * Get all of the posts for the user.
@@ -1727,7 +1727,7 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
        *
        * @var string
        */
-      public static $collection: string = 'books';
+      protected $collection: string = 'books';
 
       /**
        * Get the author that wrote the book.
@@ -1750,7 +1750,7 @@ Mongoloquent can "eager load" relationships at the time you query the parent mod
        *
        * @var string
        */
-      public static $collection = 'books';
+      public $collection = 'books';
 
       /**
        * Get the author that wrote the book.
@@ -1811,6 +1811,184 @@ Sometimes you may need to eager load several different relationships.
     import Book from './Models/Book';
 
     const books = await Book.with('author').with('publisher').get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Eager Loading Specific Columns
+
+You may not always need every column from the relationships you are retrieving. For this reason, Mongoloquent allows you to specify which columns of the relationship you would like to retrieve:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const books = await Book.with('author', {
+      select: ["_id", "name"]
+    }).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const books = await Book.with('author', {
+      select: ["_id", "name"]
+    }).get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+> When using this feature, you should always include the `_id` column and any relevant foreign key columns in the list of columns you wish to retrieve.
+
+You also can excluded columns from the eager loaded relationships by passing an array of columns to the `exclude` option:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const books = await Book.with('author', {
+      exclude: ["name"]
+    }).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const books = await Book.with('author', {
+      exclude: ["name"]
+    }).get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Eager Loading by Default
+
+Sometimes you might want to always load some relationships when retrieving a model. To accomplish this, you may define a `$with` property on the model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+    import { ObjectID } from "mongodb"
+    import Author from './Models/Author';
+    import Genre from './Models/Genre';
+
+    interface IBook extends IMongoloquentSchema, IMongoloquentTimestamps {
+      title: string
+      authorId: ObjectID
+      genreId: ObjectID
+    }
+
+    class Book extends Model<IBook> {
+      /**
+       * The attributes of the model.
+       *
+       * @var IBook
+       */
+      public static $schema: IBook
+
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
+      protected $collection: string = 'books';
+
+      /**
+       * The relationships that should always be loaded.
+       *
+       * @var array
+       */
+      protected $with: string[] = ['author'];
+
+      /**
+       * Get the author that wrote the book.
+       */
+      public author(){
+        return this.belongsTo(Author);
+      }
+
+      /**
+       * Get the genre of the book.
+       */
+      public genre(){
+        return this.belongsTo(Genre);
+      }
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from 'mongoloquent';
+    import { ObjectID } from "mongodb"
+    import Author from './Models/Author';
+    import Genre from './Models/Genre';
+
+    class Book extends Model {
+      /**
+       * The collection name.
+       *
+       * @var string
+       */
+      public $collection = 'books';
+
+      /**
+       * The relationships that should always be loaded.
+       *
+       * @var array
+       */
+      public $with = ['author'];
+
+      /**
+       * Get the author that wrote the book.
+       */
+      public author(){
+        return this.belongsTo(Author);
+      }
+
+      /**
+       * Get the genre of the book.
+       */
+      public genre(){
+        return this.belongsTo(Genre);
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you would like to remove an item from the `$with` property for a single query, you may use the `without` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const books = await Book.without('author').get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const books = await Book.without('author').get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you would like to override all items within the `$with` property for a single query, you may use the `withOnly` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const books = await Book.withOnly('genre').get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const books = await Book.withOnly('genre').get();
     ```
 
   </TabItem>
