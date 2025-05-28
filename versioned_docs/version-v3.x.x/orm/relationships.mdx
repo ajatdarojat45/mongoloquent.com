@@ -952,7 +952,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      protected $collection: string = 'imagables';
+      protected $collection: string = 'images';
     }
 
 
@@ -1033,7 +1033,7 @@ Next, let's examine the model definitions needed to build this relationship:
        *
        * @var string
        */
-      public $collection = 'imagables';
+      public $collection = 'images';
     }
 
 
@@ -1816,6 +1816,46 @@ Sometimes you may need to eager load several different relationships.
   </TabItem>
 </Tabs>
 
+#### Nested Eager Loading
+
+To eager load a relationship's relationships, you may use "dot" syntax. For example, let's eager load all of the book's authors and all of the author's personal contacts:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const books = await Book.with('author.contacts').get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const books = await Book.with('author.contacts').get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Alternatively, you may specify nested eager loaded relationships by providing an object to the `with` method, which can be convenient when eager loading multiple nested relationships:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const books = await Book.with({
+      "author": ["contacts", "publisher"]
+    }).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const books = await Book.with({
+      "author": ["contacts", "publisher"]
+    }).get();
+    ```
+
+  </TabItem>
+</Tabs>
+
 #### Eager Loading Specific Columns
 
 You may not always need every column from the relationships you are retrieving. For this reason, Mongoloquent allows you to specify which columns of the relationship you would like to retrieve:
@@ -1856,6 +1896,33 @@ You also can excluded columns from the eager loaded relationships by passing an 
     ```javascript
     const books = await Book.with('author', {
       exclude: ["name"]
+    }).get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Eager Loading with another options
+
+You may also pass any other options that are available to the `with` method, such as `select`, `exclude`, `sort`, `skip` and `limit`:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const books = await Book.with('author', {
+      sort: ["name", "desc"],
+      skip: 5,
+      limit: 10
+    }).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const books = await Book.with('author', {
+      sort: ["name", "asc"],
+      skip: 5,
+      limit: 10
     }).get();
     ```
 
