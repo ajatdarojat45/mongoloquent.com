@@ -16,7 +16,7 @@ Before installing Mongoloquent, make sure you have [NodeJS and NPM](https://node
 If you already have NodeJS and NPM installed, you may install the mongoloquent on your project via NPM:
 
 ```bash
-npm install mongoloquent
+npm install mongoloquent mongodb
 ```
 
 ## Initial Configuration
@@ -24,12 +24,12 @@ npm install mongoloquent
 You can configure Mongoloquent by creating a `.env` file in the root of your project. This file will contain the configuration settings for your MongoDB connection.
 
 ```env
-// default: mongodb://localhost:27017
+# default: mongodb://localhost:27017
 MONGOLOQUENT_DATABASE_URI=mongodb://localhost:27017
 
-// default: mongoloquent
+# default: mongoloquent
 MONGOLOQUENT_DATABASE_NAME=mongoloquent
 
-// default: Asia/Jakarta
+# default: Asia/Jakarta
 MONGOLOQUENT_TIMEZONE=Asia/Jakarta
 ```
