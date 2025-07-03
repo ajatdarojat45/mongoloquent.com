@@ -215,7 +215,7 @@ You may use the `transaction` method provided by the `DB` class to run a set of 
     ```typescript
     import { DB } from 'mongoloquent';
 
-    DB.transaction(async (session) => {
+    await DB.transaction(async (session) => {
       await DB
       .collection("users")
       .where("name", "John Doe")
@@ -233,7 +233,7 @@ You may use the `transaction` method provided by the `DB` class to run a set of 
     ```javascript
     import { DB } from 'mongoloquent';
 
-    DB.transaction(async (session) => {
+    await DB.transaction(async (session) => {
       await DB
       .collection("users")
       .where("name", "John Doe")
@@ -260,7 +260,7 @@ The `transaction` method accepts an optional second argument which defines the n
     ```typescript
     import { DB } from 'mongoloquent';
 
-    DB.transaction(async (session) => {
+    await DB.transaction(async (session) => {
       await DB
       .collection("users")
       .where("name", "John Doe")
@@ -278,7 +278,7 @@ The `transaction` method accepts an optional second argument which defines the n
     ```javascript
     import { DB } from 'mongoloquent';
 
-    DB.transaction(async (session) => {
+    await DB.transaction(async (session) => {
       await DB
       .collection("users")
       .where("name", "John Doe")
