@@ -18,13 +18,13 @@ Almost every modern web application interacts with a database. Mongoloquent make
 You can configure Mongoloquent by creating a `.env` file in the root of your project. This file will contain the configuration settings for your MongoDB connection.
 
 ```env
-// default: mongodb://localhost:27017
+# default: mongodb://localhost:27017
 MONGOLOQUENT_DATABASE_URI=mongodb://localhost:27017
 
-// default: mongoloquent
+# default: mongoloquent
 MONGOLOQUENT_DATABASE_NAME=mongoloquent
 
-// default: Asia/Jakarta
+# default: Asia/Jakarta
 MONGOLOQUENT_TIMEZONE=Asia/Jakarta
 ```
 
@@ -205,6 +205,96 @@ If your application using multiple connections, you may define each connection v
 
   </TabItem>
 </Tabs>
+
+## Database Transactions
+
+You may use the `transaction` method provided by the `DB` class to run a set of operations within a database transaction. If an exception is thrown within the transaction closure, the transaction will automatically be rolled back and the exception is re-thrown. If the closure executes successfully, the transaction will automatically be committed. You don't need to worry about manually rolling back or committing while using the `transaction` method:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from 'mongoloquent';
+
+    DB.transaction(async (session) => {
+      await DB
+      .collection("users")
+      .where("name", "John Doe")
+      .update({ votes: 1 }, { session });
+
+      await DB
+      .collection("posts")
+      .where("title", "Hello World")
+      .delete({ session });
+    })
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    DB.transaction(async (session) => {
+      await DB
+      .collection("users")
+      .where("name", "John Doe")
+      .update({ votes: 1 }, { session });
+
+      await DB
+      .collection("posts")
+      .where("title", "Hello World")
+      .delete({ session });
+    })
+    ```
+
+  </TabItem>
+</Tabs>
+
+> The `transaction` method using global database connection in the `.env` and does not support when you are using multiple connections.
+
+#### Handling Deadlocks
+
+The `transaction` method accepts an optional second argument which defines the number of times a transaction should be retried when a deadlock occurs. Once these attempts have been exhausted, an exception will be thrown:
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from 'mongoloquent';
+
+    DB.transaction(async (session) => {
+      await DB
+      .collection("users")
+      .where("name", "John Doe")
+      .update({ votes: 1 }, { session });
+
+      await DB
+      .collection("posts")
+      .where("title", "Hello World")
+      .delete({ session });
+    }, { retries: 5 })
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    DB.transaction(async (session) => {
+      await DB
+      .collection("users")
+      .where("name", "John Doe")
+      .update({ votes: 1 }, { session });
+
+      await DB
+      .collection("posts")
+      .where("title", "Hello World")
+      .delete({ session });
+    }, { retries: 5 })
+    ```
+
+  </TabItem>
+</Tabs>
+
+> The DB class's transaction methods control the transactions for both the Mongoloquent [query builder](../database/query-builder) and [ORM](../orm/getting-started).
 
 ---
 
