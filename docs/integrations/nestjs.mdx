@@ -1,13 +1,13 @@
 ---
 sidebar_position: 1
-title: NestJS Integration
+title: NestJS
 ---
 
 import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import Sponsor from "../sponsor.mdx";
 
-# NestJS Integration
+# NestJS
 
 ### Integration
 
@@ -422,7 +422,7 @@ There are three types of relations:
 | One-to-many / Many-to-one | Every row in the primary table has one or more related rows in the foreign table          |
 | Many-to-many              | Every row in the primary table has many related rows in the foreign table, and vice versa |
 
-To define relations in models, use the corresponding methods. For example, to define that each `User` can have multiple photos, use the `@HasMany()` decorator.
+To define relations in models, use the corresponding methods. For example, to define that each `User` can have multiple photos, use the `hasMany` method.
 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
@@ -559,7 +559,9 @@ Now, we can use this object to create a transaction.
   </TabItem>
 </Tabs>
 
-> **Hint**: Mongoloquent Transaction only worked in the same connection and database. To learn more about Mongoloquent Transaction read [this](../database/getting-started/#database-transactions) chapter.
+> **Notice**: The Mongoloquent DB class's transaction only working in the same connection and database.
+
+> **Hint**: To learn more about Mongoloquent Transaction read [this](../database/getting-started/#database-transactions) chapter.
 
 ### Multiple databases
 

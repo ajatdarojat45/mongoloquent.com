@@ -249,7 +249,50 @@ You may use the `transaction` method provided by the `DB` class to run a set of 
   </TabItem>
 </Tabs>
 
-> The `transaction` method using global database connection in the `.env` and does not support when you are using multiple connections.
+#### Custom Connection
+
+You also can set the `connection` in the `DB` class when execute `transaction`.
+
+<Tabs>
+  <TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from 'mongoloquent';
+
+    await DB.connection("mongodb://localhost:27017").transaction(async (session) => {
+      await DB
+      .collection("users")
+      .where("name", "John Doe")
+      .update({ votes: 1 }, { session });
+
+      await DB
+      .collection("posts")
+      .where("title", "Hello World")
+      .delete({ session });
+    })
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from 'mongoloquent';
+
+    await DB.connection("mongodb://localhost:27017").transaction(async (session) => {
+      await DB
+      .collection("users")
+      .where("name", "John Doe")
+      .update({ votes: 1 }, { session });
+
+      await DB
+      .collection("posts")
+      .where("title", "Hello World")
+      .delete({ session });
+    })
+    ```
+
+  </TabItem>
+</Tabs>
+
+> The DB class's `transaction` only working in the same `connection` and `database`.
 
 #### Handling Deadlocks
 
