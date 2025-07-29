@@ -1,0 +1,731 @@
+---
+sidebar_position: 1
+title: NestJS
+---
+
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "../sponsor.mdx";
+
+# NestJS
+
+### Integration
+
+For integrating with `NestJS`, `Mongoloquent` provides the [@mongoloqunet/nestjs](https://npmjs.com/@mongoloquent/nestjs) package. [NestJS](https://nestjs.com) is a progressive Node.js framework for building efficient, reliable and scalable server-side applications available for TypeScript. Since it's written in TypeScript, it integrates well with the Mongoloquent ORM.
+
+To begin using it, we first install the required dependencies. In this chapter, we'll demonstrate using the popular MySQL Relational DBMS, but TypeORM provides support for many relational databases, such as PostgreSQL, Oracle, Microsoft SQL Server, SQLite, and even NoSQL databases like MongoDB. The procedure we walk through in this chapter will be the same for any database supported by TypeORM. You'll simply need to install the associated client API libraries for your selected database.
+
+To begin using it, we first install the required dependencies.
+
+```bash
+npm install @mongoloquent/nestjs mongoloquent mongodb
+```
+
+Once the installation process is complete, we can import the `MongoloquentModule` into the root `AppModule`.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // app.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { MongoloquentModule } from '@mongoloquent/nestjs';
+
+    @Module({
+      imports: [
+        MongoloquentModule.forRoot({
+         name: "default", // optional default: default,
+         connection: "mongodb://localhost:27017", // required
+         database: "mongoloquent", // required
+         timezone: "Asia/Jakarta", // optional default: Asia/Jakarta
+         models: [],
+         global: true // optional default: false
+        }),
+      ],
+    })
+    export class AppModule {}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // app.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { MongoloquentModule } from '@mongoloquent/nestjs';
+
+    @Module({
+      imports: [
+        MongoloquentModule.forRoot({
+         name: "default", // optional default: default,
+         connection: "mongodb://localhost:27017", // required
+         database: "mongoloquent", // required
+         timezone: "Asia/Jakarta", // optional default: Asia/Jakarta
+         models: [],
+         global: true // optional default: false
+        }),
+      ],
+    })
+    export class AppModule {}
+    ```
+
+  </TabItem>
+</Tabs>
+
+Once this is done, the Mongoloquent `DB` class will be available to inject across the entire project (without needing to import any modules), for example:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // app.service.ts
+
+    import { Injectable } from '@nestjs/common';
+    import { DB, InjectDB } from '@mongoloquent/nestjs';
+
+    @Injectable()
+    export class AppService {
+      constructor(
+       @InjectDB("default") private db: typeof DB
+      ) {}
+    }
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // app.service.ts
+
+    import { Injectable } from '@nestjs/common';
+    import { DB, InjectDB } from '@mongoloquent/nestjs';
+
+    @Injectable()
+    export class AppService {
+      constructor(
+       @InjectDB("default") private db: typeof DB
+      ) {}
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Models
+
+`Mongoloquent` implements the Active Record pattern. With this pattern, you use model classes directly to interact with the database. To continue the example, we need at least one model. Let's define the `User` model.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // user.model.ts
+
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent"
+
+    export interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+     firstName: string;
+     lastName: string;
+     isActive: boolean;
+    }
+
+    export default class User extends Model<IUser> {
+     static $schema: IUser
+     protected $collection: string = "users"
+    }
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // user.model.ts
+    
+    import { Model } from "mongoloquent"
+
+    export default class User extends Model {
+     protected $collection = "users"
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+> **Hint**: Learn more about the Model [here](../orm/getting-started.mdx)
+
+The `User` model file sits in the `users` directory. This directory contains all files related to the `UsersModule`. You can decide where to keep your model files, however, we recommend creating them near their domain, in the corresponding module directory.
+
+To begin using the `User` model, we need to let `Mongoloquent` know about it by inserting it into the models array in the module `forRoot()` method options:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // app.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { MongoloquentModule } from '@mongoloquent/nestjs';
+    import { User } from './users/user.model';
+
+    @Module({
+      imports: [
+        MongoloquentModule.forRoot({
+         name: "default", // optional default: default,
+         connection: "mongodb://localhost:27017", // required
+         database: "mongoloquent", // required
+         timezone: "Asia/Jakarta", // optional default: Asia/Jakarta
+         models: [User],
+         global: true // optional default: false
+        }),
+      ],
+    })
+    export class AppModule {}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // app.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { MongoloquentModule } from '@mongoloquent/nestjs';
+    import { User } from './users/user.model';
+
+    @Module({
+      imports: [
+        MongoloquentModule.forRoot({
+         name: "default", // optional default: default,
+         connection: "mongodb://localhost:27017", // required
+         database: "mongoloquent", // required
+         timezone: "Asia/Jakarta", // optional default: Asia/Jakarta
+         models: [User],
+         global: true // optional default: false
+        }),
+      ],
+    })
+    export class AppModule {}
+    ```
+
+  </TabItem>
+</Tabs>
+
+Next, let's look at the `UsersModule`:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // users.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { MongoloquentModule } from '@mongoloquent/nestjs';
+    import { User } from './user.model';
+    import { UsersController } from './users.controller';
+    import { UsersService } from './users.service';
+
+    @Module({
+      imports: [MongoloquentModule.forFeature([User])],
+      providers: [UsersService],
+      controllers: [UsersController],
+    })
+    export class UsersModule {}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // users.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { MongoloquentModule } from '@mongoloquent/nestjs';
+    import { User } from './user.model';
+    import { UsersController } from './users.controller';
+    import { UsersService } from './users.service';
+
+    @Module({
+      imports: [MongoloquentModule.forFeature([User])],
+      providers: [UsersService],
+      controllers: [UsersController],
+    })
+    export class UsersModule {}
+    ```
+
+  </TabItem>
+</Tabs>
+
+This module uses the `forFeature()` method to define which models are registered in the current scope. With that in place, we can inject the `UserModel` into the `UsersService` using the `@InjectModel()` decorator:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // users.services.ts
+
+    import { Injectable } from '@nestjs/common';
+    import { InjectModel } from '@mongoloquent/nestjs';
+    import { User } from './user.model';
+
+    @Injectable()
+    export class UsersService {
+      constructor(
+        @InjectModel(User)
+        private userModel: typeof User,
+      ) {}
+
+      async findAll() {
+        return this.userModel.findAll();
+      }
+
+      findOne(id: string) {
+        return this.userModel.findOne({
+          where: {
+            id,
+          },
+        });
+      }
+
+      async remove(id: string) {
+        const user = await this.findOne(id);
+        await user.destroy();
+      }
+    }
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // users.services.ts
+
+    import { Injectable } from '@nestjs/common';
+    import { InjectModel } from '@mongoloquent/nestjs';
+    import { User } from './user.model';
+
+    @Injectable()
+    export class UsersService {
+      constructor(
+        @InjectModel(User)
+        private userModel: typeof User,
+      ) {}
+
+      async findAll() {
+        return this.userModel.findAll();
+      }
+
+      findOne(id: string) {
+        return this.userModel.findOne({
+          where: {
+            id,
+          },
+        });
+      }
+
+      async remove(id: string) {
+        const user = await this.findOne(id);
+        await user.destroy();
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+> **Notice**: Don't forget to import the UsersModule into the root AppModule.
+
+If you want to use the model outside of the module which imports `SequelizeModule.forFeature`, you'll need to re-export the providers generated by it. You can do this by exporting the whole module, like this:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // users.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { MongoloquentModule } from '@mongoloquent/nestjs';
+    import { User } from './user.entity';
+
+    @Module({
+      imports: [MongoloquentModule.forFeature([User])],
+      exports: [MongoloquentModule]
+    })
+    export class UsersModule {}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // users.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { MongoloquentModule } from '@mongoloquent/nestjs';
+    import { User } from './user.entity';
+
+    @Module({
+      imports: [MongoloquentModule.forFeature([User])],
+      exports: [MongoloquentModule]
+    })
+    export class UsersModule {}
+    ```
+
+  </TabItem>
+</Tabs>
+
+Now if we import `UsersModule` in `UserHttpModule`, we can use `@InjectModel(User)` in the providers of the latter module.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // users.http.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { UsersModule } from './users.module';
+    import { UsersService } from './users.service';
+    import { UsersController } from './users.controller';
+
+    @Module({
+      imports: [UsersModule],
+      providers: [UsersService],
+      controllers: [UsersController]
+    })
+    export class UserHttpModule {}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // users.http.module.ts
+
+    import { Module } from '@nestjs/common';
+    import { UsersModule } from './users.module';
+    import { UsersService } from './users.service';
+    import { UsersController } from './users.controller';
+
+    @Module({
+      imports: [UsersModule],
+      providers: [UsersService],
+      controllers: [UsersController]
+    })
+    export class UserHttpModule {}
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Relations
+
+Relations are associations established between two or more tables. Relations are based on common fields from each table, often involving primary and foreign keys.
+
+There are three types of relations:
+
+| Relationship Type         | Description                                                                               |
+| ------------------------- | ----------------------------------------------------------------------------------------- |
+| One-to-one                | Every row in the primary table has one and only one associated row in the foreign table   |
+| One-to-many / Many-to-one | Every row in the primary table has one or more related rows in the foreign table          |
+| Many-to-many              | Every row in the primary table has many related rows in the foreign table, and vice versa |
+
+To define relations in models, use the corresponding methods. For example, to define that each `User` can have multiple photos, use the `hasMany` method.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    // user.model.ts
+
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent"
+    import { Photo } from '../photos/photo.model';
+
+    export interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+     firstName: string;
+     lastName: string;
+     isActive: boolean;
+    }
+
+    export default class User extends Model<IUser> {
+     static $schema: IUser
+     protected $collection: string = "users"
+
+     public photos(){
+      return this.hasMany(Photo, "userId", "_id")
+     }
+    }
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    // user.model.ts
+    
+    import { Model } from "mongoloquent"
+    import { Photo } from '../photos/photo.model';
+
+    export default class User extends Model {
+     protected $collection = "users"
+
+     public photos(){
+      return this.hasMany(Photo, "userId", "_id")
+     }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+> **Hint**: To learn more about relations in `Mongoloquent`, read [this](../orm/relationships.mdx) chapter.
+
+### Transactions
+
+A database transaction symbolizes a unit of work performed within a database management system against a database, and treated in a coherent and reliable way independent of other transactions. A transaction generally represents any change in a database ([learn more](https://en.wikipedia.org/wiki/Database_transaction)).
+
+Below is a sample implementation of a managed transaction (auto-callback).
+
+First, we need to inject the Mongoloquent `DB` class into a class in the normal way:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { DB } from "mongoloquent"
+    import { InjectDB } from "@mongoloquent/nestjs"
+
+    @Injectable()
+    export class UsersService {
+      constructor(@InjectDB("default") private db: typeof DB) {}
+    }
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    import { DB } from "mongoloquent"
+    import { InjectDB } from "@mongoloquent/nestjs"
+
+    @Injectable()
+    export class UsersService {
+      constructor(@InjectDB("default") private db: typeof DB) {}
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+Now, we can use this object to create a transaction.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    async createMany() {
+      try {
+        await this.db.transaction(async session => {
+          await this.userModel.insert(
+              { firstName: 'Abraham', lastName: 'Lincoln' },
+              { session },
+          );
+
+          await this.userModel.insert(
+              { firstName: 'John', lastName: 'Boothe' },
+              { session },
+          );
+        });
+      } catch (err) {
+        // Transaction has been rolled back
+        // err is whatever rejected the promise chain returned to the transaction callback
+      }
+    }
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    async createMany() {
+      try {
+        await this.db.transaction(async session => {
+          await this.userModel.insert(
+              { firstName: 'Abraham', lastName: 'Lincoln' },
+              { session },
+          );
+
+          await this.userModel.insert(
+              { firstName: 'John', lastName: 'Boothe' },
+              { session },
+          );
+        });
+      } catch (err) {
+        // Transaction has been rolled back
+        // err is whatever rejected the promise chain returned to the transaction callback
+      }
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+> **Notice**: The Mongoloquent DB class's transaction only working in the same connection and database.
+
+> **Hint**: To learn more about Mongoloquent Transaction read [this](../database/getting-started/#database-transactions) chapter.
+
+### Multiple databases
+
+Some projects require multiple database connections. This can also be achieved with this module. To work with multiple connections, first create the connections. In this case, connection naming becomes mandatory.
+
+Suppose you have an `Album` entity stored in its own database.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    @Module({
+      imports: [
+        SequelizeModule.forRoot({
+          name: 'default',
+          connection: 'user_db_host',
+          database: 'user_db',
+          timezone: 'Asia/Jakarta'
+          models: [User],
+        }),
+        SequelizeModule.forRoot({
+          name: 'albumsConnection',
+          connection: 'album_db_host',
+          database: 'album_db',
+          timezone: 'Asia/Jakarta'
+          models: [Album],
+        }),
+      ],
+    })
+    export class AppModule {}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    @Module({
+      imports: [
+        SequelizeModule.forRoot({
+          connection: 'user_db_host',
+          database: 'user_db',
+          timezone: 'Asia/Jakarta'
+          models: [User],
+        }),
+        SequelizeModule.forRoot({
+          name: 'albumsConnection',
+          connection: 'album_db_host',
+          database: 'album_db',
+          timezone: 'Asia/Jakarta'
+          models: [Album],
+        }),
+      ],
+    })
+    export class AppModule {}
+    ```
+
+  </TabItem>
+</Tabs>
+
+> **Notice** If you don't set the `name` for a connection, its name is set to `default`. Please note that you shouldn't have multiple connections without a name, or with the same name, otherwise they will get overridden.
+
+At this point, you have `User` and `Album` models registered with their own connection. With this setup, you have to tell the `MongoloquentModule.forFeature()` method. If you do not pass any connection name, the `default` connection is used.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    @Module({
+      imports: [
+        MongoloquentModule.forFeature([User]),
+        MongoloquentModule.forFeature([Album], 'albumsConnection'),
+      ],
+    })
+    export class AppModule {}
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    @Module({
+      imports: [
+        MongoloquentModule.forFeature([User]),
+        MongoloquentModule.forFeature([Album], 'albumsConnection'),
+      ],
+    })
+    export class AppModule {}
+    ```
+
+  </TabItem>
+</Tabs>
+
+### Async configuration
+
+You may want to pass your `MongoloquentModule` options asynchronously instead of statically. In this case, use the `forRootAsync()` method, which provides several ways to deal with async configuration.
+
+One approach is to use a factory function:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    MongoloquentModule.forRootAsync({
+      useFactory: () => ({
+        connection: "mongodb://localhost:27017",
+        database: 'test',
+        timezone: "Asia/Jakarta"
+      }),
+      models: [],
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    MongoloquentModule.forRootAsync({
+      useFactory: () => ({
+        connection: "mongodb://localhost:27017",
+        database: 'test',
+        timezone: "Asia/Jakarta"
+      }),
+      models: [],
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+Our factory behaves like any other [asynchronous provider](https://docs.nestjs.com/fundamentals/async-providers) (e.g., it can be `async` and it's able to inject dependencies through `inject`).
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    MongoloquentModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: "mongodb://localhost:27017",
+        database: 'test',
+        timezone: "Asia/Jakarta"
+      }),
+      models: [],
+      inject: [ConfigService],
+    });
+    ```
+
+  </TabItem>
+
+  <TabItem value="Javascript" label="Javascript" default>
+    ```javascript
+    MongoloquentModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: "mongodb://localhost:27017",
+        database: 'test',
+        timezone: "Asia/Jakarta"
+      }),
+      models: [],
+      inject: [ConfigService],
+    });
+    ```
+
+  </TabItem>
+</Tabs>
+
+> **Hint**: Import `ConfigModule` and `ConfigService` from `@nestjs/config`
+
+---
+
+<Sponsor />
