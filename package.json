@@ -18,6 +18,7 @@
 		"javascript",
 		"typescript",
 		"database",
+		"nosql",
 		"mongodb",
 		"orm",
 		"mongoloquent"
