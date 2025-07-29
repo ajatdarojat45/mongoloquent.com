@@ -7,7 +7,7 @@ import Tabs from "@theme/Tabs";
 import TabItem from "@theme/TabItem";
 import Sponsor from "../sponsor.mdx";
 
-# NestJS
+# NestJS Integration
 
 <p align="center">
 	<a href="http://nestjs.com/" target="blank">
@@ -46,31 +46,7 @@ Once the installation process is complete, we can import the `MongoloquentModule
          connection: "mongodb://localhost:27017", // required
          database: "mongoloquent", // required
          timezone: "Asia/Jakarta", // optional default: Asia/Jakarta
-         models: [],
-         global: true // optional default: false
-        }),
-      ],
-    })
-    export class AppModule {}
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    // app.module.ts
-
-    import { Module } from '@nestjs/common';
-    import { MongoloquentModule } from '@mongoloquent/nestjs';
-
-    @Module({
-      imports: [
-        MongoloquentModule.forRoot({
-         name: "default", // optional default: default,
-         connection: "mongodb://localhost:27017", // required
-         database: "mongoloquent", // required
-         timezone: "Asia/Jakarta", // optional default: Asia/Jakarta
-         models: [],
+         models: [], // optional default: []
          global: true // optional default: false
         }),
       ],
@@ -89,24 +65,8 @@ Once this is done, the Mongoloquent `DB` class will be available to inject acros
     // app.service.ts
 
     import { Injectable } from '@nestjs/common';
-    import { DB, InjectDB } from '@mongoloquent/nestjs';
-
-    @Injectable()
-    export class AppService {
-      constructor(
-       @InjectDB("default") private db: typeof DB
-      ) {}
-    }
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    // app.service.ts
-
-    import { Injectable } from '@nestjs/common';
-    import { DB, InjectDB } from '@mongoloquent/nestjs';
+    import { InjectDB } from '@mongoloquent/nestjs';
+    import { DB } from "mongoloquent"
 
     @Injectable()
     export class AppService {
@@ -136,22 +96,9 @@ Once this is done, the Mongoloquent `DB` class will be available to inject acros
      isActive: boolean;
     }
 
-    export default class User extends Model<IUser> {
+    export class User extends Model<IUser> {
      static $schema: IUser
      protected $collection: string = "users"
-    }
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    // user.model.ts
-    
-    import { Model } from "mongoloquent"
-
-    export default class User extends Model {
-     protected $collection = "users"
     }
     ```
 
@@ -176,37 +123,12 @@ To begin using the `User` model, we need to let `Mongoloquent` know about it by 
     @Module({
       imports: [
         MongoloquentModule.forRoot({
-         name: "default", // optional default: default,
-         connection: "mongodb://localhost:27017", // required
-         database: "mongoloquent", // required
-         timezone: "Asia/Jakarta", // optional default: Asia/Jakarta
+         name: "default",
+         connection: "mongodb://localhost:27017",
+         database: "mongoloquent",
+         timezone: "Asia/Jakarta",
          models: [User],
-         global: true // optional default: false
-        }),
-      ],
-    })
-    export class AppModule {}
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    // app.module.ts
-
-    import { Module } from '@nestjs/common';
-    import { MongoloquentModule } from '@mongoloquent/nestjs';
-    import { User } from './users/user.model';
-
-    @Module({
-      imports: [
-        MongoloquentModule.forRoot({
-         name: "default", // optional default: default,
-         connection: "mongodb://localhost:27017", // required
-         database: "mongoloquent", // required
-         timezone: "Asia/Jakarta", // optional default: Asia/Jakarta
-         models: [User],
-         global: true // optional default: false
+         global: true
         }),
       ],
     })
@@ -238,26 +160,6 @@ Next, let's look at the `UsersModule`:
     ```
 
   </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    // users.module.ts
-
-    import { Module } from '@nestjs/common';
-    import { MongoloquentModule } from '@mongoloquent/nestjs';
-    import { User } from './user.model';
-    import { UsersController } from './users.controller';
-    import { UsersService } from './users.service';
-
-    @Module({
-      imports: [MongoloquentModule.forFeature([User])],
-      providers: [UsersService],
-      controllers: [UsersController],
-    })
-    export class UsersModule {}
-    ```
-
-  </TabItem>
 </Tabs>
 
 This module uses the `forFeature()` method to define which models are registered in the current scope. With that in place, we can inject the `UserModel` into the `UsersService` using the `@InjectModel()` decorator:
@@ -270,6 +172,7 @@ This module uses the `forFeature()` method to define which models are registered
     import { Injectable } from '@nestjs/common';
     import { InjectModel } from '@mongoloquent/nestjs';
     import { User } from './user.model';
+    import { ObjectId } from "mongodb"
 
     @Injectable()
     export class UsersService {
@@ -279,56 +182,16 @@ This module uses the `forFeature()` method to define which models are registered
       ) {}
 
       async findAll() {
-        return this.userModel.findAll();
+        return this.userModel.get();
       }
 
       findOne(id: string) {
-        return this.userModel.findOne({
-          where: {
-            id,
-          },
-        });
+        return this.userModel.find(id)
       }
 
       async remove(id: string) {
-        const user = await this.findOne(id);
-        await user.destroy();
-      }
-    }
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    // users.services.ts
-
-    import { Injectable } from '@nestjs/common';
-    import { InjectModel } from '@mongoloquent/nestjs';
-    import { User } from './user.model';
-
-    @Injectable()
-    export class UsersService {
-      constructor(
-        @InjectModel(User)
-        private userModel: typeof User,
-      ) {}
-
-      async findAll() {
-        return this.userModel.findAll();
-      }
-
-      findOne(id: string) {
-        return this.userModel.findOne({
-          where: {
-            id,
-          },
-        });
-      }
-
-      async remove(id: string) {
-        const user = await this.findOne(id);
-        await user.destroy();
+        const user = this.findOne(id)
+        await user.delete()
       }
     }
     ```
@@ -357,23 +220,6 @@ If you want to use the model outside of the module which imports `SequelizeModul
     ```
 
   </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    // users.module.ts
-
-    import { Module } from '@nestjs/common';
-    import { MongoloquentModule } from '@mongoloquent/nestjs';
-    import { User } from './user.entity';
-
-    @Module({
-      imports: [MongoloquentModule.forFeature([User])],
-      exports: [MongoloquentModule]
-    })
-    export class UsersModule {}
-    ```
-
-  </TabItem>
 </Tabs>
 
 Now if we import `UsersModule` in `UserHttpModule`, we can use `@InjectModel(User)` in the providers of the latter module.
@@ -381,25 +227,6 @@ Now if we import `UsersModule` in `UserHttpModule`, we can use `@InjectModel(Use
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    // users.http.module.ts
-
-    import { Module } from '@nestjs/common';
-    import { UsersModule } from './users.module';
-    import { UsersService } from './users.service';
-    import { UsersController } from './users.controller';
-
-    @Module({
-      imports: [UsersModule],
-      providers: [UsersService],
-      controllers: [UsersController]
-    })
-    export class UserHttpModule {}
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
     // users.http.module.ts
 
     import { Module } from '@nestjs/common';
@@ -457,24 +284,6 @@ To define relations in models, use the corresponding methods. For example, to de
     ```
 
   </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    // user.model.ts
-    
-    import { Model } from "mongoloquent"
-    import { Photo } from '../photos/photo.model';
-
-    export default class User extends Model {
-     protected $collection = "users"
-
-     public photos(){
-      return this.hasMany(Photo, "userId", "_id")
-     }
-    }
-    ```
-
-  </TabItem>
 </Tabs>
 
 > **Hint**: To learn more about relations in `Mongoloquent`, read [this](../orm/relationships.mdx) chapter.
@@ -500,19 +309,6 @@ First, we need to inject the Mongoloquent `DB` class into a class in the normal 
     ```
 
   </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    import { DB } from "mongoloquent"
-    import { InjectDB } from "@mongoloquent/nestjs"
-
-    @Injectable()
-    export class UsersService {
-      constructor(@InjectDB("default") private db: typeof DB) {}
-    }
-    ```
-
-  </TabItem>
 </Tabs>
 
 Now, we can use this object to create a transaction.
@@ -520,30 +316,6 @@ Now, we can use this object to create a transaction.
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    async createMany() {
-      try {
-        await this.db.transaction(async session => {
-          await this.userModel.insert(
-              { firstName: 'Abraham', lastName: 'Lincoln' },
-              { session },
-          );
-
-          await this.userModel.insert(
-              { firstName: 'John', lastName: 'Boothe' },
-              { session },
-          );
-        });
-      } catch (err) {
-        // Transaction has been rolled back
-        // err is whatever rejected the promise chain returned to the transaction callback
-      }
-    }
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
     async createMany() {
       try {
         await this.db.transaction(async session => {
@@ -602,30 +374,6 @@ Suppose you have an `Album` entity stored in its own database.
     ```
 
   </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    @Module({
-      imports: [
-        SequelizeModule.forRoot({
-          connection: 'user_db_host',
-          database: 'user_db',
-          timezone: 'Asia/Jakarta'
-          models: [User],
-        }),
-        SequelizeModule.forRoot({
-          name: 'albumsConnection',
-          connection: 'album_db_host',
-          database: 'album_db',
-          timezone: 'Asia/Jakarta'
-          models: [Album],
-        }),
-      ],
-    })
-    export class AppModule {}
-    ```
-
-  </TabItem>
 </Tabs>
 
 > **Notice** If you don't set the `name` for a connection, its name is set to `default`. Please note that you shouldn't have multiple connections without a name, or with the same name, otherwise they will get overridden.
@@ -635,19 +383,6 @@ At this point, you have `User` and `Album` models registered with their own conn
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    @Module({
-      imports: [
-        MongoloquentModule.forFeature([User]),
-        MongoloquentModule.forFeature([Album], 'albumsConnection'),
-      ],
-    })
-    export class AppModule {}
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
     @Module({
       imports: [
         MongoloquentModule.forFeature([User]),
@@ -680,20 +415,6 @@ One approach is to use a factory function:
     ```
 
   </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
-    MongoloquentModule.forRootAsync({
-      useFactory: () => ({
-        connection: "mongodb://localhost:27017",
-        database: 'test',
-        timezone: "Asia/Jakarta"
-      }),
-      models: [],
-    });
-    ```
-
-  </TabItem>
 </Tabs>
 
 Our factory behaves like any other [asynchronous provider](https://docs.nestjs.com/fundamentals/async-providers) (e.g., it can be `async` and it's able to inject dependencies through `inject`).
@@ -701,22 +422,6 @@ Our factory behaves like any other [asynchronous provider](https://docs.nestjs.c
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    MongoloquentModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: (configService: ConfigService) => ({
-        connection: "mongodb://localhost:27017",
-        database: 'test',
-        timezone: "Asia/Jakarta"
-      }),
-      models: [],
-      inject: [ConfigService],
-    });
-    ```
-
-  </TabItem>
-
-  <TabItem value="Javascript" label="Javascript" default>
-    ```javascript
     MongoloquentModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: (configService: ConfigService) => ({
