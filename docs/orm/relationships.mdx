@@ -1929,6 +1929,27 @@ You may also pass any other options that are available to the `with` method, suc
   </TabItem>
 </Tabs>
 
+#### Eager Loading and Nested Queries
+
+Sometimes you may need to querying data by relation data.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    const books = await Book.with('author').where("author.name", "Ajat").get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    const books = await Book.with('author').where("author.name", "Ajat").get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+> You can use `.` (chaining) for nested queries
+
 #### Eager Loading by Default
 
 Sometimes you might want to always load some relationships when retrieving a model. To accomplish this, you may define a `$with` property on the model:
