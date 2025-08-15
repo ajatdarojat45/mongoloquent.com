@@ -71,7 +71,7 @@ const config: Config = {
 					position: "left",
 				},
 				{
-					label: "API References",
+					label: "API Reference",
 					position: "left",
 					href: "https://api.mongoloquent.com",
 				},
