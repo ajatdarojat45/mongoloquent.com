@@ -173,20 +173,19 @@ This module uses the `forFeature()` method to define which models are registered
     @Injectable()
     export class UsersService {
       constructor(
-        @InjectModel(User)
-        private userModel: typeof User,
+        @InjectModel(User) private userModel: typeof User,
       ) {}
 
       async findAll() {
         return this.userModel.get();
       }
 
-      findOne(id: string) {
-        return this.userModel.find(id)
+      findOne(id: ObjectId) {
+        return this.userModel.where("_id", id).first();
       }
 
-      async remove(id: string) {
-        const user = this.findOne(id)
+      async remove(id: ObjectId) {
+        const user = await this.find(id)
         await user.delete()
       }
     }
@@ -292,11 +291,15 @@ First, we need to inject the Mongoloquent `DB` class into a class in the normal 
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    import { DB, InjectDB } from "@mongoloquent/nestjs"
+    import { DB, InjectDB, InjectModel } from "@mongoloquent/nestjs"
+    import { User } from "./users.model"
 
     @Injectable()
     export class UsersService {
-      constructor(@InjectDB() private db: DB) {}
+      constructor(
+        @InjectDB() private db: DB,
+        @InjectModel(User) private userModel: typeof User,
+      ) {}
     }
     ```
 
@@ -352,29 +355,26 @@ First, annotate your `controller` method with the `@Transactional` decorator to 
     import { ClientSession } from 'mongodb';
     import { InjectModel, Transactional, Session } from '@mongoloquent/nestjs'
     import { User } from './users.model'
-    import { ProfilesService } from './profiles.service'
+    import { PostsService } from './posts.service'
 
     @Controller('users')
     export class UsersController {
       constructor(
-        @InjectModel() private userModel: typeof User,
-        private profilesService: ProfilesService
+        @InjectModel(User) private userModel: typeof User,
+        private postsService: PostsService
       ) {}
 
       @Post('create')
       @Transactional()
-      async createMany(
+      async createUser(
         @Session() Session: ClientSession
       ) {
-
         await this.userModel.insert(
           { firstName: 'Abraham', lastName: 'Lincoln' },
           { session },
         );
 
-        await this.profilesService.createDefaultProfile();
-
-        return "Users created successfully";
+        await this.postsService.createMany();
       }
     }
     ```
@@ -389,23 +389,26 @@ In the `service` called from the `controller`, we can retrieve the `session` dir
 <Tabs>
 	<TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    // profiles.service.ts
+    // posts.service.ts
     import { Injectable } from '@nestjs/common'
     import { DB, InjectDB, InjectModel } from '@mongoloquent/nestjs'
-    import { Profile } from './profiles.model'
+    import { Post } from './posts.model'
 
     @Injectable()
-    export class ProfilesService {
+    export class PostsService {
       constructor(
         @InjectDB() private db: DB,
-        @InjectModel() private profileModel: typeof Profile
+        @InjectModel(Post) private postModel: typeof Post
       ) {}
 
-      async createDefaultProfile() {
+      async createMany() {
         const session = this.db.getSession()
 
-        await this.profileModel.insert(
-          { bio: 'This is a default bio', avatarUrl: null },
+        await this.postModel.insertMany(
+          [
+            { title: "Traveling to Asia" },
+            { title: "Traveling to Europe" },
+          ],
           { session },
         )
       }
