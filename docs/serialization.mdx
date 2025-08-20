@@ -1,0 +1,169 @@
+---
+sidebar_position: 6
+title: Serialization
+---
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+import Sponsor from "./sponsor.mdx";
+
+# Mongoloquent: Serialization
+
+## Introduction
+
+When building APIs, you will often need to convert your models and relationships to arrays or JSON. Mongoloquent includes convenient methods for making these conversions, as well as controlling which attributes are included in the serialized representation of your models.
+
+## Hiding Attributes
+
+Sometimes you may wish to limit the attributes, such as passwords, that are included in your model's array or JSON representation. To do so, add a `$hidden` property to your model. Attributes that are listed in the `$hidden` property's array will not be included in the serialized representation of your model:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      first_name: string;
+      last_name: string;
+      password: string;
+    }
+
+    class User extends Model<IUser> {
+      /**
+       * The attributes that should be hidden.
+       *
+       * @var array<string>
+       */
+      protected $hidden = ['password'];
+
+      // ...
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class User extends Model {
+     /**
+      * The attributes that should be hidden.
+      *
+      * @var array<string>
+      */
+      $hidden = ['password'];
+
+     // ...
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+Alternatively, you may use the `visible` property to define an "allow list" of attributes that should be included in your model's object.
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    import { Model, IMongoloquentSchema, IMongoloquentTimestamps } from "mongoloquent";
+
+    interface IUser extends IMongoloquentSchema, IMongoloquentTimestamps {
+      first_name: string;
+      last_name: string;
+      password: string;
+    }
+
+    class User extends Model<IUser> {
+      /**
+       * The attributes that should be visible.
+       *
+       * @var array<string>
+       */
+      protected $visible = ['first_name', 'last_name'];
+
+      // ...
+    }
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    import { Model } from "mongoloquent";
+
+    class User extends Model {
+     /**
+      * The attributes that should be visible.
+      *
+      * @var array<string>
+      */
+      $visible = ['first_name', 'last_name'];
+
+     // ...
+    }
+    ```
+
+  </TabItem>
+</Tabs>
+
+#### Temporarily Modifying Attribute Visibility
+If you would like to make some typically hidden attributes visible on a given model instance, you may use the `makeVisible` method. The `makeVisible` method returns the model instance:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await User.makeVisible('attribute').get();
+
+    await User.makeVisible(['name', 'email']).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await User.makeVisible('attribute').get();
+
+    await User.makeVisible(['name', 'email']).get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+Likewise, if you would like to hide some attributes that are typically visible, you may use the `makeHidden` method:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await User.makeHidden('attribute').get();
+
+    await User.makeHidden(['name', 'email']).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await User.makeHidden('attribute').get();
+
+    await User.makeHidden(['name', 'email']).get();
+    ```
+
+  </TabItem>
+</Tabs>
+
+If you wish to temporarily override all of the visible or hidden attributes, you may use the `setVisible` and `setHidden` methods respectively:
+
+<Tabs>
+	<TabItem value="Typescript" label="Typescript" default>
+    ```typescript
+    await User.setVisible(['id', 'name']).get();
+
+    await User.setHidden(['email', 'password', 'remember_token']).get();
+    ```
+
+  </TabItem>
+  <TabItem value="Javascript" label="Javascript">
+    ```javascript
+    await User.setVisible(['id', 'name']).get();
+
+    await User.setHidden(['email', 'password', 'remember_token']).get();
+    ```
+
+  </TabItem>
+</Tabs>
