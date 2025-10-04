@@ -185,7 +185,7 @@ This module uses the `forFeature()` method to define which models are registered
       }
 
       async remove(id: ObjectId) {
-        const user = await this.find(id)
+        const user = await this.userModel.find(id)
         await user.delete()
       }
     }
@@ -439,14 +439,14 @@ Suppose you have an `Album` entity stored in its own database.
     ```typescript
     @Module({
       imports: [
-        SequelizeModule.forRoot({
+        MongoloquentModule.forRoot({
           name: 'default',
           connection: 'user_db_host',
           database: 'user_db',
           timezone: 'Asia/Jakarta'
           models: [User],
         }),
-        SequelizeModule.forRoot({
+        MongoloquentModule.forRoot({
           name: 'albumsConnection',
           connection: 'album_db_host',
           database: 'album_db',
