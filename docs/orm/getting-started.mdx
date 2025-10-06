@@ -111,9 +111,9 @@ If your model's corresponding database collection does not fit this convention, 
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    import { Mongoloquent } from "mongoloquent";
+    import { Model } from "mongoloquent";
 
-    class Flight extends Mongoloquent {
+    class Flight extends Model {
       /**
        * The collection associated with the model.
        *
@@ -404,7 +404,7 @@ The Mongoloquent `Collection` class extends Mongoloquent's base `Collection` cla
 <Tabs>
   <TabItem value="Typescript" label="Typescript" default>
     ```typescript
-    const flights = await Fligh.where("distination", "Paris").get();
+    const flights = await Flight.where("distination", "Paris").get();
 
     const sortedFlights = flights.sortBy((flight) => flight.name);
     ```
@@ -412,7 +412,7 @@ The Mongoloquent `Collection` class extends Mongoloquent's base `Collection` cla
   </TabItem>
   <TabItem value="Javascript" label="Javascript">
     ```javascript
-    const flights = await Fligh.where("distination", "Paris").get();
+    const flights = await Flight.where("distination", "Paris").get();
 
     const sortedFlights = flights.sortBy((flight) => flight.name);
     ```
